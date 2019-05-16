@@ -6,10 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js",
-    "build": "webpack --watch",
-    "eslint": "eslint *.js"
+    "build": "webpack --watch"
   },
-  "pre-commit": "eslint",
+  "lint-staged": {
+    "*.js": "eslint",
+    "*.css": "stylelint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hacker-home/Airbnb-booking.git"
@@ -41,7 +48,13 @@
     "babel-loader": "^8.0.6",
     "babel-preset-react": "^6.24.1",
     "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.13.0",
+    "husky": "^2.3.0",
+    "lint-staged": "^8.1.7",
+    "pre-commit": "^1.2.2",
     "webpack": "^4.31.0"
   }
 }
