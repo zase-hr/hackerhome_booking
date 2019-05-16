@@ -12,7 +12,7 @@ const Room = sequelize.define('rooms', {
   cleaning_fee: Sequelize.INTEGER,
   service_fee: Sequelize.INTEGER,
   tax: Sequelize.INTEGER,
-  max_guest: Sequelize.INTEGER,
+  max_guest: Sequelize.STRING,
   min_night: Sequelize.INTEGER,
   max_night: Sequelize.INTEGER,
   ratings: Sequelize.DECIMAL(2, 1),
@@ -21,7 +21,7 @@ const Room = sequelize.define('rooms', {
 
 const Booking = sequelize.define('bookings', {
   email: Sequelize.STRING,
-  guests: Sequelize.INTEGER,
+  guests: Sequelize.STRING,
   check_in: Sequelize.DATE,
   check_out: Sequelize.DATE,
   createdAt: Sequelize.DATE,
@@ -34,8 +34,10 @@ const Booking = sequelize.define('bookings', {
   },
 });
 
-Room.hasMany(Booking, {foreignKey: 'room_id', sourceKey: 'id' });
-Booking.belongsTo(Room, {foreignKey: 'room_id', targetKey: 'id'});
+Room.hasMany(Booking, { foreignKey: 'room_id', sourceKey: 'id' });
+Booking.belongsTo(Room, { foreignKey: 'room_id', targetKey: 'id' });
+
+sequelize.authenticate();
 
 Room.sync();
 Booking.sync();
