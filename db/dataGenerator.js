@@ -1,11 +1,12 @@
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize('booking', 'yerin', 'yerin', {
-  host: 'localhost:3000',
+  host: 'localhost',
   dialect: 'mysql',
 });
 
 const Room = sequelize.define('rooms', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   roomname: Sequelize.STRING,
   price: Sequelize.INTEGER,
   cleaning_fee: Sequelize.INTEGER,
@@ -24,10 +25,17 @@ const Booking = sequelize.define('bookings', {
   check_in: Sequelize.DATE,
   check_out: Sequelize.DATE,
   createdAt: Sequelize.DATE,
+  room_id: {
+    type: Sequelize.INTEGER,
+    references: {
+      model: 'rooms',
+      key: 'id',
+    },
+  },
 });
 
-Room.hasMany(Booking);
-Booking.belongsTo(Room);
+Room.hasMany(Booking, {foreignKey: 'room_id', sourceKey: 'id' });
+Booking.belongsTo(Room, {foreignKey: 'room_id', targetKey: 'id'});
 
 Room.sync();
 Booking.sync();
