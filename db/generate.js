@@ -188,4 +188,4 @@ const createRoomData = () => {
 };
 
 createRoomData();
-setTimeout(createBookingData, 5000);
+createBookingData();
