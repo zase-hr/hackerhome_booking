@@ -146,13 +146,8 @@ function generateRandomBookings(num) {
 
 
 generateRandomRooms(1);
-// console.log(rooms);
-
-
 generateRandomBookings(5);
 
-console.log(bookings);
-// console.log(bookings.length);
 
 const createBookingData = () => {
   for (let i = 0; i < bookings.length; i += 1) {
