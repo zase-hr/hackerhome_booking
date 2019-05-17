@@ -25,7 +25,7 @@ const Booking = sequelize.define('bookings', {
   check_in: Sequelize.DATE,
   check_out: Sequelize.DATE,
   createdAt: Sequelize.DATE,
-  room_id: {
+  roomId: {
     type: Sequelize.INTEGER,
     references: {
       model: 'rooms',
@@ -34,8 +34,8 @@ const Booking = sequelize.define('bookings', {
   },
 });
 
-Room.hasMany(Booking, { foreignKey: 'room_id', sourceKey: 'id' });
-Booking.belongsTo(Room, { foreignKey: 'room_id', targetKey: 'id' });
+Room.hasMany(Booking, { foreignKey: 'roomId' });
+Booking.belongsTo(Room, { foreignKey: 'roomId' });
 
 sequelize.authenticate();
 
