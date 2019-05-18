@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-
+import Info from './components/Info.jsx';
+import Form from './components/form.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -13,13 +14,16 @@ class App extends React.Component {
         cleaning_fee: 0,
         service_fee: 0,
         tax: 0,
-        max_guest: null,
+        max_guest: {},
         min_night: 0,
         max_night: 0,
         ratings: 0,
         num_reviews: 0,
       },
       bookingInfo: {},
+      makeBooking:{},
+      calenderToggle: false,
+      guestToggle: false,
     };
 
     this.getRoomData = this.getRoomData.bind(this);
@@ -58,7 +62,31 @@ class App extends React.Component {
     });
   }
 
+  makeBooking(roomId) {
+    $.ajax({
+      url: `/booking?roomId=${roomId}`,
+      type: 'POST',
+      data: {
+        value: {
+          check_in: 0,
+          check_out: 0,
+          guests: {},
+          email: 0,
+          roomId: 1,
+        },
+      },
+      dataType: 'application/json',
+      error: (err) => {
+        throw err;
+      },
+      success: () => {
+        console.log('success to make booking');
+      },
+    });
+  }
+
   upDateRoomState(result) {
+    console.log(result)
     this.setState({
       roomInfo: {
         roomname: result.roomname,
@@ -73,7 +101,6 @@ class App extends React.Component {
         num_reviews: result.num_reviews,
       },
     });
-    console.log(this.state);
   }
 
   // upDateBookingState(result) {
@@ -84,12 +111,30 @@ class App extends React.Component {
   //   console.log(this.state);
   // }
 
+  
+
   render() {
+    // const guest;
+    // if (this.state.roomInfo.max_guest !== '') {
+    //   guest = JSON.parse(this.state.roomInfo.max_guest);
+    // };
+
     return (
       <div>
-        <div>Hello</div>
+        <div>
+          <Info
+            price={this.state.roomInfo.price}
+            reviews={this.state.roomInfo.num_reviews}
+            ratings={this.state.roomInfo.ratings}
+          />
+        </div>
+        <div>
+          <Form guest={this.state.roomInfo.max_guest} />
+        </div>
+        <button type="button">Book</button>
       </div>
     );
   }
 }
+
 ReactDOM.render(<App />, document.getElementById('booking'));

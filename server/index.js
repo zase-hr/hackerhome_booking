@@ -27,7 +27,7 @@ app.get('/room', (req, res) => {
 app.get('/booking', (req, res) => {
   db.Booking.findAll({
     where: {
-      roomId: 1,
+      roomId: req.query.roomId,
     },
   })
     .then((result) => {
@@ -38,7 +38,7 @@ app.get('/booking', (req, res) => {
     });
 });
 
-app.post('/', (req, res) => {
+app.post('/booking', (req, res) => {
   console.log(req.body);
   res.send('hi');
 });
