@@ -1,44 +1,51 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-class GuestPicker extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      maxAdults: 0,
-      maxChildren: 0,
-      maxInfants: 0,
-    };
 
-    // this.upDateMaxGuests = this.upDateMaxGuests.bind(this);
-  }
+const GuestPicker = (props) => {
+  const maxGuests = JSON.parse(props.guest);
 
-
-
-  render() {
-    let maxGuests;
-    if (typeof this.props.guest === 'string') {
-      maxGuests = JSON.parse(this.props.guest);
-    }
-    return (
+  return (
+    <div className="picker">
       <div>
-        <div>
-          <span>Adult</span> <button disabled={this.props.adults === 1}>-</button> {this.props.adults} <button>+</button>
-          <br />
-          <span>Children<div>Ages 2-12</div></span> <button disabled={this.props.children === 0}>-</button> {this.props.children} <button>+</button>
-          <br />
-          <span>Infants<div>Under 2</div></span> <button disabled={this.props.infants === 0}>-</button> {this.props.infants} <button>+</button>
+        <div className="guestType">
+          Adult
+          <div className="buttonSection">
+            <button className="buttons" disabled={props.adults === 1} onClick={props.decreaseAdults}>- </button>
+            <div className="countAdults">{props.adults}</div>
+            <button className="buttons" disabled={props.adults === maxGuests.adults} onClick={props.increaseAdult}> + </button>
+          </div>
         </div>
         <div></div>
-        <div></div>
-        <div>
-          {`${maxGuests.adults} guest maximum. `} 
-          <br />
-          {`${maxGuests.children} children and ${maxGuests.infants} infants are allowed in this room.`}
+        <br /><br />
+        <div className="guestType">
+          Children
+          <div className="buttonSection">
+            <button className="buttons" disabled={props.num_children === 0} onClick={props.decreaseChildren}>-</button>
+            <div className="count">{props.num_children}</div>
+            <button className="buttons" disabled={props.num_children === maxGuests.children} onClick={props.increaseChildren}>+</button>
+          </div>
         </div>
+          <div className="guestTypeInfo">Ages 2-12</div>
+        <br />
+        <div className="guestType">
+          Infants
+          <div className="buttonSection">
+            <button className="buttons" disabled={props.infants === 0} onClick={props.decreaseInfants}>-</button>
+            <div className="count">{props.infants}</div>
+            <button className="buttons" disabled={props.infants === maxGuests.infants} onClick={props.increaseInfants}>+</button>
+          </div>
+        </div>
+        <div className="guestTypeInfo">Under 2</div>
       </div>
-    );
-  }
-}
+      <br />
+      <div>
+        {`${maxGuests.adults} guest maximum. `}{`${maxGuests.children} children and ${maxGuests.infants} infants are allowed in this room.`}
+      </div>
+      <button className="close" onClick={props.guestExpandToggle}>Close</button>
+    </div>
+  );
+};
+
 
 export default GuestPicker;

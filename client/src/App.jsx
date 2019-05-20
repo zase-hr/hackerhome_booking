@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Info from './components/Info.jsx';
 import Form from './components/form.jsx';
+import './App.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -21,9 +22,6 @@ class App extends React.Component {
         num_reviews: 0,
       },
       bookingInfo: {},
-      makeBooking:{},
-      calenderToggle: false,
-      guestToggle: false,
     };
 
     this.getRoomData = this.getRoomData.bind(this);
@@ -86,7 +84,6 @@ class App extends React.Component {
   }
 
   upDateRoomState(result) {
-    console.log(result)
     this.setState({
       roomInfo: {
         roomname: result.roomname,
@@ -103,24 +100,11 @@ class App extends React.Component {
     });
   }
 
-  // upDateBookingState(result) {
-  //   this.setState({
-  //     bookingInfo: {
-  //     },
-  //   });
-  //   console.log(this.state);
-  // }
-
-  
 
   render() {
-    // const guest;
-    // if (this.state.roomInfo.max_guest !== '') {
-    //   guest = JSON.parse(this.state.roomInfo.max_guest);
-    // };
-
     return (
-      <div>
+      <div className="app">
+        <button className="xbutton">X</button>
         <div>
           <Info
             price={this.state.roomInfo.price}
@@ -128,10 +112,25 @@ class App extends React.Component {
             ratings={this.state.roomInfo.ratings}
           />
         </div>
+        <div className="dividingSection" />
         <div>
-          <Form guest={this.state.roomInfo.max_guest} />
+          <Form
+            guest={this.state.roomInfo.max_guest}
+            price={this.state.roomInfo.price}
+            cleaning_fee={this.state.roomInfo.cleaning_fee}
+            service_fee={this.state.roomInfo.service_fee}
+            tax={this.state.roomInfo.tax}
+            min_night={this.state.roomInfo.min_night}
+            max_night={this.state.roomInfo.max_night}
+          />
         </div>
-        <button type="button">Book</button>
+
+        <div className="notYet">You won’t be charged yet</div>
+        <div className="dividingSection" />
+        <div className="image">
+          <div className="lower">New lower price</div>
+          <div className="lowerPrice">Price for your trip dates was just lowered by $71.</div>
+        </div>
       </div>
     );
   }

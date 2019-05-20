@@ -11,27 +11,181 @@ class Form extends React.Component {
       adults: 1,
       children: 0,
       infants: 0,
+      adultMessage: '1 Guest',
+      childrenMessage: '',
+      infantMessage: '',
+      guestSelected: false,
+      guestExpand: false,
+      totalCostPerNight: 0,
+      totalCost: 0,
+      calculatedTax: 0,
+      selectedNights: 2,
+      check_in: 0,
+      check_out: 0,
     };
+    this.increaseAdults = this.increaseAdults.bind(this);
+    this.increaseChildren = this.increaseChildren.bind(this);
+    this.increaseInfants = this.increaseInfants.bind(this);
+    this.decreaseAdults = this.decreaseAdults.bind(this);
+    this.decreaseChildren = this.decreaseChildren.bind(this);
+    this.decreaseInfants = this.decreaseInfants.bind(this);
+    this.guestButtonMessage = this.guestButtonMessage.bind(this);
+    this.guestSelectToggle = this.guestSelectToggle.bind(this);
+    this.guestExpandToggle = this.guestExpandToggle.bind(this);
+    this.calculateCostPerNight = this.calculateCostPerNight.bind(this);
   }
-  increaseAdults() {
-    
+
+  increaseAdults(e) {
+    e.preventDefault();
     this.setState({
-      adults: this.state.adults +1
-    })
+      adults: this.state.adults + 1,
+    }, this.guestButtonMessage);
   }
-  inCreaseChildren() {
 
+  increaseChildren(e) {
+    e.preventDefault();
+    this.setState({
+      children: this.state.children + 1,
+    }, this.guestButtonMessage);
   }
-  inCreaseInfants() {
 
+  increaseInfants(e) {
+    e.preventDefault();
+    this.setState({
+      infants: this.state.infants + 1,
+    }, this.guestButtonMessage);
   }
+
+  decreaseAdults(e) {
+    e.preventDefault();
+    this.setState({
+      adults: this.state.adults - 1,
+    }, this.guestButtonMessage);
+  }
+
+  decreaseChildren(e) {
+    e.preventDefault();
+    this.setState({
+      children: this.state.children - 1,
+    }, this.guestButtonMessage);
+  }
+
+  decreaseInfants(e) {
+    e.preventDefault();
+    this.setState({
+      infants: this.state.infants - 1,
+    }, this.guestButtonMessage);
+  }
+
+  guestButtonMessage() {
+    if (this.state.adults === 1) {
+      this.setState({
+        adultMessage: '1 Guest',
+      });
+    } else {
+      this.setState({
+        adultMessage: `${this.state.adults} Guests`,
+      });
+    }
+
+    if (this.state.children === 1) {
+      this.setState({
+        childrenMessage: ', 1 Child',
+      });
+    } else {
+      this.setState({
+        childrenMessage: `, ${this.state.children} Children`,
+      });
+    }
+
+    if (this.state.infants === 1) {
+      this.setState({
+        infantMessage: ', 1 Infant',
+      });
+    } else {
+      this.setState({
+        infantMessage: `, ${this.state.infants} Infants`,
+      });
+    }
+  }
+
+  guestSelectToggle(e) {
+    this.setState({
+      guestSelected: true,
+    }, this.calculateCostPerNight);
+    e.preventDefault();
+  }
+
+  guestExpandToggle(e) {
+    this.setState({
+      guestExpand: !this.state.guestExpand,
+      guestSelected: true,
+    }, this.calculateCostPerNight);
+    e.preventDefault();
+  }
+
+  calculateCostPerNight() {
+    let cost = this.props.price + this.props.service_fee + this.props.cleaning_fee;
+    let tax = cost * (this.props.tax / 100);
+    tax = parseFloat(tax.toFixed(2));
+    cost += tax;
+    cost = parseFloat(cost.toFixed(2));
+    const totalCost = cost * this.state.selectedNights;
+    this.setState({
+      totalCostPerDay: cost,
+      calculatedTax: tax,
+      totalCost: totalCost,
+    });
+  }
+
   render() {
+    let message = this.state.adultMessage;
+
+    if (this.state.children !== 0) {
+      message += this.state.childrenMessage;
+    }
+    if (this.state.infants) {
+      message += this.state.infantMessage;
+    }
+
     return (
       <section>
-        <div>
-          <Date />
-          <Guest guest={this.props.guest} adults={this.state.adults} children={this.state.children} infants={this.state.infants} />
-          <Cost />
+        <form>
+          <div>
+            <Date />
+            <Guest
+              guest={this.props.guest}
+              adults={this.state.adults}
+              num_children={this.state.children}
+              infants={this.state.infants}
+              increaseAdults={this.increaseAdults}
+              increaseChildren={this.increaseChildren}
+              increaseInfants={this.increaseInfants}
+              decreaseAdults={this.decreaseAdults}
+              decreaseChildren={this.decreaseChildren}
+              decreaseInfants={this.decreaseInfants}
+              guestSelectToggle={this.guestSelectToggle}
+              message={message}
+              guestButtonMessage={this.guestButtonMessage}
+              guestSelected={this.state.guestSelected}
+              guestExpandToggle={this.guestExpandToggle}
+              guestExpand={this.state.guestExpand}
+            />
+            {this.state.guestSelected && !this.state.guestExpand
+              ? (
+                <Cost
+                  price={this.props.price}
+                  cleaning_fee={this.props.cleaning_fee}
+                  service_fee={this.props.service_fee}
+                  tax={this.state.calculatedTax}
+                  totalCost={this.state.totalCost}
+                  selectedNights={this.state.selectedNights}
+                />
+              ) : null}
+          </div>
+        </form>
+        <div className="bookbutton">
+          <button className="book" type="button"><div>Book</div></button>
         </div>
       </section>
 
