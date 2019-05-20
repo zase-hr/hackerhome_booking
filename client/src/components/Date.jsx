@@ -25,4 +25,9 @@ handleChange(e){
     );
   }
 }
+
+Date.propTypes = {
+  // video: React.PropTypes.object.isRequired
+};
+
 export default Date;

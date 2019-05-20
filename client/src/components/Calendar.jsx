@@ -16,6 +16,8 @@ class Calendar extends React.Component {
     this.weekdays = moment.weekdays();
     this.weekdaysShort = moment.weekdaysShort();
     this.months = moment.months();
+    this.month = this.month.bind(this);
+    this.SelectList = this.SelectList.bind(this);
   }
 
   year() {
@@ -43,18 +45,41 @@ class Calendar extends React.Component {
     return moment(dateContext).startOf('month').format('d');
   }
 
+  SelectList(props) {
+    const popup = props.data.map((data => (
+      <div key={data}>
+        <a href="#">
+          {data}
+        </a>
+      </div>
+    )));
+    return (
+      <div className="month-popup">
+        {popup}
+      </div>
+    );
+  }
+
+  MonthNav(props) {
+    return (
+      <span className="label-month">
+        {props.month()}
+        {!props.showMonthPopup
+        && <props.SelectList data={props.months} />
+        }
+      </span>
+    );
+  }
+
   render() {
     const weekdays = this.weekdaysShort.map(day => (
       <td key={day} className="week-day">{day}</td>
     ));
     const blanks = [];
     for (let i = 0; i < this.firstDayOfMonth(); i += 1) {
-      blanks.push(<td className="emptySlot">
-        {''}
-                  </td>);
+      const key = i * 80;
+      blanks.push(<td key={key} className="emptySlot" />);
     }
-
-    console.log('blanks: ', blanks);
 
     const daysInMonth = [];
     for (let d = 1; d < this.daysInMonth(); d += 1) {
@@ -65,8 +90,6 @@ class Calendar extends React.Component {
         </td>,
       );
     }
-
-    console.log('days: ', daysInMonth);
 
     const totalSlots = [...blanks, ...daysInMonth];
     const rows = [];
@@ -99,6 +122,11 @@ class Calendar extends React.Component {
         <table className="calendar">
           <thead>
             <tr className="calendar-header" />
+            <tr>
+              <td colSpan="5">
+                <this.MonthNav month={this.month} showMonthPopup={this.state.showMonthPopup} SelectList={this.SelectList} months={this.months} />
+              </td>
+            </tr>
           </thead>
           <tbody>
             <tr>
