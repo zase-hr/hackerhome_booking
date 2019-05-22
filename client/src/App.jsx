@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import moment from 'moment';
 import Info from './components/Info.jsx';
 import Form from './components/form.jsx';
 import './App.css';
@@ -21,12 +22,14 @@ class App extends React.Component {
         ratings: 0,
         num_reviews: 0,
       },
+      bookedDates: [],
       bookingInfo: {},
     };
 
     this.getRoomData = this.getRoomData.bind(this);
     this.getBookingData = this.getBookingData.bind(this);
-    this.upDateRoomState = this.upDateRoomState.bind(this);
+    this.updateRoomState = this.updateRoomState.bind(this);
+    this.updateBookedDates = this.updateBookedDates.bind(this);
   }
 
   componentDidMount() {
@@ -42,7 +45,7 @@ class App extends React.Component {
         throw err;
       },
       success: (result) => {
-        this.upDateRoomState(result);
+        this.updateRoomState(result);
       },
     });
   }
@@ -56,7 +59,21 @@ class App extends React.Component {
       },
       success: (result) => {
         console.log(result);
+        this.updateBookedDates(result);
       },
+    });
+  }
+
+  updateBookedDates(results) {
+    const bookedDate = [];
+    results.forEach((data) => {
+      const nights = moment(data.check_out).diff(data.check_in, 'd');
+      for (let i = 0; i < nights; i += 1) {
+        bookedDate.push(moment(data.check_in, 'YYYY-MM-DD').add(i, 'd'));
+      }
+    });
+    this.setState({
+      bookedDates: bookedDate,
     });
   }
 
@@ -83,7 +100,7 @@ class App extends React.Component {
     });
   }
 
-  upDateRoomState(result) {
+  updateRoomState(result) {
     this.setState({
       roomInfo: {
         roomname: result.roomname,
@@ -104,7 +121,9 @@ class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <button className="xbutton">X</button>
+        <button className="xbutton">
+        X
+        </button>
         <div>
           <Info
             price={this.state.roomInfo.price}
@@ -122,6 +141,7 @@ class App extends React.Component {
             tax={this.state.roomInfo.tax}
             min_night={this.state.roomInfo.min_night}
             max_night={this.state.roomInfo.max_night}
+            bookedDates={this.state.bookedDates}
           />
         </div>
 

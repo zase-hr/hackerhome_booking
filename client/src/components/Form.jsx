@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import moment from 'moment';
 import Date from './Date.jsx';
 import Cost from './Cost.jsx';
 import Guest from './Guest.jsx';
@@ -22,6 +23,9 @@ class Form extends React.Component {
       selectedNights: 2,
       check_in: 0,
       check_out: 0,
+      selectedDate: 0,
+      check_in_clicked: false,
+      check_out_clicked: false,
     };
     this.increaseAdults = this.increaseAdults.bind(this);
     this.increaseChildren = this.increaseChildren.bind(this);
@@ -33,6 +37,10 @@ class Form extends React.Component {
     this.guestSelectToggle = this.guestSelectToggle.bind(this);
     this.guestExpandToggle = this.guestExpandToggle.bind(this);
     this.calculateCostPerNight = this.calculateCostPerNight.bind(this);
+    this.onDayClick = this.onDayClick.bind(this);
+    this.handleCheckinClicked = this.handleCheckinClicked.bind(this);
+    this.handleCheckoutClicked = this.handleCheckoutClicked.bind(this);
+    this.calendarInitialize = this.calendarInitialize.bind(this);
   }
 
   increaseAdults(e) {
@@ -138,6 +146,40 @@ class Form extends React.Component {
     });
   }
 
+  onDayClick(e, dateContext, cb1, cb2) {
+    console.log('selected day: ', dateContext.format('MM-DD-YYYY'));
+    if (this.state.check_in_clicked) {
+      this.setState({
+        check_in: dateContext.format('MM/DD/YYYY'),
+      }, cb1());
+    } else if (this.state.check_out_clicked) {
+      this.setState({
+        check_out: dateContext.format('MM/DD/YYYY'),
+      }, cb2());
+    }
+  }
+
+  handleCheckinClicked() {
+    this.setState({
+      check_in_clicked: true,
+      check_out_clicked: false,
+    });
+  }
+
+  handleCheckoutClicked() {
+    this.setState({
+      check_out_clicked: true,
+      check_in_clicked: false,
+    });
+  }
+
+  calendarInitialize() {
+    this.setState({
+      check_in: 0,
+      check_out: 0,
+    }, this.handleCheckinClicked());
+  }
+
   render() {
     let message = this.state.adultMessage;
 
@@ -152,7 +194,17 @@ class Form extends React.Component {
       <section>
         <form>
           <div>
-            <Date />
+            <Date
+              check_in={this.state.check_in}
+              check_out={this.state.check_out}
+              onDayClick={this.onDayClick}
+              bookedDates={this.props.bookedDates}
+              handleCheckinClicked={this.handleCheckinClicked}
+              handleCheckoutClicked={this.handleCheckoutClicked}
+              check_in_clicked={this.state.check_in_clicked}
+              check_out_clicked={this.state.check_out_clicked}
+              calendarInitialize={this.calendarInitialize}
+            />
             <Guest
               guest={this.props.guest}
               adults={this.state.adults}

@@ -9,7 +9,7 @@ const GuestPicker = (props) => {
     <div className="picker">
       <div>
         <div className="guestType">
-          Adult
+          Adults
           <div className="buttonSection">
             <button className="buttons" disabled={props.adults === 1} onClick={props.decreaseAdults}>- </button>
             <div className="countAdults">{props.adults}</div>

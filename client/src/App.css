@@ -20,16 +20,13 @@ body {
     font-size: 16px;
     align-items: flex-start;
     text-align: auto;
-    padding: 20px;
-    /* margin: -20px, 0, 0, 0; */
+    padding-bottom: 20px;
+    margin-bottom: 10px;
     cursor: pointer !important;
     background-color: transparent !important;
     color: buttontext !important;
     display: block !important;
-    border-width: 0px !important;
-    border-style: initial !important;
-    border-color: initial !important;
-    border-image: initial !important;
+    border: none; 
     letter-spacing: normal;
     word-spacing: normal;
     text-transform: none;
@@ -245,12 +242,11 @@ body {
 
 .guestPicker {
     position: absolute !important;
+    box-sizing: border-box !important;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px, rgba(0, 0, 0, 0.07) 0px 0px 0px 1px !important;
     width: 100% !important;
-    min-width: 280px !important;
     text-align: left !important;
     margin-bottom: 16px !important;
-    box-sizing: border-box !important;
     z-index: 2 !important;
     left: 0px !important;
     background: rgb(255, 255, 255) !important;
@@ -271,6 +267,7 @@ body {
     display: block;
     fill: currentcolor;
 }
+
 .guestType {
     margin: 0px !important;
     word-wrap: break-word !important;
@@ -494,8 +491,7 @@ body {
     font-weight: 600 !important;
     line-height: 1.3333333333333333em !important;
     color: #484848 !important;
-    min-width: 280px !important;
-    max-width: 740px !important;
+    padding-bottom: 15px;
 }
 
 .lower {
@@ -516,3 +512,93 @@ body {
 .lowerPrice{
   padding-right: 20%;
 }
+.calendar-container {
+  padding-top: -30px;
+  margin: 15px;
+  margin-bottom: 30px;
+  width: 308px;
+  height: 308px;
+}
+.datePicker{
+    position: absolute !important;
+    box-sizing: border-box !important;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px, rgba(0, 0, 0, 0.07) 0px 0px 0px 1px !important;
+    background: rgb(255, 255, 255) !important;
+    border-radius: 3px !important;
+    z-index: 3 !important;
+}
+
+.thisMonth{
+    color: rgb(72, 72, 72) !important;
+    font-size: 18px !important;
+    text-align: center !important;
+    padding-top: 30px !important;
+    caption-side: initial !important;
+    font-weight: bold;
+}
+.month-popup {
+  box-sizing: border-box !important;
+  position: relative;
+  z-index: 4 !important;
+}
+.days {
+    width: 41px;
+    height: 40px;
+    border: 1px double rgb(228, 231, 231);
+    color: rgb(72, 72, 72);
+    background: rgb(255, 255, 255);
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    text-align: center !important;
+    display: table-cell;
+    vertical-align: inherit;
+    font-weight: 600 !important;
+    padding: -10%;
+}
+
+.day[disabled]{
+    font-family: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+    font-weight: 700 !important;
+    height: 12px !important;
+    line-height: 12px !important;
+    width: 38px !important;
+    color: rgb(216, 216, 216) !important;
+    display: block;
+    text-decoration: line-through;
+}
+
+.week-day{
+    text-align: center !important;
+    color: rgb(117, 117, 117) !important;
+    font-weight: 600 !important;
+    font-size: smaller;
+    padding-top: 25px;
+}
+
+.prev {
+    cursor: pointer !important;
+    user-select: none !important;
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(117, 117, 117) !important;
+    position: absolute !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: rgb(228, 231, 231) !important;
+    border-image: initial !important;
+    border-radius: 3px !important;
+    padding: 6px 9px !important;
+    font-size: 20px;
+}
+.clear {
+  color: var(--color-text-link, #008489) !important;
+    font-family: var(--font-font_family, Circular,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif) !important;
+    background: transparent !important;
+    cursor: pointer !important;
+    border: none;
+    float: right;
+    margin: 15px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration-line: var(--font-link-text-decoration-line, none) !important;
+  }
