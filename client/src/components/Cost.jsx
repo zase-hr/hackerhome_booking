@@ -31,12 +31,12 @@ class Cost extends React.Component {
         <div className="dividingSection1" />
         <div className="taxRate">
           <div className="costTitle">Ocupancy taxes</div>
-          <div className="cost">${this.props.tax * this.props.selectedNights}</div>
+          <div className="cost">${(this.props.tax * this.props.selectedNights).toFixed(1)}</div>
         </div>
         <div className="dividingSection1" />
         <div className="totalRate">
           <div className="costTitle"> Total</div>
-          <div className="cost">{`$${this.props.totalCost}`}</div>
+          <div className="cost">{`$${(this.props.totalCost).toFixed(1)}`}</div>
         </div>
       </div>
     );

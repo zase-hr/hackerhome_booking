@@ -51,7 +51,7 @@ class Form extends React.Component {
     } else if (this.state.check_out_clicked) {
       this.setState({
         check_out: dateContext.format('MM/DD/YYYY'),
-      }, cb2());
+      }, cb2(), this.guestExpandToggle(e));
     }
   }
 
