@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import moment from 'moment';
 import Date from './Date.jsx';
 import Cost from './Cost.jsx';
@@ -43,46 +42,16 @@ class Form extends React.Component {
     this.calendarInitialize = this.calendarInitialize.bind(this);
   }
 
-  increaseAdults(e) {
-    e.preventDefault();
-    this.setState({
-      adults: this.state.adults + 1,
-    }, this.guestButtonMessage);
-  }
-
-  increaseChildren(e) {
-    e.preventDefault();
-    this.setState({
-      children: this.state.children + 1,
-    }, this.guestButtonMessage);
-  }
-
-  increaseInfants(e) {
-    e.preventDefault();
-    this.setState({
-      infants: this.state.infants + 1,
-    }, this.guestButtonMessage);
-  }
-
-  decreaseAdults(e) {
-    e.preventDefault();
-    this.setState({
-      adults: this.state.adults - 1,
-    }, this.guestButtonMessage);
-  }
-
-  decreaseChildren(e) {
-    e.preventDefault();
-    this.setState({
-      children: this.state.children - 1,
-    }, this.guestButtonMessage);
-  }
-
-  decreaseInfants(e) {
-    e.preventDefault();
-    this.setState({
-      infants: this.state.infants - 1,
-    }, this.guestButtonMessage);
+  onDayClick(e, dateContext, cb1, cb2) {
+    if (this.state.check_in_clicked) {
+      this.setState({
+        check_in: dateContext.format('MM/DD/YYYY'),
+      }, cb1());
+    } else if (this.state.check_out_clicked) {
+      this.setState({
+        check_out: dateContext.format('MM/DD/YYYY'),
+      }, cb2());
+    }
   }
 
   guestButtonMessage() {
@@ -140,23 +109,52 @@ class Form extends React.Component {
     cost = parseFloat(cost.toFixed(2));
     const totalCost = cost * this.state.selectedNights;
     this.setState({
-      totalCostPerDay: cost,
+      totalCostPerNight: cost,
       calculatedTax: tax,
-      totalCost: totalCost,
+      totalCost,
     });
   }
 
-  onDayClick(e, dateContext, cb1, cb2) {
-    console.log('selected day: ', dateContext.format('MM-DD-YYYY'));
-    if (this.state.check_in_clicked) {
-      this.setState({
-        check_in: dateContext.format('MM/DD/YYYY'),
-      }, cb1());
-    } else if (this.state.check_out_clicked) {
-      this.setState({
-        check_out: dateContext.format('MM/DD/YYYY'),
-      }, cb2());
-    }
+  increaseAdults(e) {
+    e.preventDefault();
+    this.setState({
+      adults: this.state.adults + 1,
+    }, this.guestButtonMessage);
+  }
+
+  increaseChildren(e) {
+    e.preventDefault();
+    this.setState({
+      children: this.state.children + 1,
+    }, this.guestButtonMessage);
+  }
+
+  increaseInfants(e) {
+    e.preventDefault();
+    this.setState({
+      infants: this.state.infants + 1,
+    }, this.guestButtonMessage);
+  }
+
+  decreaseAdults(e) {
+    e.preventDefault();
+    this.setState({
+      adults: this.state.adults - 1,
+    }, this.guestButtonMessage);
+  }
+
+  decreaseChildren(e) {
+    e.preventDefault();
+    this.setState({
+      children: this.state.children - 1,
+    }, this.guestButtonMessage);
+  }
+
+  decreaseInfants(e) {
+    e.preventDefault();
+    this.setState({
+      infants: this.state.infants - 1,
+    }, this.guestButtonMessage);
   }
 
   handleCheckinClicked() {
@@ -189,7 +187,6 @@ class Form extends React.Component {
     if (this.state.infants) {
       message += this.state.infantMessage;
     }
-
     return (
       <section>
         <form>
@@ -244,5 +241,17 @@ class Form extends React.Component {
     );
   }
 }
+
+// Form.propTypes = {
+//   guest: PropTypes.string.isRequired,
+//   price: PropTypes.number.isRequired,
+//   cleaning_fee: PropTypes.number.isRequired,
+//   service_fee: PropTypes.number.isRequired,
+//   tax: PropTypes.number.isRequired,
+//   min_night: PropTypes.number.isRequired,
+//   max_night: PropTypes.number.isRequired,
+//   bookedDates: PropTypes.object.isRequired,
+// };
+
 
 export default Form;

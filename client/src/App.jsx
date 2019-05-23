@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import moment from 'moment';
 import Info from './components/Info.jsx';
 import Form from './components/form.jsx';
-import './App.css';
+// import './App.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -24,12 +23,14 @@ class App extends React.Component {
       },
       bookedDates: [],
       bookingInfo: {},
+      rendering: true,
     };
 
     this.getRoomData = this.getRoomData.bind(this);
     this.getBookingData = this.getBookingData.bind(this);
     this.updateRoomState = this.updateRoomState.bind(this);
     this.updateBookedDates = this.updateBookedDates.bind(this);
+    this.handleRendering = this.handleRendering.bind(this);
   }
 
   componentDidMount() {
@@ -61,6 +62,12 @@ class App extends React.Component {
         console.log(result);
         this.updateBookedDates(result);
       },
+    });
+  }
+
+  handleRendering() {
+    this.setState({
+      rendering: false,
     });
   }
 
@@ -119,9 +126,9 @@ class App extends React.Component {
 
 
   render() {
-    return (
+    const app = (
       <div className="app">
-        <button className="xbutton">
+        <button type="submit" className="xbutton" onClick={this.handleRendering}>
         X
         </button>
         <div>
@@ -153,7 +160,13 @@ class App extends React.Component {
         </div>
       </div>
     );
+
+    return (
+      <div>
+        {this.state.rendering ? app : null}
+      </div>
+    );
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('booking'));
+export default App;

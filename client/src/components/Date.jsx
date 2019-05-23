@@ -15,7 +15,7 @@ class Date extends React.Component {
   }
 
   handleChange(e) {
-    console.log(e.target.value);
+    return e;
   }
 
   // handle check-in and out
@@ -64,14 +64,13 @@ class Date extends React.Component {
                  />
             ) : null}
         </div>
-        {/* <Calendar onDayClick={this.props.onDayClick} /> */}
       </div>
     );
   }
 }
 
-Date.propTypes = {
-  // video: React.PropTypes.object.isRequired
-};
+// for propTypes validation
+// Date.propTypes = {
+// };
 
 export default Date;

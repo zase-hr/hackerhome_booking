@@ -38,10 +38,13 @@ app.get('/booking', (req, res) => {
     });
 });
 
-app.post('/booking', (req, res) => {
-  console.log(req.body);
-  res.send('hi');
-});
+
+// making booking
+
+// app.post('/booking', (req, res) => {
+//   console.log(req.body);
+//   res.send();
+// });
 
 app.listen(port, () => {
   console.log(`Listening port: ${port}`);

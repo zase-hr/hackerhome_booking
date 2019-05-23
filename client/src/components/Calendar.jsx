@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import moment from 'moment';
 
 class Calendar extends React.Component {
@@ -8,24 +7,58 @@ class Calendar extends React.Component {
     this.style = {};
     this.state = {
       dateContext: moment(),
-      showMonthPopup: false,
-      showYearPopup: false,
     };
     this.weekdays = moment.weekdays();
     this.weekdaysShort = moment.weekdaysShort();
     this.months = moment.months();
     this.month = this.month.bind(this);
-    this.SelectList = this.SelectList.bind(this);
-    this.onChangeMonth = this.onChangeMonth.bind(this);
     this.setMonth = this.setMonth.bind(this);
-    this.onSelectChange = this.onSelectChange.bind(this);
+    this.onMonthChange = this.onMonthChange.bind(this);
     this.year = this.year.bind(this);
-    this.showYearEditor = this.showYearEditor.bind(this);
     this.setYear = this.setYear.bind(this);
-    this.onYearChange = this.onYearChange.bind(this);
-    this.onKeyUpYear = this.onKeyUpYear.bind(this);
     this.prevMonth = this.prevMonth.bind(this);
     this.nextMonth = this.nextMonth.bind(this);
+  }
+
+  onMonthChange(data) {
+    this.setMonth(data);
+    this.props.onChangeMonth && this.props.onChangeMonth();
+  }
+
+  onDayClick(e, day) {
+    this.props.onDayClick && this.props.onDayClick(e, day);
+  }
+
+  setMonth(month) {
+    const monthNo = this.months.indexOf(month);
+    let dateContext = Object.assign({}, this.state.dateContext);
+    dateContext = moment(dateContext).set('month', monthNo);
+    this.setState({
+      dateContext,
+    });
+  }
+
+  setYear(year) {
+    let dateContext = Object.assign({}, this.state.dateContext);
+    dateContext = moment(dateContext).set('year', year);
+    this.setState({
+      dateContext,
+    });
+  }
+
+  MonthNav(props) {
+    return (
+      <span className="label-month">
+        {props.month()}
+        {props.showMonthPopup
+          && <props.SelectList data={props.months} onSelectChange={props.onSelectChange} />
+        }
+      </span>
+    );
+  }
+
+  currentDate() {
+    return this.state.dateContext.get('date');
   }
 
   year() {
@@ -40,10 +73,6 @@ class Calendar extends React.Component {
     return this.state.dateContext.daysInMonth();
   }
 
-  currentDate() {
-    return this.state.dateContext.get('date');
-  }
-
   currentDay() {
     return this.state.dateContext.format('D');
   }
@@ -51,15 +80,6 @@ class Calendar extends React.Component {
   firstDayOfMonth() {
     const { dateContext } = this.state;
     return moment(dateContext).startOf('month').format('d');
-  }
-
-  setMonth(month) {
-    const monthNo = this.months.indexOf(month);
-    let dateContext = Object.assign({}, this.state.dateContext);
-    dateContext = moment(dateContext).set('month', monthNo);
-    this.setState({
-      dateContext,
-    });
   }
 
   nextMonth() {
@@ -80,74 +100,6 @@ class Calendar extends React.Component {
     this.props.onPrevMonth && this.props.onPrevMonth();
   }
 
-  onSelectChange(data) {
-    this.setMonth(data);
-    this.props.onChangeMonth && this.props.onChangeMonth();
-  }
-
-  SelectList(props) {
-    const popup = props.data.map((data => (
-      <div key={data}>
-        <a href="#" onClick={() => { props.onSelectChange(data); }}>
-          {data}
-        </a>
-      </div>
-    )));
-    return (
-      <div className="month-popup">
-        {popup}
-      </div>
-    );
-  }
-
-  onChangeMonth() {
-    this.setState({
-      showMonthPopup: !this.state.showMonthPopup,
-    });
-  }
-
-  MonthNav(props) {
-    return (
-      <span
-        className="label-month"
-        onClick={() => { props.onChangeMonth(); }}
-      >
-        {props.month()}
-        {props.showMonthPopup
-        && <props.SelectList data={props.months} onSelectChange={props.onSelectChange} />
-        }
-      </span>
-    );
-  }
-
-  showYearEditor() {
-    this.setState({
-      showYearPopup: !this.state.showMonthPopup,
-    });
-  }
-
-  setYear(year) {
-    let dateContext = Object.assign({}, this.state.dateContext);
-    dateContext = moment(dateContext).set('year', year);
-    this.setState({
-      dateContext,
-    });
-  }
-
-  onYearChange(e) {
-    this.setYear(e.target.value);
-    this.props.onYearChange && this.props.onYearChange(e, e.target.value);
-  }
-
-  onKeyUpYear(e) {
-    if (e.which === 13 || e.which === 27) {
-      this.setYear(e.target.value);
-      this.setState({
-        showYearPopup: false,
-      });
-    }
-  }
-
   YearNav(props) {
     return (
       props.showYearPopup
@@ -155,7 +107,6 @@ class Calendar extends React.Component {
           <input
             defaultValue={props.year()}
             className="editor-year"
-            // ref={(yearInput) => { this.yearInput = yearInput; }}
             onKeyUp={(e) => { props.onKeyUpYear(e); }}
             onChange={(e) => { props.onYearChange(e); }}
             type="number"
@@ -165,18 +116,13 @@ class Calendar extends React.Component {
         : (
           <span
             className="label-year"
-            onClick={() => { props.showYearEditor(); }}
+            // onClick={() => { props.showYearEditor(); }}
           >
             {props.year()}
           </span>
         )
     );
   }
-
-  onDayClick(e, day) {
-    this.props.onDayClick && this.props.onDayClick(e, day);
-  }
-
 
   render() {
     const weekdays = this.weekdaysShort.map(day => (
@@ -259,9 +205,9 @@ class Calendar extends React.Component {
                 </button>
               </td>
               <td colSpan="5" className="thisMonth">
-                <this.MonthNav month={this.month} showMonthPopup={this.state.showMonthPopup} SelectList={this.SelectList} months={this.months} onChangeMonth={this.onChangeMonth} onSelectChange={this.onSelectChange} />
+                <this.MonthNav month={this.month} months={this.months} onMonthChange={this.onMonthChange} />
                 {' '}
-                <this.YearNav year={this.year} showYearPopup={this.state.showYearPopup} showYearEditor={this.showYearEditor} onYearChange={this.onYearChange} onKeyUpYear={this.onKeyUpYear} />
+                <this.YearNav year={this.year} />
               </td>
               <td colSpan="2" className="nav-month">
                 <button
