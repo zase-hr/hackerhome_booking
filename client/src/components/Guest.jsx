@@ -26,6 +26,8 @@ const Guest = props => (
             decreaseInfants={props.decreaseInfants}
             guestButtonMessage={props.guestButtonMessage}
             guestExpandToggle={props.guestExpandToggle}
+            updateTotalNights={props.updateTotalNights}
+
           />
         ) : null}
     </div>

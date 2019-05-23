@@ -19,7 +19,7 @@ class Form extends React.Component {
       totalCostPerNight: 0,
       totalCost: 0,
       calculatedTax: 0,
-      selectedNights: 2,
+      selectedNights: 0,
       check_in: 0,
       check_out: 0,
       selectedDate: 0,
@@ -40,6 +40,7 @@ class Form extends React.Component {
     this.handleCheckinClicked = this.handleCheckinClicked.bind(this);
     this.handleCheckoutClicked = this.handleCheckoutClicked.bind(this);
     this.calendarInitialize = this.calendarInitialize.bind(this);
+    this.updateTotalNights = this.updateTotalNights.bind(this);
   }
 
   onDayClick(e, dateContext, cb1, cb2) {
@@ -98,6 +99,7 @@ class Form extends React.Component {
       guestExpand: !this.state.guestExpand,
       guestSelected: true,
     }, this.calculateCostPerNight);
+    this.updateTotalNights();
     e.preventDefault();
   }
 
@@ -171,6 +173,14 @@ class Form extends React.Component {
     });
   }
 
+  updateTotalNights() {
+    let nights = moment(this.state.check_out, 'MM/DD/YY') - moment(this.state.check_in, 'MM/DD/YY');
+    nights = moment(nights).format('D');
+    this.setState({
+      selectedNights: nights,
+    });
+  }
+
   calendarInitialize() {
     this.setState({
       check_in: 0,
@@ -219,6 +229,7 @@ class Form extends React.Component {
               guestSelected={this.state.guestSelected}
               guestExpandToggle={this.guestExpandToggle}
               guestExpand={this.state.guestExpand}
+              updateTotalNights={this.updateTotalNights}
             />
             {this.state.guestSelected && !this.state.guestExpand
               ? (
