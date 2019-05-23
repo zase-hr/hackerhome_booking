@@ -4,6 +4,7 @@ import Date from './Date.jsx';
 import Cost from './Cost.jsx';
 import Guest from './Guest.jsx';
 
+
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -26,12 +27,14 @@ class Form extends React.Component {
       check_in_clicked: false,
       check_out_clicked: false,
     };
-    this.increaseAdults = this.increaseAdults.bind(this);
-    this.increaseChildren = this.increaseChildren.bind(this);
-    this.increaseInfants = this.increaseInfants.bind(this);
-    this.decreaseAdults = this.decreaseAdults.bind(this);
-    this.decreaseChildren = this.decreaseChildren.bind(this);
-    this.decreaseInfants = this.decreaseInfants.bind(this);
+    // this.increaseAdults = this.increaseAdults.bind(this);
+    // this.increaseChildren = this.increaseChildren.bind(this);
+    // this.increaseInfants = this.increaseInfants.bind(this);
+    // this.decreaseAdults = this.decreaseAdults.bind(this);
+    // this.decreaseChildren = this.decreaseChildren.bind(this);
+    // this.decreaseInfants = this.decreaseInfants.bind(this);
+    this.increaseGuest = this.increaseGuest.bind(this);
+    this.decreaseGuest = this.decreaseGuest.bind(this);
     this.guestButtonMessage = this.guestButtonMessage.bind(this);
     this.guestSelectToggle = this.guestSelectToggle.bind(this);
     this.guestExpandToggle = this.guestExpandToggle.bind(this);
@@ -117,47 +120,63 @@ class Form extends React.Component {
     });
   }
 
-  increaseAdults(e) {
-    e.preventDefault();
+  increaseGuest(e) {
+    e.preventDefault(e);
+    console.log(e.target.className)
     this.setState({
-      adults: this.state.adults + 1,
+      [e.target.className]: this.state[e.target.className] + 1,
     }, this.guestButtonMessage);
   }
 
-  increaseChildren(e) {
-    e.preventDefault();
+  decreaseGuest(e) {
+    e.preventDefault(e);
+    console.log(e.target.className)
     this.setState({
-      children: this.state.children + 1,
+      [e.target.className]: this.state[e.target.className] - 1,
     }, this.guestButtonMessage);
   }
 
-  increaseInfants(e) {
-    e.preventDefault();
-    this.setState({
-      infants: this.state.infants + 1,
-    }, this.guestButtonMessage);
-  }
+  // increaseAdults(e) {
+  //   e.preventDefault();
+  //   this.setState({
+  //     adults: this.state.adults + 1,
+  //   }, this.guestButtonMessage);
+  // }
 
-  decreaseAdults(e) {
-    e.preventDefault();
-    this.setState({
-      adults: this.state.adults - 1,
-    }, this.guestButtonMessage);
-  }
+  // increaseChildren(e) {
+  //   e.preventDefault();
+  //   this.setState({
+  //     children: this.state.children + 1,
+  //   }, this.guestButtonMessage);
+  // }
 
-  decreaseChildren(e) {
-    e.preventDefault();
-    this.setState({
-      children: this.state.children - 1,
-    }, this.guestButtonMessage);
-  }
+  // increaseInfants(e) {
+  //   e.preventDefault();
+  //   this.setState({
+  //     infants: this.state.infants + 1,
+  //   }, this.guestButtonMessage);
+  // }
 
-  decreaseInfants(e) {
-    e.preventDefault();
-    this.setState({
-      infants: this.state.infants - 1,
-    }, this.guestButtonMessage);
-  }
+  // decreaseAdults(e) {
+  //   e.preventDefault();
+  //   this.setState({
+  //     adults: this.state.adults - 1,
+  //   }, this.guestButtonMessage);
+  // }
+
+  // decreaseChildren(e) {
+  //   e.preventDefault();
+  //   this.setState({
+  //     children: this.state.children - 1,
+  //   }, this.guestButtonMessage);
+  // }
+
+  // decreaseInfants(e) {
+  //   e.preventDefault();
+  //   this.setState({
+  //     infants: this.state.infants - 1,
+  //   }, this.guestButtonMessage);
+  // }
 
   handleCheckinClicked() {
     this.setState({
@@ -217,12 +236,14 @@ class Form extends React.Component {
               adults={this.state.adults}
               num_children={this.state.children}
               infants={this.state.infants}
-              increaseAdults={this.increaseAdults}
-              increaseChildren={this.increaseChildren}
-              increaseInfants={this.increaseInfants}
-              decreaseAdults={this.decreaseAdults}
-              decreaseChildren={this.decreaseChildren}
-              decreaseInfants={this.decreaseInfants}
+              // increaseAdults={this.increaseAdults}
+              // increaseChildren={this.increaseChildren}
+              // increaseInfants={this.increaseInfants}
+              increaseGuest={this.increaseGuest}
+              decreaseGuest={this.decreaseGuest}
+              // decreaseAdults={this.decreaseAdults}
+              // decreaseChildren={this.decreaseChildren}
+              // decreaseInfants={this.decreaseInfants}
               guestSelectToggle={this.guestSelectToggle}
               message={message}
               guestButtonMessage={this.guestButtonMessage}

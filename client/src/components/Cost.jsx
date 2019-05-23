@@ -16,7 +16,7 @@ class Cost extends React.Component {
           <div className="costTitle">${this.props.price} x {this.props.selectedNights} 
             {this.props.selectedNights === 1 ? 'night' : 'nights'}
           </div>
-          <div className="cost">${this.props.price * this.props.selectedNights}</div>
+          <div className="cost">{`$ ${this.props.price * this.props.selectedNights}`}</div>
         </div>
         <div className="dividingSection1" />
         <div className="serviceRate">

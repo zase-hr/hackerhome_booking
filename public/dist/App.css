@@ -290,7 +290,7 @@ body {
     line-height: 1.2857142857142858em !important;
     color: #484848 !important;
 }
-.buttons{
+.adults{
   /* display: inline-block !important; */
     cursor: pointer !important;
     text-align: center !important;
@@ -310,7 +310,47 @@ body {
     display: table-cell !important;
     vertical-align: middle !important;
 }
-.buttons:disabled {
+.children{
+  /* display: inline-block !important; */
+    cursor: pointer !important;
+    text-align: center !important;
+    line-height: 1 !important;
+    position: relative !important;
+    touch-action: manipulation !important;
+    height: 32px !important;
+    width: 32px !important;
+    box-shadow: none !important;
+    border-radius: 50% !important;
+    border-style: solid !important;
+    border-color: rgb(0, 132, 137) !important;
+    background: transparent !important;
+    border-width: 1px !important;
+    color: rgb(0, 132, 137) !important;
+    font-size: 16px !important;
+    display: table-cell !important;
+    vertical-align: middle !important;
+}
+.infants{
+  /* display: inline-block !important; */
+    cursor: pointer !important;
+    text-align: center !important;
+    line-height: 1 !important;
+    position: relative !important;
+    touch-action: manipulation !important;
+    height: 32px !important;
+    width: 32px !important;
+    box-shadow: none !important;
+    border-radius: 50% !important;
+    border-style: solid !important;
+    border-color: rgb(0, 132, 137) !important;
+    background: transparent !important;
+    border-width: 1px !important;
+    color: rgb(0, 132, 137) !important;
+    font-size: 16px !important;
+    display: table-cell !important;
+    vertical-align: middle !important;
+}
+#buttons:disabled {
     cursor: default !important;
     border-color: rgba(0, 132, 137, 0.3) !important;
     background: transparent !important;

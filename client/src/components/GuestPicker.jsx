@@ -11,9 +11,9 @@ const GuestPicker = (props) => {
         <div className="guestType">
           Adults
           <div className="buttonSection">
-            <button className="buttons" disabled={props.adults === 1} onClick={props.decreaseAdults}>- </button>
+            <button className="adults" id="buttons" disabled={props.adults === 1} onClick={props.decreaseGuest}>- </button>
             <div className="countAdults">{props.adults}</div>
-            <button className="buttons" disabled={props.adults === maxGuests.adults} onClick={props.increaseAdult}> + </button>
+            <button className="adults" id="buttons" disabled={props.adults === maxGuests.adults} onClick={props.increaseGuest}> + </button>
           </div>
         </div>
         <div></div>
@@ -21,9 +21,9 @@ const GuestPicker = (props) => {
         <div className="guestType">
           Children
           <div className="buttonSection">
-            <button className="buttons" disabled={props.num_children === 0} onClick={props.decreaseChildren}>-</button>
+            <button className="children" id="buttons" disabled={props.num_children === 0} onClick={props.decreaseGuest}>-</button>
             <div className="count">{props.num_children}</div>
-            <button className="buttons" disabled={props.num_children === maxGuests.children} onClick={props.increaseChildren}>+</button>
+            <button className="children" id="buttons" disabled={props.num_children === maxGuests.children} onClick={props.increaseGuest}>+</button>
           </div>
         </div>
           <div className="guestTypeInfo">Ages 2-12</div>
@@ -31,9 +31,9 @@ const GuestPicker = (props) => {
         <div className="guestType">
           Infants
           <div className="buttonSection">
-            <button className="buttons" disabled={props.infants === 0} onClick={props.decreaseInfants}>-</button>
+            <button className="infants" id="buttons" disabled={props.infants === 0} onClick={props.decreaseGuest}>-</button>
             <div className="count">{props.infants}</div>
-            <button className="buttons" disabled={props.infants === maxGuests.infants} onClick={props.increaseInfants}>+</button>
+            <button className="infants" id="buttons" disabled={props.infants === maxGuests.infants} onClick={props.increaseGuest}>+</button>
           </div>
         </div>
         <div className="guestTypeInfo">Under 2</div>
