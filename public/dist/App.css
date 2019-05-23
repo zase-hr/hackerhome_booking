@@ -182,6 +182,13 @@ body {
     color: #484848 !important;
     
 }
+
+.guestSection1{
+    flex-direction:row;
+    display: table !important;
+    width: 100% !important;
+    border-spacing: 0px !important;
+}
 .guest{
     width: 100% !important;
     position: relative !important;
@@ -237,7 +244,8 @@ body {
 }
 .message{
   padding-top: 10px;
-  padding-left: 15px;
+  padding-left: 20px;
+  padding-bottom: 15px;
 }
 
 .guestPicker {
@@ -264,8 +272,16 @@ body {
 .goDown {
     height: 16px;
     width: 16px;
-    display: block;
     fill: currentcolor;
+    float: right;
+    margin-top: 5px;
+    display: table-cell !important;
+    vertical-align: middle !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 1.375em !important;
+    color: #484848 !important;
+    margin-right: 20px;
 }
 
 .guestType {
