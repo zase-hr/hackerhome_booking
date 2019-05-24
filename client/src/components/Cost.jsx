@@ -5,8 +5,8 @@ const Cost = (props) => {
   const {
     price,
     selectedNights,
-    service_fee,
-    cleaning_fee,
+    serviceFee,
+    cleaningFee,
     tax,
     totalCost,
   } = props;
@@ -29,7 +29,7 @@ x
         <div className="costTitle">Service fee</div>
         <div className="cost">
 $
-          {service_fee * selectedNights}
+          {serviceFee * selectedNights}
         </div>
       </div>
       <div className="dividingSection1" />
@@ -37,7 +37,7 @@ $
         <div className="costTitle">Cleaning fee</div>
         <div className="cost">
 $
-          {cleaning_fee * selectedNights}
+          {cleaningFee * selectedNights}
         </div>
       </div>
       <div className="dividingSection1" />
@@ -59,8 +59,8 @@ $
 
 Cost.propTypes = {
   price: PropTypes.number.isRequired,
-  cleaning_fee: PropTypes.number.isRequired,
-  service_fee: PropTypes.number.isRequired,
+  cleaningFee: PropTypes.number.isRequired,
+  serviceFee: PropTypes.number.isRequired,
   tax: PropTypes.number.isRequired,
   totalCost: PropTypes.number.isRequired,
   selectedNights: PropTypes.string.isRequired,

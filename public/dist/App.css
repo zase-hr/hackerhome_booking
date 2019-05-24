@@ -579,6 +579,9 @@ body {
     line-height: 1.3333333333333333em !important;
     color: #484848 !important;
     padding-bottom: 15px;
+    min-width: 280px !important;
+    max-width: 740px !important;
+    width: 100%
 }
 
 .lower {

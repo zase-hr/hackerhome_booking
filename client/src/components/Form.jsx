@@ -22,11 +22,11 @@ export default class Form extends React.Component {
       totalCost: 0,
       calculatedTax: 0,
       selectedNights: 0,
-      check_in: '',
-      check_out: '',
+      checkIn: '',
+      checkOut: '',
       selectedDate: 0,
-      check_in_clicked: false,
-      check_out_clicked: false,
+      checkInClicked: false,
+      checkOutClicked: false,
     };
 
     this.increaseGuest = this.increaseGuest.bind(this);
@@ -44,14 +44,14 @@ export default class Form extends React.Component {
   }
 
   onDayClick(e, dateContext, cb1, cb2) {
-    const { check_in_clicked, check_out_clicked } = this.state;
-    if (check_in_clicked) {
+    const { checkInClicked, checkOutClicked } = this.state;
+    if (checkInClicked) {
       this.setState({
-        check_in: dateContext.format('MM/DD/YYYY'),
+        checkIn: dateContext.format('MM/DD/YYYY'),
       }, cb1());
-    } else if (check_out_clicked) {
+    } else if (checkOutClicked) {
       this.setState({
-        check_out: dateContext.format('MM/DD/YYYY'),
+        checkOut: dateContext.format('MM/DD/YYYY'),
       }, cb2(), this.guestExpandToggle(e));
     }
   }
@@ -121,10 +121,10 @@ export default class Form extends React.Component {
 
   calculateCostPerNight() {
     const {
-      price, service_fee, cleaning_fee, tax,
+      price, serviceFee, cleaningFee, tax,
     } = this.props;
     const { selectedNights } = this.state;
-    let cost = price + service_fee + cleaning_fee;
+    let cost = price + serviceFee + cleaningFee;
     let totalTax = cost * (tax / 100);
     totalTax = parseFloat(tax.toFixed(2));
     cost += totalTax;
@@ -153,21 +153,21 @@ export default class Form extends React.Component {
 
   handleCheckinClicked() {
     this.setState({
-      check_in_clicked: true,
-      check_out_clicked: false,
+      checkInClicked: true,
+      checkOutClicked: false,
     });
   }
 
   handleCheckoutClicked() {
     this.setState({
-      check_out_clicked: true,
-      check_in_clicked: false,
+      checkOutClicked: true,
+      checkInClicked: false,
     });
   }
 
   updateTotalNights() {
-    const { check_out, check_in } = this.state;
-    let nights = moment(check_out, 'MM/DD/YY') - moment(check_in, 'MM/DD/YY');
+    const { checkOut, checkIn } = this.state;
+    let nights = moment(checkOut, 'MM/DD/YY') - moment(checkIn, 'MM/DD/YY');
     nights = moment(nights).format('D');
     this.setState({
       selectedNights: nights,
@@ -176,8 +176,8 @@ export default class Form extends React.Component {
 
   calendarInitialize(e) {
     this.setState({
-      check_in: 0,
-      check_out: 0,
+      checkIn: 0,
+      checkOut: 0,
     }, this.handleCheckinClicked());
     e.preventDefault();
   }
@@ -190,10 +190,10 @@ export default class Form extends React.Component {
       adultMessage,
       childrenMessage,
       infantMessage,
-      check_in,
-      check_out,
-      check_in_clicked,
-      check_out_clicked,
+      checkIn,
+      checkOut,
+      checkInClicked,
+      checkOutClicked,
       guestSelected,
       guestExpand,
       selectedNights,
@@ -205,8 +205,10 @@ export default class Form extends React.Component {
       bookedDates,
       guest,
       price,
-      cleaning_fee,
-      service_fee,
+      cleaningFee,
+      serviceFee,
+      minNight,
+      maxNight,
     } = this.props;
 
     let message = adultMessage;
@@ -223,15 +225,17 @@ export default class Form extends React.Component {
         <form>
           <div>
             <Date
-              check_in={check_in}
-              check_out={check_out}
+              checkIn={checkIn}
+              checkOut={checkOut}
               onDayClick={this.onDayClick}
               bookedDates={bookedDates}
               handleCheckinClicked={this.handleCheckinClicked}
               handleCheckoutClicked={this.handleCheckoutClicked}
-              check_in_clicked={check_in_clicked}
-              check_out_clicked={check_out_clicked}
+              checkInClicked={checkInClicked}
+              checkOutClicked={checkOutClicked}
               calendarInitialize={this.calendarInitialize}
+              minNight={minNight}
+              maxNight={maxNight}
             />
             <Guest
               guest={guest}
@@ -253,8 +257,8 @@ export default class Form extends React.Component {
               ? (
                 <Cost
                   price={price}
-                  cleaning_fee={cleaning_fee}
-                  service_fee={service_fee}
+                  cleaningFee={cleaningFee}
+                  serviceFee={serviceFee}
                   tax={calculatedTax}
                   totalCost={totalCost}
                   selectedNights={selectedNights}
@@ -274,8 +278,10 @@ export default class Form extends React.Component {
 Form.propTypes = {
   guest: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
-  cleaning_fee: PropTypes.number.isRequired,
-  service_fee: PropTypes.number.isRequired,
+  cleaningFee: PropTypes.number.isRequired,
+  serviceFee: PropTypes.number.isRequired,
   tax: PropTypes.number.isRequired,
   bookedDates: PropTypes.array.isRequired,
+  minNight: PropTypes.number.isRequired,
+  maxNight: PropTypes.number.isRequired,
 };

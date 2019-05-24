@@ -101,16 +101,21 @@ export default class Calendar extends React.Component {
     onPrevMonth && onPrevMonth();
   }
 
+  calculateMinMaxNight() {
+    moment(checkIn, 'MM/DD/YYYY') 
+  }
+
   render() {
     const {
       bookedDates,
-      check_in,
-      check_out,
+      checkIn,
+      checkOut,
       handleCheckoutOnclick,
       closeCalendar,
       onDayClick,
       calendarInitialize,
-
+      minNight,
+      maxNight,
     } = this.props;
 
     const {
@@ -138,8 +143,10 @@ export default class Calendar extends React.Component {
             disabled={
               moment(dateContext).set('date', d) < moment()
               || formattedBookedDates.includes(moment(dateContext).set('date', d).format('MM/DD/YYYY'))
-              || moment(dateContext).set('date', d) < moment(check_in, 'MM/DD/YYYY')
-              || moment(dateContext).set('date', d) > moment(check_out, 'MM/DD/YYYY')
+              || moment(dateContext).set('date', d) < moment(checkIn, 'MM/DD/YYYY')
+              || moment(dateContext).set('date', d) > moment(checkOut, 'MM/DD/YYYY')
+              || moment(dateContext).set('date', d) < moment(checkIn, 'MM/DD/YYYY').add(minNight, 'd')
+              || moment(dateContext).set('date', d) > moment(checkIn, 'MM/DD/YYYY').add(maxNight, 'd')
             }
             onClick={(e) => {
               let dateContext1 = Object.assign({}, dateContext);
@@ -210,7 +217,11 @@ export default class Calendar extends React.Component {
                   </button>
                 </td>
                 <td colSpan="5" className="thisMonth">
-                  <MonthNav month={this.month} months={this.months} onMonthChange={this.onMonthChange} />
+                  <MonthNav
+                    month={this.month}
+                    months={this.months}
+                    onMonthChange={this.onMonthChange}
+                  />
                   {' '}
                   {this.year()}
                 </td>
@@ -255,10 +266,13 @@ export default class Calendar extends React.Component {
 
 
 Calendar.propTypes = {
-  check_in: PropTypes.string.isRequired,
-  check_out: PropTypes.string.isRequired,
+  checkIn: PropTypes.string.isRequired,
+  checkOut: PropTypes.string.isRequired,
   handleCheckoutOnclick: PropTypes.func.isRequired,
   closeCalendar: PropTypes.func.isRequired,
   onDayClick: PropTypes.func.isRequired,
   calendarInitialize: PropTypes.func.isRequired,
+  bookedDates: PropTypes.array.isRequired,
+  minNight: PropTypes.number.isRequired,
+  maxNight: PropTypes.number.isRequired,
 };

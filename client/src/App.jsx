@@ -11,14 +11,14 @@ export default class App extends React.Component {
       roomInfo: {
         roomname: '',
         price: 0,
-        cleaning_fee: 0,
-        service_fee: 0,
+        cleaningFee: 0,
+        serviceFee: 0,
         tax: 0,
-        max_guest: '',
-        min_night: 0,
-        max_night: 0,
+        maxGuest: '',
+        minNight: 0,
+        maxNight: 0,
         ratings: '',
-        num_reviews: 0,
+        numReviews: 0,
       },
       bookedDates: [],
       rendering: true,
@@ -45,6 +45,7 @@ export default class App extends React.Component {
       },
       success: (result) => {
         this.updateRoomState(result);
+        console.log(result);
       },
     });
   }
@@ -110,14 +111,14 @@ export default class App extends React.Component {
       roomInfo: {
         roomname: result.roomname,
         price: result.price,
-        cleaning_fee: result.cleaning_fee,
-        service_fee: result.service_fee,
+        cleaningFee: result.cleaning_fee,
+        serviceFee: result.service_fee,
         tax: result.tax,
-        max_guest: result.max_guest,
-        min_night: result.min_night,
-        max_night: result.max_night,
+        maxGuest: result.max_guest,
+        minNight: result.min_night,
+        maxNight: result.max_night,
         ratings: result.ratings,
-        num_reviews: result.num_reviews,
+        numReviews: result.num_reviews,
       },
     });
   }
@@ -138,20 +139,20 @@ export default class App extends React.Component {
         <div>
           <Info
             price={roomInfo.price}
-            reviews={roomInfo.num_reviews}
+            reviews={roomInfo.numReviews}
             ratings={roomInfo.ratings}
           />
         </div>
         <div className="dividingSection" />
         <div>
           <Form
-            guest={roomInfo.max_guest}
+            guest={roomInfo.maxGuest}
             price={roomInfo.price}
-            cleaning_fee={roomInfo.cleaning_fee}
-            service_fee={roomInfo.service_fee}
+            cleaningFee={roomInfo.cleaningFee}
+            serviceFee={roomInfo.serviceFee}
             tax={roomInfo.tax}
-            min_night={roomInfo.min_night}
-            max_night={roomInfo.max_night}
+            minNight={roomInfo.minNight}
+            maxNight={roomInfo.maxNight}
             bookedDates={bookedDates}
           />
         </div>

@@ -42,13 +42,15 @@ class Date extends React.Component {
 
   render() {
     const {
-      check_in,
-      check_out,
+      checkIn,
+      checkOut,
       onDayClick,
       bookedDates,
-      check_in_clicked,
-      check_out_clicked,
+      checkInClicked,
+      checkOutClicked,
       calendarInitialize,
+      minNight,
+      maxNight,
     } = this.props;
 
     const {
@@ -59,9 +61,9 @@ class Date extends React.Component {
       <div className="dates">
         <div className="dateSection">Dates</div>
         <div className="inputs">
-          <input className="check-in" type="text" value={check_in === '' ? 'Check-in' : check_in} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
+          <input className="check-in" type="text" value={checkIn === '' ? 'Check-in' : checkIn} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
           <div className="arrow">→</div>
-          <input className="check-out" type="text" value={check_out === '' ? 'Checkout' : check_out} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
+          <input className="check-out" type="text" value={checkOut === '' ? 'Checkout' : checkOut} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
         </div>
         <div className="datePicker">
           {calendarExpanded
@@ -71,12 +73,14 @@ class Date extends React.Component {
                 handleCheckoutOnclick={this.handleCheckoutOnclick}
                 onDayClick={onDayClick}
                 bookedDates={bookedDates}
-                check_in={check_in}
-                check_out={check_out}
-                check_in_clicked={check_in_clicked}
-                check_out_clicked={check_out_clicked}
+                checkIn={checkIn}
+                checkOut={checkOut}
+                checkInClicked={checkInClicked}
+                checkOutClicked={checkOutClicked}
                 closeCalendar={this.closeCalendar}
                 calendarInitialize={calendarInitialize}
+                minNight={minNight}
+                maxNight={maxNight}
               />
             ) : null}
         </div>
@@ -86,13 +90,17 @@ class Date extends React.Component {
 }
 
 Date.propTypes = {
-  check_in: PropTypes.string.isRequired,
-  check_out: PropTypes.string.isRequired,
+  checkIn: PropTypes.string.isRequired,
+  checkOut: PropTypes.string.isRequired,
   handleCheckinClicked: PropTypes.func.isRequired,
   handleCheckoutClicked: PropTypes.func.isRequired,
   onDayClick: PropTypes.func.isRequired,
   calendarInitialize: PropTypes.func.isRequired,
-  // bookedDates: PropTypes.array.isRequired,
+  checkInClicked: PropTypes.bool.isRequired,
+  checkOutClicked: PropTypes.bool.isRequired,
+  bookedDates: PropTypes.array.isRequired,
+  minNight: PropTypes.number.isRequired,
+  maxNight: PropTypes.number.isRequired,
 };
 
 export default Date;
