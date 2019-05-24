@@ -1,7 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
+import MonthNav from './MonthNav.jsx';
+import ClickOutsideOfCalendar from './ClickOutsideOfCalendar.jsx';
 
-class Calendar extends React.Component {
+export default class Calendar extends React.Component {
   constructor(props) {
     super(props);
     this.style = {};
@@ -21,60 +24,53 @@ class Calendar extends React.Component {
   }
 
   onMonthChange(data) {
+    const { onChangeMonth } = this.props;
     this.setMonth(data);
-    this.props.onChangeMonth && this.props.onChangeMonth();
-  }
-
-  onDayClick(e, day) {
-    this.props.onDayClick && this.props.onDayClick(e, day);
+    onChangeMonth && onChangeMonth();
   }
 
   setMonth(month) {
+    const { dateContext } = this.state;
     const monthNo = this.months.indexOf(month);
-    let dateContext = Object.assign({}, this.state.dateContext);
-    dateContext = moment(dateContext).set('month', monthNo);
+    let dateContext1 = Object.assign({}, dateContext);
+    dateContext1 = moment(dateContext1).set('month', monthNo);
     this.setState({
-      dateContext,
+      dateContext: dateContext1,
     });
   }
 
   setYear(year) {
-    let dateContext = Object.assign({}, this.state.dateContext);
-    dateContext = moment(dateContext).set('year', year);
+    const { dateContext } = this.state;
+    let dateContext1 = Object.assign({}, dateContext);
+    dateContext1 = moment(dateContext1).set('year', year);
     this.setState({
-      dateContext,
+      dateContext: dateContext1,
     });
   }
 
-  MonthNav(props) {
-    return (
-      <span className="label-month">
-        {props.month()}
-        {props.showMonthPopup
-          && <props.SelectList data={props.months} onSelectChange={props.onSelectChange} />
-        }
-      </span>
-    );
-  }
-
   currentDate() {
-    return this.state.dateContext.get('date');
+    const { dateContext } = this.state;
+    return dateContext.get('date');
   }
 
   year() {
-    return this.state.dateContext.format('Y');
+    const { dateContext } = this.state;
+    return dateContext.format('Y');
   }
 
   month() {
-    return this.state.dateContext.format('MMMM');
+    const { dateContext } = this.state;
+    return dateContext.format('MMMM');
   }
 
   daysInMonth() {
-    return this.state.dateContext.daysInMonth();
+    const { dateContext } = this.state;
+    return dateContext.daysInMonth();
   }
 
   currentDay() {
-    return this.state.dateContext.format('D');
+    const { dateContext } = this.state;
+    return dateContext.format('D');
   }
 
   firstDayOfMonth() {
@@ -83,48 +79,44 @@ class Calendar extends React.Component {
   }
 
   nextMonth() {
-    let dateContext = Object.assign({}, this.state.dateContext);
-    dateContext = moment(dateContext).add(1, 'month');
+    const { dateContext } = this.state;
+    let dateContext1 = Object.assign({}, dateContext);
+    dateContext1 = moment(dateContext1).add(1, 'month');
     this.setState({
-      dateContext,
+      dateContext: dateContext1,
     });
-    this.props.onNextMonth && this.props.onNextMonth();
+    const { onNextMonth } = this.props;
+    onNextMonth && onNextMonth();
   }
 
   prevMonth() {
-    let dateContext = Object.assign({}, this.state.dateContext);
-    dateContext = moment(dateContext).subtract(1, 'month');
+    const { dateContext } = this.state;
+    let dateContext1 = Object.assign({}, dateContext);
+    dateContext1 = moment(dateContext1).subtract(1, 'month');
     this.setState({
-      dateContext,
+      dateContext: dateContext1,
     });
-    this.props.onPrevMonth && this.props.onPrevMonth();
-  }
 
-  YearNav(props) {
-    return (
-      props.showYearPopup
-        ? (
-          <input
-            defaultValue={props.year()}
-            className="editor-year"
-            onKeyUp={(e) => { props.onKeyUpYear(e); }}
-            onChange={(e) => { props.onYearChange(e); }}
-            type="number"
-            placeholder="year"
-          />
-        )
-        : (
-          <span
-            className="label-year"
-            // onClick={() => { props.showYearEditor(); }}
-          >
-            {props.year()}
-          </span>
-        )
-    );
+    const { onPrevMonth } = this.props;
+    onPrevMonth && onPrevMonth();
   }
 
   render() {
+    const {
+      bookedDates,
+      check_in,
+      check_out,
+      handleCheckoutOnclick,
+      closeCalendar,
+      onDayClick,
+      calendarInitialize,
+
+    } = this.props;
+
+    const {
+      dateContext,
+    } = this.state;
+
     const weekdays = this.weekdaysShort.map(day => (
       <td key={day} className="week-day">{day.slice(0, day.length - 1)}</td>
     ));
@@ -134,7 +126,7 @@ class Calendar extends React.Component {
       blanks.push(<td key={key} className="emptySlot" />);
     }
 
-    const bookedDates = this.props.bookedDates.map(date => date.format('MM/DD/YYYY'));
+    const formattedBookedDates = bookedDates.map(date => date.format('MM/DD/YYYY'));
 
     const daysInMonth = [];
     for (let d = 1; d <= this.daysInMonth(); d += 1) {
@@ -142,18 +134,27 @@ class Calendar extends React.Component {
         <td key={d} className="days">
           <span
             className="day"
+            role="button"
             disabled={
-              moment(this.state.dateContext).set('date', d) < moment()
-              || bookedDates.includes(moment(this.state.dateContext).set('date', d).format('MM/DD/YYYY'))
-              || moment(this.state.dateContext).set('date', d) < moment(this.props.check_in, 'MM/DD/YYYY')
-              || moment(this.state.dateContext).set('date', d) > moment(this.props.check_out, 'MM/DD/YYYY')
+              moment(dateContext).set('date', d) < moment()
+              || formattedBookedDates.includes(moment(dateContext).set('date', d).format('MM/DD/YYYY'))
+              || moment(dateContext).set('date', d) < moment(check_in, 'MM/DD/YYYY')
+              || moment(dateContext).set('date', d) > moment(check_out, 'MM/DD/YYYY')
             }
             onClick={(e) => {
-              let dateContext = Object.assign({}, this.state.dateContext);
-              dateContext = moment(dateContext).set('date', d);
-              this.props.onDayClick(e, dateContext, this.props.handleCheckoutOnclick, this.props.closeCalendar);
+              let dateContext1 = Object.assign({}, dateContext);
+              dateContext1 = moment(dateContext1).set('date', d);
+              onDayClick(e, dateContext1, handleCheckoutOnclick, closeCalendar);
               this.setState({
-                dateContext,
+                dateContext: dateContext1,
+              });
+            }}
+            onKeyPress={(e) => {
+              let dateContext1 = Object.assign({}, dateContext);
+              dateContext1 = moment(dateContext1).set('date', d);
+              onDayClick(e, dateContext1, handleCheckoutOnclick, closeCalendar);
+              this.setState({
+                dateContext: dateContext1,
               });
             }}
           >
@@ -190,57 +191,74 @@ class Calendar extends React.Component {
     });
 
     return (
-      <div className="calendar-container">
-        <table className="calendar">
-          <thead>
-            <tr className="calendar-header" />
-            <tr>
-              <td colSpan="1" className="nav-month">
-                <button
-                  type="submit"
-                  className="prev"
-                  onClick={() => { this.prevMonth(); }}
-                >
-                ←
-                </button>
-              </td>
-              <td colSpan="5" className="thisMonth">
-                <this.MonthNav month={this.month} months={this.months} onMonthChange={this.onMonthChange} />
-                {' '}
-                <this.YearNav year={this.year} />
-              </td>
-              <td colSpan="2" className="nav-month">
-                <button
-                  type="submit"
-                  className="prev"
-                  onClick={() => { this.nextMonth(); }}
-                >
-                →
-                </button>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              {weekdays}
-            </tr>
-            {trElems}
-          </tbody>
-        </table>
-        <button
-          className="clear"
-          type="submit"
-          onClick={() => {
-            this.props.calendarInitialize();
-            this.setState({
-              dateContext: moment(),
-            });
-          }}
-        >
-Clear dates
-        </button>
-      </div>
+      <ClickOutsideOfCalendar closeCalendar={closeCalendar}>
+        <div className="calendar-container">
+          <table className="calendar">
+            <thead>
+              <tr className="calendar-header" />
+              <tr>
+                <td colSpan="1" className="nav-month">
+                  <button
+                    type="submit"
+                    className="prev"
+                    onClick={(e) => {
+                      this.prevMonth();
+                      e.preventDefault();
+                    }}
+                  >
+                  ←
+                  </button>
+                </td>
+                <td colSpan="5" className="thisMonth">
+                  <MonthNav month={this.month} months={this.months} onMonthChange={this.onMonthChange} />
+                  {' '}
+                  {this.year()}
+                </td>
+                <td colSpan="2" className="nav-month">
+                  <button
+                    type="submit"
+                    className="prev"
+                    onClick={(e) => {
+                      this.nextMonth();
+                      e.preventDefault();
+                    }}
+                  >
+                  →
+                  </button>
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {weekdays}
+              </tr>
+              {trElems}
+            </tbody>
+          </table>
+          <button
+            className="clear"
+            type="submit"
+            onClick={(e) => {
+              calendarInitialize(e);
+              this.setState({
+                dateContext: moment(),
+              });
+            }}
+          >
+  Clear dates
+          </button>
+        </div>
+      </ClickOutsideOfCalendar>
     );
   }
 }
-export default Calendar;
+
+
+Calendar.propTypes = {
+  check_in: PropTypes.string.isRequired,
+  check_out: PropTypes.string.isRequired,
+  handleCheckoutOnclick: PropTypes.func.isRequired,
+  closeCalendar: PropTypes.func.isRequired,
+  onDayClick: PropTypes.func.isRequired,
+  calendarInitialize: PropTypes.func.isRequired,
+};

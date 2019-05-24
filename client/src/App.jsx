@@ -4,7 +4,7 @@ import moment from 'moment';
 import Info from './components/Info.jsx';
 import Form from './components/form.jsx';
 
-class App extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,14 +14,13 @@ class App extends React.Component {
         cleaning_fee: 0,
         service_fee: 0,
         tax: 0,
-        max_guest: {},
+        max_guest: '',
         min_night: 0,
         max_night: 0,
-        ratings: 0,
+        ratings: '',
         num_reviews: 0,
       },
       bookedDates: [],
-      bookingInfo: {},
       rendering: true,
     };
 
@@ -125,7 +124,10 @@ class App extends React.Component {
 
 
   render() {
-    const divStyle = {height: '16px', width: '16px', display: 'block', fill: 'rgb(118, 118, 118)', }
+    const { roomInfo, bookedDates, rendering } = this.state;
+    const divStyle = {
+      height: '16px', width: '16px', display: 'block', fill: 'rgb(118, 118, 118)',
+    };
     const app = (
       <div className="app">
         <button type="submit" className="xbutton" onClick={this.handleRendering}>
@@ -135,22 +137,22 @@ class App extends React.Component {
         </button>
         <div>
           <Info
-            price={this.state.roomInfo.price}
-            reviews={this.state.roomInfo.num_reviews}
-            ratings={this.state.roomInfo.ratings}
+            price={roomInfo.price}
+            reviews={roomInfo.num_reviews}
+            ratings={roomInfo.ratings}
           />
         </div>
         <div className="dividingSection" />
         <div>
           <Form
-            guest={this.state.roomInfo.max_guest}
-            price={this.state.roomInfo.price}
-            cleaning_fee={this.state.roomInfo.cleaning_fee}
-            service_fee={this.state.roomInfo.service_fee}
-            tax={this.state.roomInfo.tax}
-            min_night={this.state.roomInfo.min_night}
-            max_night={this.state.roomInfo.max_night}
-            bookedDates={this.state.bookedDates}
+            guest={roomInfo.max_guest}
+            price={roomInfo.price}
+            cleaning_fee={roomInfo.cleaning_fee}
+            service_fee={roomInfo.service_fee}
+            tax={roomInfo.tax}
+            min_night={roomInfo.min_night}
+            max_night={roomInfo.max_night}
+            bookedDates={bookedDates}
           />
         </div>
 
@@ -165,10 +167,8 @@ class App extends React.Component {
 
     return (
       <div>
-        {this.state.rendering ? app : null}
+        {rendering ? app : null}
       </div>
     );
   }
 }
-
-export default App;
