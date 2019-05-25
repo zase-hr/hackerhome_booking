@@ -41,10 +41,10 @@ app.get('/booking', (req, res) => {
 
 // making booking
 
-// app.post('/booking', (req, res) => {
-//   console.log(req.body);
-//   res.send();
-// });
+app.post('/booking', (req, res) => {
+  console.log(req.body);
+  res.send(req.body);
+});
 
 app.listen(port, () => {
   console.log(`Listening port: ${port}`);

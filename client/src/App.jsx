@@ -8,6 +8,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      roomId: 1,
       roomInfo: {
         roomname: '',
         price: 0,
@@ -32,8 +33,9 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    this.getRoomData(1);
-    this.getBookingData(1);
+    const { roomId } = this.state;
+    this.getRoomData(roomId);
+    this.getBookingData(roomId);
   }
 
   getRoomData(roomId) {
@@ -83,29 +85,6 @@ export default class App extends React.Component {
     });
   }
 
-  makeBooking(roomId) {
-    $.ajax({
-      url: `/booking?roomId=${roomId}`,
-      type: 'POST',
-      data: {
-        value: {
-          check_in: 0,
-          check_out: 0,
-          guests: {},
-          email: 0,
-          roomId: 1,
-        },
-      },
-      dataType: 'application/json',
-      error: (err) => {
-        throw err;
-      },
-      success: () => {
-        console.log('success to make booking');
-      },
-    });
-  }
-
   updateRoomState(result) {
     this.setState({
       roomInfo: {
@@ -125,7 +104,9 @@ export default class App extends React.Component {
 
 
   render() {
-    const { roomInfo, bookedDates, rendering } = this.state;
+    const {
+      roomId, roomInfo, bookedDates, rendering,
+    } = this.state;
     const divStyle = {
       height: '16px', width: '16px', display: 'block', fill: 'rgb(118, 118, 118)',
     };
@@ -154,6 +135,10 @@ export default class App extends React.Component {
             minNight={roomInfo.minNight}
             maxNight={roomInfo.maxNight}
             bookedDates={bookedDates}
+            roomId={roomId}
+            roomname={roomInfo.roomname}
+            reviews={roomInfo.numReviews}
+            ratings={roomInfo.ratings}
           />
         </div>
 

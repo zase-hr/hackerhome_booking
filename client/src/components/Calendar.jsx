@@ -102,7 +102,7 @@ export default class Calendar extends React.Component {
   }
 
   calculateMinMaxNight() {
-    moment(checkIn, 'MM/DD/YYYY') 
+    moment(checkIn, 'MM/DD/YYYY');
   }
 
   render() {
@@ -116,6 +116,7 @@ export default class Calendar extends React.Component {
       calendarInitialize,
       minNight,
       maxNight,
+      handleBothUnclicked,
     } = this.props;
 
     const {
@@ -132,17 +133,43 @@ export default class Calendar extends React.Component {
     }
 
     const formattedBookedDates = bookedDates.map(date => date.format('MM/DD/YYYY'));
-
     const daysInMonth = [];
     for (let d = 1; d <= this.daysInMonth(); d += 1) {
       daysInMonth.push(
-        <td key={d} className="days">
+        <td
+          key={d}
+          className="days"
+          style={
+            (moment(dateContext).set('date', d) === moment(checkIn, 'MM/DD/YYYY')
+              || moment(dateContext).set('date', d) === moment(checkOut, 'MM/DD/YYYY')
+              ? {
+                border: '1px double rgb(0, 166, 153)',
+                color: 'rgb(255, 255, 255) !important',
+                background: 'rgb(0, 166, 153) !important',
+              }
+              : null)
+              || (
+                checkIn !== ''
+              && (moment(dateContext).set('date', d) > moment(checkIn, 'MM/DD/YYYY')
+                && moment(dateContext).set('date', d) < moment(checkOut, 'MM/DD/YYYY'))
+                  ? {
+                    border: '1px double rgb(128, 232, 224)',
+                    color: 'rgb(1, 122, 135)',
+                    background: 'rgb (178, 241, 236)',
+                  }
+                  : null
+              )
+            }
+        >
           <span
             className="day"
             role="button"
             disabled={
-              moment(dateContext).set('date', d) < moment()
+              (checkIn !== '' && checkOut !== '')
+                ? moment(dateContext).set('date', d) < moment()
               || formattedBookedDates.includes(moment(dateContext).set('date', d).format('MM/DD/YYYY'))
+                : moment(dateContext).set('date', d) < moment()
+                || formattedBookedDates.includes(moment(dateContext).set('date', d).format('MM/DD/YYYY'))
               || moment(dateContext).set('date', d) < moment(checkIn, 'MM/DD/YYYY')
               || moment(dateContext).set('date', d) > moment(checkOut, 'MM/DD/YYYY')
               || moment(dateContext).set('date', d) < moment(checkIn, 'MM/DD/YYYY').add(minNight, 'd')
@@ -198,7 +225,10 @@ export default class Calendar extends React.Component {
     });
 
     return (
-      <ClickOutsideOfCalendar closeCalendar={closeCalendar}>
+      <ClickOutsideOfCalendar
+        closeCalendar={closeCalendar}
+        handleBothUnclicked={handleBothUnclicked}
+      >
         <div className="calendar-container">
           <table className="calendar">
             <thead>
@@ -275,4 +305,5 @@ Calendar.propTypes = {
   bookedDates: PropTypes.array.isRequired,
   minNight: PropTypes.number.isRequired,
   maxNight: PropTypes.number.isRequired,
+  handleBothUnclicked: PropTypes.func.isRequired,
 };

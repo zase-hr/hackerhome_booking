@@ -51,19 +51,44 @@ class Date extends React.Component {
       calendarInitialize,
       minNight,
       maxNight,
+      handleBothUnclicked,
     } = this.props;
 
     const {
       calendarExpanded,
     } = this.state;
 
+    let checkInClassName = 'check-in';
+    if (checkInClicked) {
+      checkInClassName += '-clicked';
+    }
+    let checkOutClassName = 'check-in';
+    if (checkOutClicked) {
+      checkOutClassName += '-clicked';
+    }
     return (
       <div className="dates">
         <div className="dateSection">Dates</div>
         <div className="inputs">
-          <input className="check-in" type="text" value={checkIn === '' ? 'Check-in' : checkIn} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
-          <div className="arrow">→</div>
-          <input className="check-out" type="text" value={checkOut === '' ? 'Checkout' : checkOut} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
+          <div>
+            <input className={checkInClassName} type="text" value={checkIn === '' ? 'Check-in' : checkIn} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
+          </div>
+          <svg
+            className="arrow"
+            viewBox="0 0 24 24"
+            role="presentation"
+            aria-hidden="true"
+            focusable="false"
+            style={{
+              
+            }}
+          >
+            <path d="m0 12.5a.5.5 0 0 0 .5.5h21.79l-6.15 6.15a.5.5 0 1 0 .71.71l7-7v-.01a.5.5 0 0 0 .14-.35.5.5 0 0 0 -.14-.35v-.01l-7-7a .5.5 0 0 0 -.71.71l6.15 6.15h-21.79a.5.5 0 0 0 -.5.5z" fillRule="evenodd" />
+
+          </svg>
+          <div>
+            <input className={checkOutClassName} type="text" value={(checkOut === '' || checkIn > checkOut) ? 'Checkout' : checkOut} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
+          </div>
         </div>
         <div className="datePicker">
           {calendarExpanded
@@ -81,6 +106,7 @@ class Date extends React.Component {
                 calendarInitialize={calendarInitialize}
                 minNight={minNight}
                 maxNight={maxNight}
+                handleBothUnclicked={handleBothUnclicked}
               />
             ) : null}
         </div>
@@ -101,6 +127,7 @@ Date.propTypes = {
   bookedDates: PropTypes.array.isRequired,
   minNight: PropTypes.number.isRequired,
   maxNight: PropTypes.number.isRequired,
+  handleBothUnclicked: PropTypes.func.isRequired,
 };
 
 export default Date;

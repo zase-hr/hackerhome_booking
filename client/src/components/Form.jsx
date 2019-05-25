@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import $ from 'jquery';
 import Date from './Date.jsx';
 import Cost from './Cost.jsx';
 import Guest from './Guest.jsx';
+import BookingSummary from './BookingSummary.jsx';
 
 
 export default class Form extends React.Component {
@@ -27,6 +29,7 @@ export default class Form extends React.Component {
       selectedDate: 0,
       checkInClicked: false,
       checkOutClicked: false,
+      bookingSummaryExpand: false,
     };
 
     this.increaseGuest = this.increaseGuest.bind(this);
@@ -41,18 +44,29 @@ export default class Form extends React.Component {
     this.calendarInitialize = this.calendarInitialize.bind(this);
     this.updateTotalNights = this.updateTotalNights.bind(this);
     this.clickOutsideOfGuestPicker = this.clickOutsideOfGuestPicker.bind(this);
+    this.handleBothUnclicked = this.handleBothUnclicked.bind(this);
+    this.makeBooking = this.makeBooking.bind(this);
+    this.bookButtonClick = this.bookButtonClick.bind(this);
+    this.closeBookingPopup = this.closeBookingPopup.bind(this);
   }
 
   onDayClick(e, dateContext, cb1, cb2) {
-    const { checkInClicked, checkOutClicked } = this.state;
+    const { checkInClicked, checkOutClicked, checkOut } = this.state;
     if (checkInClicked) {
-      this.setState({
-        checkIn: dateContext.format('MM/DD/YYYY'),
-      }, cb1());
+      if (dateContext.format('MM/DD/YYYY') > checkOut) {
+        this.setState({
+          checkIn: dateContext.format('MM/DD/YYYY'),
+          checkOut: '',
+        }, cb1());
+      } else {
+        this.setState({
+          checkIn: dateContext.format('MM/DD/YYYY'),
+        }, cb1());
+      }
     } else if (checkOutClicked) {
       this.setState({
         checkOut: dateContext.format('MM/DD/YYYY'),
-      }, cb2(), this.guestExpandToggle(e));
+      }, cb2(), this.guestExpandToggle(e), this.handleBothUnclicked());
     }
   }
 
@@ -165,6 +179,13 @@ export default class Form extends React.Component {
     });
   }
 
+  handleBothUnclicked() {
+    this.setState({
+      checkInClicked: false,
+      checkOutClicked: false,
+    });
+  }
+
   updateTotalNights() {
     const { checkOut, checkIn } = this.state;
     let nights = moment(checkOut, 'MM/DD/YY') - moment(checkIn, 'MM/DD/YY');
@@ -176,10 +197,64 @@ export default class Form extends React.Component {
 
   calendarInitialize(e) {
     this.setState({
-      checkIn: 0,
-      checkOut: 0,
+      checkIn: '',
+      checkOut: '',
     }, this.handleCheckinClicked());
     e.preventDefault();
+  }
+
+  makeBooking(roomId, email) {
+    const {
+      checkIn, checkOut, adults, children, infants,
+    } = this.state;
+    let guests = {
+      adults,
+      children,
+      infants,
+    };
+    guests = JSON.stringify(guests);
+    const checkInDate = JSON.stringify(moment(checkIn, 'MM/DD/YYYY').format());
+    const checkOutDate = JSON.stringify(moment(checkOut, 'MM/DD/YYYY').format());
+
+    $.ajax({
+      url: `/booking?roomId=${roomId}`,
+      type: 'POST',
+      data: {
+        value: {
+          check_in: checkInDate,
+          check_out: checkOutDate,
+          guests,
+          email,
+          roomId,
+        },
+      },
+      dataType: 'application/json',
+      error: (err) => {
+        throw err;
+      },
+      success: () => {
+        console.log('success to make booking');
+      },
+    });
+  }
+
+  bookButtonClick() {
+    const { checkOut, checkIn, guestSelected } = this.state;
+    if (checkIn === '' || checkOut === '') {
+      this.handleCheckinClicked();
+    } else if (!guestSelected) {
+      this.guestExpandToggle();
+    } else {
+      this.setState({
+        bookingSummaryExpand: true,
+      });
+    }
+  }
+
+  closeBookingPopup() {
+    this.setState({
+      bookingSummaryExpand: false,
+    });
   }
 
   render() {
@@ -199,6 +274,7 @@ export default class Form extends React.Component {
       selectedNights,
       calculatedTax,
       totalCost,
+      bookingSummaryExpand,
     } = this.state;
 
     const {
@@ -209,6 +285,10 @@ export default class Form extends React.Component {
       serviceFee,
       minNight,
       maxNight,
+      roomId,
+      roomname,
+      reviews,
+      ratings,
     } = this.props;
 
     let message = adultMessage;
@@ -236,6 +316,7 @@ export default class Form extends React.Component {
               calendarInitialize={this.calendarInitialize}
               minNight={minNight}
               maxNight={maxNight}
+              handleBothUnclicked={this.handleBothUnclicked}
             />
             <Guest
               guest={guest}
@@ -267,7 +348,26 @@ export default class Form extends React.Component {
           </div>
         </form>
         <div className="bookbutton">
-          <button className="book" type="button"><div>Book</div></button>
+          <button className="book" type="button" onClick={this.bookButtonClick}><div>Book</div></button>
+          {bookingSummaryExpand ? (
+            <BookingSummary
+              roomId={roomId}
+              roomname={roomname}
+              makeBooking={this.makeBooking}
+              checkIn={checkIn}
+              checkOut={checkOut}
+              message={message}
+              totalCost={totalCost}
+              cleaningFee={cleaningFee}
+              serviceFee={serviceFee}
+              tax={calculatedTax}
+              selectedNights={selectedNights}
+              price={price}
+              closeBookingPopup={this.closeBookingPopup}
+              reviews={reviews}
+              ratings={ratings}
+            />
+          ) : null}
         </div>
       </section>
 
@@ -284,4 +384,6 @@ Form.propTypes = {
   bookedDates: PropTypes.array.isRequired,
   minNight: PropTypes.number.isRequired,
   maxNight: PropTypes.number.isRequired,
+  roomId: PropTypes.number.isRequired,
+  roomname: PropTypes.string.isRequired,
 };

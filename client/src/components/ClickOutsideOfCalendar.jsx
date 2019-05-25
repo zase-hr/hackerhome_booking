@@ -17,27 +17,26 @@ export default class ClickOutsideOfCalendar extends Component {
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
-  /**
-   * Set the wrapper ref
-   */
   setWrapperRef(node) {
     this.wrapperRef = node;
   }
 
-  /**
-   * Alert if clicked on outside of element
-   */
   handleClickOutside(event) {
+    const { closeCalendar, handleBothUnclicked } = this.props;
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.props.closeCalendar();
+      closeCalendar();
+      handleBothUnclicked();
     }
   }
 
   render() {
-    return <div ref={this.setWrapperRef}>{this.props.children}</div>;
+    const { children } = this.props;
+    return <div ref={this.setWrapperRef}>{children}</div>;
   }
 }
 
 ClickOutsideOfCalendar.propTypes = {
   children: PropTypes.element.isRequired,
+  closeCalendar: PropTypes.func.isRequired,
+  handleBothUnclicked: PropTypes.func.isRequired,
 };

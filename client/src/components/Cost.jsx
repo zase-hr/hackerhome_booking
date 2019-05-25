@@ -10,49 +10,58 @@ const Cost = (props) => {
     tax,
     totalCost,
   } = props;
+  const roomPrice = parseFloat(price);
+
   return (
     <div className="rates">
-      <div className="roomRate">
-        <div className="costTitle">
-$
-          {price}
-          {' '}
-x
-          {' '}
-          {selectedNights}
-          {selectedNights === 1 ? ' night' : ' nights'}
-        </div>
-        <div className="cost">{`$ ${price * selectedNights}`}</div>
-      </div>
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr>
+            <td>
+              {`$ ${roomPrice} x ${selectedNights}`}
+              {(selectedNights === 1) ? ' night' : ' nights'}
+            </td>
+            <td className="prices">{`$ ${roomPrice * selectedNights}`}</td>
+          </tr>
+        </tbody>
+      </table>
       <div className="dividingSection1" />
-      <div className="serviceRate">
-        <div className="costTitle">Service fee</div>
-        <div className="cost">
-$
-          {serviceFee * selectedNights}
-        </div>
-      </div>
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr>
+            <td>Cleaning fee</td>
+            <td className="prices">{`$ ${serviceFee * selectedNights}`}</td>
+          </tr>
+        </tbody>
+      </table>
       <div className="dividingSection1" />
-      <div className="cleaningRate">
-        <div className="costTitle">Cleaning fee</div>
-        <div className="cost">
-$
-          {cleaningFee * selectedNights}
-        </div>
-      </div>
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr>
+            <td>Service fee</td>
+            <td className="prices">{`$ ${cleaningFee * selectedNights}`}</td>
+          </tr>
+        </tbody>
+      </table>
       <div className="dividingSection1" />
-      <div className="taxRate">
-        <div className="costTitle">Ocupancy taxes</div>
-        <div className="cost">
-$
-          {(tax * selectedNights).toFixed(1)}
-        </div>
-      </div>
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr>
+            <td>Taxes</td>
+            <td className="prices">{`$ ${(tax * selectedNights).toFixed(1)}`}</td>
+          </tr>
+        </tbody>
+      </table>
       <div className="dividingSection1" />
-      <div className="totalRate">
-        <div className="costTitle"> Total</div>
-        <div className="cost">{`$${(totalCost).toFixed(1)}`}</div>
-      </div>
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr />
+          <tr>
+            <td style={{ fontWeight: '600', fontSize: '15px' }}>Total</td>
+            <td className="prices" style={{ fontWeight: '600' }}>{`$ ${totalCost}`}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 };
