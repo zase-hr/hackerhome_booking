@@ -213,27 +213,24 @@ export default class Form extends React.Component {
       infants,
     };
     guests = JSON.stringify(guests);
-    const checkInDate = JSON.stringify(moment(checkIn, 'MM/DD/YYYY').format());
-    const checkOutDate = JSON.stringify(moment(checkOut, 'MM/DD/YYYY').format());
-
+    const checkInDate = moment(checkIn, 'MM/DD/YYYY').format();
+    const checkOutDate = moment(checkOut, 'MM/DD/YYYY').format();
+    let value = {
+      check_in: checkInDate,
+      check_out: checkOutDate,
+      guests,
+      email,
+      roomId,
+      createdAt: moment().format(),
+    };
+    value = JSON.stringify(value);
     $.ajax({
       url: `/booking?roomId=${roomId}`,
       type: 'POST',
-      data: {
-        value: {
-          check_in: checkInDate,
-          check_out: checkOutDate,
-          guests,
-          email,
-          roomId,
-        },
-      },
-      dataType: 'application/json',
-      error: (err) => {
-        throw err;
-      },
-      success: () => {
-        console.log('success to make booking');
+      contentType: 'application/json',
+      data: value,
+      success: (data) => {
+        console.log(data);
       },
     });
   }

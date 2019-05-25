@@ -145,9 +145,8 @@ function generateRandomBookings(num) {
 }
 
 
-generateRandomRooms(1);
-generateRandomBookings(5);
-
+generateRandomRooms(5);
+generateRandomBookings(30);
 
 const createBookingData = () => {
   for (let i = 0; i < bookings.length; i += 1) {
@@ -171,6 +170,7 @@ const createRoomData = () => {
     rooms[i].max_guest = JSON.stringify(rooms[i].max_guest);
   }
 
+
   rooms.forEach(data => (
     db.Room.create(data)
       .then(() => {
@@ -182,5 +182,27 @@ const createRoomData = () => {
   ));
 };
 
-createRoomData();
-createBookingData();
+// createRoomData();
+// setTimeout(createBookingData, 20000);
+
+
+
+function createData() {
+  for (let i = 0; i < rooms.length; i += 1) {
+    rooms[i].max_guest = JSON.stringify(rooms[i].max_guest);
+  }
+
+  for (let i = 0; i < bookings.length; i += 1) {
+    bookings[i].guests = JSON.stringify(bookings[i].guests);
+    bookings[i].roomId += 1;
+  }
+
+  db.Room.bulkCreate(rooms, { returning: true }).then(() => {
+    db.Booking.bulkCreate(bookings, { returning: true });
+  })
+    .then(() => {
+      console.log('Complete');
+    });
+}
+
+createData();

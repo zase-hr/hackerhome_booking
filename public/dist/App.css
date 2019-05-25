@@ -127,6 +127,18 @@ body {
   border-bottom-color: #EBEBEB !important;
   margin-top: 16px;
   margin-bottom: 16px;
+  min-width: 280px !important;
+  max-width: 740px !important;
+  width: 100%;
+}
+
+.dividingSection2 {
+  border-bottom-width: 1px !important;
+  border-bottom-style: solid !important;
+  border-bottom-color: #EBEBEB !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top: -20px;
 }
 .dates {
   padding-bottom: 10px;
@@ -518,6 +530,10 @@ body {
     font-weight: 400 !important;
     line-height: 1.28571em !important;
     color: rgb(72, 72, 72) !important;
+    padding-top: 10px;
+    min-width: 280px !important;
+    max-width: 740px !important;
+    width: 100%;
 }
 td{
   margin: 3px auto 3px auto;
@@ -708,8 +724,8 @@ td{
   position: absolute;
   left: 30%;
   right: 30%;
-  top: 10%;
-  bottom: 12%;
+  top: 8%;
+  bottom: 10%;
   padding: 20px;
   background-color: white;
   z-index: 100 !important;

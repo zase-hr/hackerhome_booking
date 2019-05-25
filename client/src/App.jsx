@@ -152,7 +152,7 @@ export default class App extends React.Component {
     );
 
     return (
-      <div>
+      <div style={{ float: 'right', display: 'sticky' }}>
         {rendering ? app : null}
       </div>
     );
