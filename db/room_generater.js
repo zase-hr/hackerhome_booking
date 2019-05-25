@@ -57,6 +57,7 @@ const createRoomData = () => {
   rooms.forEach(data => (
     db.Room.create(data)
       .then(() => {
+        // eslint-disable-next-line no-console
         console.log('success');
       })
       .catch((err) => {

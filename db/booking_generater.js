@@ -118,6 +118,7 @@ const createBookingData = () => {
   bookings.forEach((data) => {
     db.Booking.create(data)
       .then(() => {
+        // eslint-disable-next-line no-console
         console.log('success for booking');
       })
       .catch((err) => {
