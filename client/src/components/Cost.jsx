@@ -1,46 +1,78 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
-class Cost extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      priceMessage: '',
-    }
-  }
+const Cost = (props) => {
+  const {
+    price,
+    selectedNights,
+    serviceFee,
+    cleaningFee,
+    tax,
+    totalCost,
+  } = props;
+  const roomPrice = parseFloat(price);
 
-  render() {
-    return (
-      <div className="rates">
-        <div className="roomRate">
-          <div className="costTitle">${this.props.price} x {this.props.selectedNights} 
-            {this.props.selectedNights === 1 ? 'night' : 'nights'}
-          </div>
-          <div className="cost">{`$ ${this.props.price * this.props.selectedNights}`}</div>
-        </div>
-        <div className="dividingSection1" />
-        <div className="serviceRate">
-          <div className="costTitle">Service fee</div>
-          <div className="cost">${this.props.service_fee * this.props.selectedNights}</div>
-        </div>
-        <div className="dividingSection1" />
-        <div className="cleaningRate">
-          <div className="costTitle">Cleaning fee</div>
-          <div className="cost">${this.props.cleaning_fee * this.props.selectedNights}</div>
-        </div>
-        <div className="dividingSection1" />
-        <div className="taxRate">
-          <div className="costTitle">Ocupancy taxes</div>
-          <div className="cost">${(this.props.tax * this.props.selectedNights).toFixed(1)}</div>
-        </div>
-        <div className="dividingSection1" />
-        <div className="totalRate">
-          <div className="costTitle"> Total</div>
-          <div className="cost">{`$${(this.props.totalCost).toFixed(1)}`}</div>
-        </div>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="rates">
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr>
+            <td>
+              {`$ ${roomPrice} x ${selectedNights}`}
+              {(selectedNights === 1) ? ' night' : ' nights'}
+            </td>
+            <td className="prices">{`$ ${roomPrice * selectedNights}`}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="dividingSection1" />
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr>
+            <td>Cleaning fee</td>
+            <td className="prices">{`$ ${serviceFee * selectedNights}`}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="dividingSection1" />
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr>
+            <td>Service fee</td>
+            <td className="prices">{`$ ${cleaningFee * selectedNights}`}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="dividingSection1" />
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr>
+            <td>Taxes</td>
+            <td className="prices">{`$ ${(tax * selectedNights).toFixed(1)}`}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div className="dividingSection1" />
+      <table style={{ width: '100%' }}>
+        <tbody>
+          <tr />
+          <tr>
+            <td style={{ fontWeight: '600', fontSize: '15px' }}>Total</td>
+            <td className="prices" style={{ fontWeight: '600' }}>{`$ ${totalCost}`}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+Cost.propTypes = {
+  price: PropTypes.number.isRequired,
+  cleaningFee: PropTypes.number.isRequired,
+  serviceFee: PropTypes.number.isRequired,
+  tax: PropTypes.number.isRequired,
+  totalCost: PropTypes.number.isRequired,
+  selectedNights: PropTypes.string.isRequired,
+};
 
 export default Cost;

@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import Calendar from './Calendar.jsx';
 
 class Date extends React.Component {
@@ -21,15 +21,17 @@ class Date extends React.Component {
   // handle check-in and out
 
   handleCheckinOnclick() {
+    const { handleCheckinClicked } = this.props;
     this.setState({
       calendarExpanded: true,
-    }, this.props.handleCheckinClicked());
+    }, handleCheckinClicked());
   }
 
   handleCheckoutOnclick() {
+    const { handleCheckoutClicked } = this.props;
     this.setState({
       calendarExpanded: true,
-    }, this.props.handleCheckoutClicked());
+    }, handleCheckoutClicked());
   }
 
   closeCalendar() {
@@ -39,29 +41,73 @@ class Date extends React.Component {
   }
 
   render() {
+    const {
+      checkIn,
+      checkOut,
+      onDayClick,
+      bookedDates,
+      checkInClicked,
+      checkOutClicked,
+      calendarInitialize,
+      minNight,
+      maxNight,
+      handleBothUnclicked,
+    } = this.props;
+
+    const {
+      calendarExpanded,
+    } = this.state;
+
+    let checkInClassName = 'check-in';
+    if (checkInClicked) {
+      checkInClassName += '-clicked';
+    }
+    let checkOutClassName = 'check-in';
+    if (checkOutClicked) {
+      checkOutClassName += '-clicked';
+    }
     return (
       <div className="dates">
         <div className="dateSection">Dates</div>
         <div className="inputs">
-          <input className="check-in" type="text" value={this.props.check_in === 0 ? 'Check-in' : this.props.check_in} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
-          <div className="arrow">→</div>
-          <input className="check-out" type="text" value={this.props.check_out === 0 ? 'Checkout' : this.props.check_out} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
+          <div>
+            <input className={checkInClassName} type="text" value={checkIn === '' ? 'Check-in' : checkIn} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
+          </div>
+          <svg
+            className="arrow"
+            viewBox="0 0 24 24"
+            role="presentation"
+            aria-hidden="true"
+            focusable="false"
+            style={{
+              
+            }}
+          >
+            <path d="m0 12.5a.5.5 0 0 0 .5.5h21.79l-6.15 6.15a.5.5 0 1 0 .71.71l7-7v-.01a.5.5 0 0 0 .14-.35.5.5 0 0 0 -.14-.35v-.01l-7-7a .5.5 0 0 0 -.71.71l6.15 6.15h-21.79a.5.5 0 0 0 -.5.5z" fillRule="evenodd" />
+
+          </svg>
+          <div>
+            <input className={checkOutClassName} type="text" value={(checkOut === '' || checkIn > checkOut) ? 'Checkout' : checkOut} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
+          </div>
         </div>
         <div className="datePicker">
-          {this.state.calendarExpanded
+          {calendarExpanded
             ? (
               <Calendar
-                  handleCheckinOnclick={this.handleCheckinOnclick}
-                  handleCheckoutOnclick={this.handleCheckoutOnclick}
-                  onDayClick={this.props.onDayClick}
-                  bookedDates={this.props.bookedDates}
-                  check_in={this.props.check_in}
-                  check_out={this.props.check_out}
-                  check_in_clicked={this.props.check_in_clicked}
-                  check_out_clicked={this.props.check_out_clicked}
-                  closeCalendar={this.closeCalendar}
-                  calendarInitialize={this.props.calendarInitialize}
-                 />
+                handleCheckinOnclick={this.handleCheckinOnclick}
+                handleCheckoutOnclick={this.handleCheckoutOnclick}
+                onDayClick={onDayClick}
+                bookedDates={bookedDates}
+                checkIn={checkIn}
+                checkOut={checkOut}
+                checkInClicked={checkInClicked}
+                checkOutClicked={checkOutClicked}
+                closeCalendar={this.closeCalendar}
+                calendarInitialize={calendarInitialize}
+                minNight={minNight}
+                maxNight={maxNight}
+                handleBothUnclicked={handleBothUnclicked}
+              />
             ) : null}
         </div>
       </div>
@@ -69,8 +115,19 @@ class Date extends React.Component {
   }
 }
 
-// for propTypes validation
-// Date.propTypes = {
-// };
+Date.propTypes = {
+  checkIn: PropTypes.string.isRequired,
+  checkOut: PropTypes.string.isRequired,
+  handleCheckinClicked: PropTypes.func.isRequired,
+  handleCheckoutClicked: PropTypes.func.isRequired,
+  onDayClick: PropTypes.func.isRequired,
+  calendarInitialize: PropTypes.func.isRequired,
+  checkInClicked: PropTypes.bool.isRequired,
+  checkOutClicked: PropTypes.bool.isRequired,
+  bookedDates: PropTypes.array.isRequired,
+  minNight: PropTypes.number.isRequired,
+  maxNight: PropTypes.number.isRequired,
+  handleBothUnclicked: PropTypes.func.isRequired,
+};
 
 export default Date;

@@ -1,11 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
+import $ from 'jquery';
 import Date from './Date.jsx';
 import Cost from './Cost.jsx';
 import Guest from './Guest.jsx';
+import BookingSummary from './BookingSummary.jsx';
 
 
-class Form extends React.Component {
+export default class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,18 +24,14 @@ class Form extends React.Component {
       totalCost: 0,
       calculatedTax: 0,
       selectedNights: 0,
-      check_in: 0,
-      check_out: 0,
+      checkIn: '',
+      checkOut: '',
       selectedDate: 0,
-      check_in_clicked: false,
-      check_out_clicked: false,
+      checkInClicked: false,
+      checkOutClicked: false,
+      bookingSummaryExpand: false,
     };
-    // this.increaseAdults = this.increaseAdults.bind(this);
-    // this.increaseChildren = this.increaseChildren.bind(this);
-    // this.increaseInfants = this.increaseInfants.bind(this);
-    // this.decreaseAdults = this.decreaseAdults.bind(this);
-    // this.decreaseChildren = this.decreaseChildren.bind(this);
-    // this.decreaseInfants = this.decreaseInfants.bind(this);
+
     this.increaseGuest = this.increaseGuest.bind(this);
     this.decreaseGuest = this.decreaseGuest.bind(this);
     this.guestButtonMessage = this.guestButtonMessage.bind(this);
@@ -44,48 +43,62 @@ class Form extends React.Component {
     this.handleCheckoutClicked = this.handleCheckoutClicked.bind(this);
     this.calendarInitialize = this.calendarInitialize.bind(this);
     this.updateTotalNights = this.updateTotalNights.bind(this);
+    this.clickOutsideOfGuestPicker = this.clickOutsideOfGuestPicker.bind(this);
+    this.handleBothUnclicked = this.handleBothUnclicked.bind(this);
+    this.makeBooking = this.makeBooking.bind(this);
+    this.bookButtonClick = this.bookButtonClick.bind(this);
+    this.closeBookingPopup = this.closeBookingPopup.bind(this);
   }
 
   onDayClick(e, dateContext, cb1, cb2) {
-    if (this.state.check_in_clicked) {
+    const { checkInClicked, checkOutClicked, checkOut } = this.state;
+    if (checkInClicked) {
+      if (dateContext.format('MM/DD/YYYY') > checkOut) {
+        this.setState({
+          checkIn: dateContext.format('MM/DD/YYYY'),
+          checkOut: '',
+        }, cb1());
+      } else {
+        this.setState({
+          checkIn: dateContext.format('MM/DD/YYYY'),
+        }, cb1());
+      }
+    } else if (checkOutClicked) {
       this.setState({
-        check_in: dateContext.format('MM/DD/YYYY'),
-      }, cb1());
-    } else if (this.state.check_out_clicked) {
-      this.setState({
-        check_out: dateContext.format('MM/DD/YYYY'),
-      }, cb2(), this.guestExpandToggle(e));
+        checkOut: dateContext.format('MM/DD/YYYY'),
+      }, cb2(), this.guestExpandToggle(e), this.handleBothUnclicked());
     }
   }
 
   guestButtonMessage() {
-    if (this.state.adults === 1) {
+    const { adults, children, infants } = this.state;
+    if (adults === 1) {
       this.setState({
         adultMessage: '1 Guest',
       });
     } else {
       this.setState({
-        adultMessage: `${this.state.adults} Guests`,
+        adultMessage: `${adults} Guests`,
       });
     }
 
-    if (this.state.children === 1) {
+    if (children === 1) {
       this.setState({
         childrenMessage: ', 1 Child',
       });
     } else {
       this.setState({
-        childrenMessage: `, ${this.state.children} Children`,
+        childrenMessage: `, ${children} Children`,
       });
     }
 
-    if (this.state.infants === 1) {
+    if (infants === 1) {
       this.setState({
         infantMessage: ', 1 Infant',
       });
     } else {
       this.setState({
-        infantMessage: `, ${this.state.infants} Infants`,
+        infantMessage: `, ${infants} Infants`,
       });
     }
   }
@@ -98,31 +111,48 @@ class Form extends React.Component {
   }
 
   guestExpandToggle(e) {
-    this.setState({
-      guestExpand: !this.state.guestExpand,
-      guestSelected: true,
-    }, this.calculateCostPerNight);
+    const { guestExpand } = this.state;
+    if (!guestExpand) {
+      this.setState({
+        guestExpand: true,
+        guestSelected: true,
+      }, this.calculateCostPerNight);
+    } else {
+      this.setState({
+        guestExpand: false,
+        guestSelected: true,
+      }, this.calculateCostPerNight);
+    }
     this.updateTotalNights();
     e.preventDefault();
   }
 
+  clickOutsideOfGuestPicker() {
+    this.setState({
+      guestExpand: false,
+    });
+  }
+
   calculateCostPerNight() {
-    let cost = this.props.price + this.props.service_fee + this.props.cleaning_fee;
-    let tax = cost * (this.props.tax / 100);
-    tax = parseFloat(tax.toFixed(2));
-    cost += tax;
+    const {
+      price, serviceFee, cleaningFee, tax,
+    } = this.props;
+    const { selectedNights } = this.state;
+    let cost = price + serviceFee + cleaningFee;
+    let totalTax = cost * (tax / 100);
+    totalTax = parseFloat(tax.toFixed(2));
+    cost += totalTax;
     cost = parseFloat(cost.toFixed(2));
-    const totalCost = cost * this.state.selectedNights;
+    const totalCost = cost * selectedNights;
     this.setState({
       totalCostPerNight: cost,
-      calculatedTax: tax,
+      calculatedTax: totalTax,
       totalCost,
     });
   }
 
   increaseGuest(e) {
     e.preventDefault(e);
-    console.log(e.target.className)
     this.setState({
       [e.target.className]: this.state[e.target.className] + 1,
     }, this.guestButtonMessage);
@@ -130,143 +160,214 @@ class Form extends React.Component {
 
   decreaseGuest(e) {
     e.preventDefault(e);
-    console.log(e.target.className)
     this.setState({
       [e.target.className]: this.state[e.target.className] - 1,
     }, this.guestButtonMessage);
   }
 
-  // increaseAdults(e) {
-  //   e.preventDefault();
-  //   this.setState({
-  //     adults: this.state.adults + 1,
-  //   }, this.guestButtonMessage);
-  // }
-
-  // increaseChildren(e) {
-  //   e.preventDefault();
-  //   this.setState({
-  //     children: this.state.children + 1,
-  //   }, this.guestButtonMessage);
-  // }
-
-  // increaseInfants(e) {
-  //   e.preventDefault();
-  //   this.setState({
-  //     infants: this.state.infants + 1,
-  //   }, this.guestButtonMessage);
-  // }
-
-  // decreaseAdults(e) {
-  //   e.preventDefault();
-  //   this.setState({
-  //     adults: this.state.adults - 1,
-  //   }, this.guestButtonMessage);
-  // }
-
-  // decreaseChildren(e) {
-  //   e.preventDefault();
-  //   this.setState({
-  //     children: this.state.children - 1,
-  //   }, this.guestButtonMessage);
-  // }
-
-  // decreaseInfants(e) {
-  //   e.preventDefault();
-  //   this.setState({
-  //     infants: this.state.infants - 1,
-  //   }, this.guestButtonMessage);
-  // }
-
   handleCheckinClicked() {
     this.setState({
-      check_in_clicked: true,
-      check_out_clicked: false,
+      checkInClicked: true,
+      checkOutClicked: false,
     });
   }
 
   handleCheckoutClicked() {
     this.setState({
-      check_out_clicked: true,
-      check_in_clicked: false,
+      checkOutClicked: true,
+      checkInClicked: false,
+    });
+  }
+
+  handleBothUnclicked() {
+    this.setState({
+      checkInClicked: false,
+      checkOutClicked: false,
     });
   }
 
   updateTotalNights() {
-    let nights = moment(this.state.check_out, 'MM/DD/YY') - moment(this.state.check_in, 'MM/DD/YY');
+    const { checkOut, checkIn } = this.state;
+    let nights = moment(checkOut, 'MM/DD/YY') - moment(checkIn, 'MM/DD/YY');
     nights = moment(nights).format('D');
     this.setState({
       selectedNights: nights,
     });
   }
 
-  calendarInitialize() {
+  calendarInitialize(e) {
     this.setState({
-      check_in: 0,
-      check_out: 0,
+      checkIn: '',
+      checkOut: '',
     }, this.handleCheckinClicked());
+    e.preventDefault();
+  }
+
+  makeBooking(roomId, email) {
+    const {
+      checkIn, checkOut, adults, children, infants,
+    } = this.state;
+    let guests = {
+      adults,
+      children,
+      infants,
+    };
+    guests = JSON.stringify(guests);
+    const checkInDate = JSON.stringify(moment(checkIn, 'MM/DD/YYYY').format());
+    const checkOutDate = JSON.stringify(moment(checkOut, 'MM/DD/YYYY').format());
+
+    $.ajax({
+      url: `/booking?roomId=${roomId}`,
+      type: 'POST',
+      data: {
+        value: {
+          check_in: checkInDate,
+          check_out: checkOutDate,
+          guests,
+          email,
+          roomId,
+        },
+      },
+      dataType: 'application/json',
+      error: (err) => {
+        throw err;
+      },
+      success: () => {
+        console.log('success to make booking');
+      },
+    });
+  }
+
+  bookButtonClick() {
+    const { checkOut, checkIn, guestSelected } = this.state;
+    if (checkIn === '' || checkOut === '') {
+      this.handleCheckinClicked();
+    } else if (!guestSelected) {
+      this.guestExpandToggle();
+    } else {
+      this.setState({
+        bookingSummaryExpand: true,
+      });
+    }
+  }
+
+  closeBookingPopup() {
+    this.setState({
+      bookingSummaryExpand: false,
+    });
   }
 
   render() {
-    let message = this.state.adultMessage;
+    const {
+      adults,
+      children,
+      infants,
+      adultMessage,
+      childrenMessage,
+      infantMessage,
+      checkIn,
+      checkOut,
+      checkInClicked,
+      checkOutClicked,
+      guestSelected,
+      guestExpand,
+      selectedNights,
+      calculatedTax,
+      totalCost,
+      bookingSummaryExpand,
+    } = this.state;
 
-    if (this.state.children !== 0) {
-      message += this.state.childrenMessage;
+    const {
+      bookedDates,
+      guest,
+      price,
+      cleaningFee,
+      serviceFee,
+      minNight,
+      maxNight,
+      roomId,
+      roomname,
+      reviews,
+      ratings,
+    } = this.props;
+
+    let message = adultMessage;
+
+    if (children !== 0) {
+      message += childrenMessage;
     }
-    if (this.state.infants) {
-      message += this.state.infantMessage;
+    if (infants) {
+      message += infantMessage;
     }
+
     return (
       <section>
         <form>
           <div>
             <Date
-              check_in={this.state.check_in}
-              check_out={this.state.check_out}
+              checkIn={checkIn}
+              checkOut={checkOut}
               onDayClick={this.onDayClick}
-              bookedDates={this.props.bookedDates}
+              bookedDates={bookedDates}
               handleCheckinClicked={this.handleCheckinClicked}
               handleCheckoutClicked={this.handleCheckoutClicked}
-              check_in_clicked={this.state.check_in_clicked}
-              check_out_clicked={this.state.check_out_clicked}
+              checkInClicked={checkInClicked}
+              checkOutClicked={checkOutClicked}
               calendarInitialize={this.calendarInitialize}
+              minNight={minNight}
+              maxNight={maxNight}
+              handleBothUnclicked={this.handleBothUnclicked}
             />
             <Guest
-              guest={this.props.guest}
-              adults={this.state.adults}
-              num_children={this.state.children}
-              infants={this.state.infants}
-              // increaseAdults={this.increaseAdults}
-              // increaseChildren={this.increaseChildren}
-              // increaseInfants={this.increaseInfants}
+              guest={guest}
+              adults={adults}
+              numChildren={children}
+              infants={infants}
               increaseGuest={this.increaseGuest}
               decreaseGuest={this.decreaseGuest}
-              // decreaseAdults={this.decreaseAdults}
-              // decreaseChildren={this.decreaseChildren}
-              // decreaseInfants={this.decreaseInfants}
               guestSelectToggle={this.guestSelectToggle}
               message={message}
               guestButtonMessage={this.guestButtonMessage}
-              guestSelected={this.state.guestSelected}
+              guestSelected={guestSelected}
               guestExpandToggle={this.guestExpandToggle}
-              guestExpand={this.state.guestExpand}
+              guestExpand={guestExpand}
               updateTotalNights={this.updateTotalNights}
+              clickOutsideOfGuestPicker={this.clickOutsideOfGuestPicker}
             />
-            {this.state.guestSelected && !this.state.guestExpand
+            {selectedNights !== 'Invalid date' && guestSelected && !guestExpand
               ? (
                 <Cost
-                  price={this.props.price}
-                  cleaning_fee={this.props.cleaning_fee}
-                  service_fee={this.props.service_fee}
-                  tax={this.state.calculatedTax}
-                  totalCost={this.state.totalCost}
-                  selectedNights={this.state.selectedNights}
+                  price={price}
+                  cleaningFee={cleaningFee}
+                  serviceFee={serviceFee}
+                  tax={calculatedTax}
+                  totalCost={totalCost}
+                  selectedNights={selectedNights}
                 />
               ) : null}
           </div>
         </form>
         <div className="bookbutton">
-          <button className="book" type="button"><div>Book</div></button>
+          <button className="book" type="button" onClick={this.bookButtonClick}><div>Book</div></button>
+          {bookingSummaryExpand ? (
+            <BookingSummary
+              roomId={roomId}
+              roomname={roomname}
+              makeBooking={this.makeBooking}
+              checkIn={checkIn}
+              checkOut={checkOut}
+              message={message}
+              totalCost={totalCost}
+              cleaningFee={cleaningFee}
+              serviceFee={serviceFee}
+              tax={calculatedTax}
+              selectedNights={selectedNights}
+              price={price}
+              closeBookingPopup={this.closeBookingPopup}
+              reviews={reviews}
+              ratings={ratings}
+            />
+          ) : null}
         </div>
       </section>
 
@@ -274,16 +375,15 @@ class Form extends React.Component {
   }
 }
 
-// Form.propTypes = {
-//   guest: PropTypes.string.isRequired,
-//   price: PropTypes.number.isRequired,
-//   cleaning_fee: PropTypes.number.isRequired,
-//   service_fee: PropTypes.number.isRequired,
-//   tax: PropTypes.number.isRequired,
-//   min_night: PropTypes.number.isRequired,
-//   max_night: PropTypes.number.isRequired,
-//   bookedDates: PropTypes.object.isRequired,
-// };
-
-
-export default Form;
+Form.propTypes = {
+  guest: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  cleaningFee: PropTypes.number.isRequired,
+  serviceFee: PropTypes.number.isRequired,
+  tax: PropTypes.number.isRequired,
+  bookedDates: PropTypes.array.isRequired,
+  minNight: PropTypes.number.isRequired,
+  maxNight: PropTypes.number.isRequired,
+  roomId: PropTypes.number.isRequired,
+  roomname: PropTypes.string.isRequired,
+};
