@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const moment = require('moment');
-const db = require('../db/dataGenerator.js');
+const db = require('../db/index.js');
 
 
 const app = express();
