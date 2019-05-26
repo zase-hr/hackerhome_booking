@@ -32,9 +32,15 @@ $
 };
 
 Info.propTypes = {
-  price: PropTypes.number.isRequired,
-  ratings: PropTypes.string.isRequired,
-  reviews: PropTypes.number.isRequired,
+  price: PropTypes.number,
+  ratings: PropTypes.string,
+  reviews: PropTypes.number,
+};
+
+Info.defaultProps = {
+  price: 0,
+  ratings: '',
+  reviews: 0,
 };
 
 

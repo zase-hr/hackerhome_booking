@@ -373,14 +373,27 @@ export default class Form extends React.Component {
 }
 
 Form.propTypes = {
-  guest: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  cleaningFee: PropTypes.number.isRequired,
-  serviceFee: PropTypes.number.isRequired,
-  tax: PropTypes.number.isRequired,
-  bookedDates: PropTypes.array.isRequired,
-  minNight: PropTypes.number.isRequired,
-  maxNight: PropTypes.number.isRequired,
-  roomId: PropTypes.number.isRequired,
-  roomname: PropTypes.string.isRequired,
+  guest: PropTypes.string,
+  price: PropTypes.number,
+  cleaningFee: PropTypes.number,
+  serviceFee: PropTypes.number,
+  tax: PropTypes.number,
+  bookedDates: PropTypes.arrayOf(PropTypes.string),
+  minNight: PropTypes.number,
+  maxNight: PropTypes.number,
+  roomId: PropTypes.number,
+  roomname: PropTypes.string,
+};
+
+Form.defaultProps = {
+  guest: '',
+  price: 0,
+  cleaningFee: 0,
+  serviceFee: 0,
+  tax: 0,
+  bookedDates: [],
+  minNight: 0,
+  maxNight: 0,
+  roomId: 1,
+  roomname: '',
 };

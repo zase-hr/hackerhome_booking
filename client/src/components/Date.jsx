@@ -116,18 +116,33 @@ class Date extends React.Component {
 }
 
 Date.propTypes = {
-  checkIn: PropTypes.string.isRequired,
-  checkOut: PropTypes.string.isRequired,
-  handleCheckinClicked: PropTypes.func.isRequired,
-  handleCheckoutClicked: PropTypes.func.isRequired,
-  onDayClick: PropTypes.func.isRequired,
-  calendarInitialize: PropTypes.func.isRequired,
-  checkInClicked: PropTypes.bool.isRequired,
-  checkOutClicked: PropTypes.bool.isRequired,
-  bookedDates: PropTypes.array.isRequired,
-  minNight: PropTypes.number.isRequired,
-  maxNight: PropTypes.number.isRequired,
-  handleBothUnclicked: PropTypes.func.isRequired,
+  checkIn: PropTypes.string,
+  checkOut: PropTypes.string,
+  handleCheckinClicked: PropTypes.func,
+  handleCheckoutClicked: PropTypes.func,
+  onDayClick: PropTypes.func,
+  calendarInitialize: PropTypes.func,
+  checkInClicked: PropTypes.bool,
+  checkOutClicked: PropTypes.bool,
+  bookedDates: PropTypes.arrayOf(PropTypes.string),
+  minNight: PropTypes.number,
+  maxNight: PropTypes.number,
+  handleBothUnclicked: PropTypes.func,
+};
+
+Date.defaultProps = {
+  checkIn: '',
+  checkOut: '',
+  handleCheckinClicked: () => { },
+  handleCheckoutClicked: () => { },
+  onDayClick: () => { },
+  calendarInitialize: () => { },
+  checkInClicked: false,
+  checkOutClicked: false,
+  bookedDates: [],
+  minNight: 0,
+  maxNight: 0,
+  handleBothUnclicked: () => { },
 };
 
 export default Date;

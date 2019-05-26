@@ -90,19 +90,34 @@ const Guest = (props) => {
 };
 
 Guest.propTypes = {
-  message: PropTypes.string.isRequired,
-  guest: PropTypes.string.isRequired,
-  adults: PropTypes.number.isRequired,
-  numChildren: PropTypes.number.isRequired,
-  infants: PropTypes.number.isRequired,
-  clickOutsideOfGuestPicker: PropTypes.func.isRequired,
-  increaseGuest: PropTypes.func.isRequired,
-  decreaseGuest: PropTypes.func.isRequired,
-  guestExpandToggle: PropTypes.func.isRequired,
-  guestExpand: PropTypes.bool.isRequired,
-  guestSelected: PropTypes.bool.isRequired,
-  updateTotalNights: PropTypes.func.isRequired,
-  guestButtonMessage: PropTypes.func.isRequired,
+  message: PropTypes.string,
+  guest: PropTypes.string,
+  adults: PropTypes.number,
+  numChildren: PropTypes.number,
+  infants: PropTypes.number,
+  clickOutsideOfGuestPicker: PropTypes.func,
+  increaseGuest: PropTypes.func,
+  decreaseGuest: PropTypes.func,
+  guestExpandToggle: PropTypes.func,
+  guestExpand: PropTypes.bool,
+  guestSelected: PropTypes.bool,
+  updateTotalNights: PropTypes.func,
+  guestButtonMessage: PropTypes.func,
 };
 
+Guest.defaultProps = {
+  message: '1 adult',
+  guest: '"{}"',
+  adults: 0,
+  numChildren: 0,
+  infants: 0,
+  clickOutsideOfGuestPicker: () => { },
+  increaseGuest: () => { },
+  decreaseGuest: () => { },
+  guestExpandToggle: () => { },
+  guestExpand: false,
+  guestSelected: false,
+  updateTotalNights: () => { },
+  guestButtonMessage: () => { },
+};
 export default Guest;

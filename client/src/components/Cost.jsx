@@ -67,12 +67,21 @@ const Cost = (props) => {
 };
 
 Cost.propTypes = {
-  price: PropTypes.number.isRequired,
-  cleaningFee: PropTypes.number.isRequired,
-  serviceFee: PropTypes.number.isRequired,
-  tax: PropTypes.number.isRequired,
-  totalCost: PropTypes.number.isRequired,
-  selectedNights: PropTypes.string.isRequired,
+  price: PropTypes.number,
+  cleaningFee: PropTypes.number,
+  serviceFee: PropTypes.number,
+  tax: PropTypes.number,
+  totalCost: PropTypes.number,
+  selectedNights: PropTypes.string,
+};
+
+Cost.defaultProps = {
+  price: 0,
+  cleaningFee: 0,
+  serviceFee: 0,
+  tax: 0,
+  totalCost: 0,
+  selectedNights: 0,
 };
 
 export default Cost;

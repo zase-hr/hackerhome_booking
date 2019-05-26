@@ -296,14 +296,27 @@ export default class Calendar extends React.Component {
 
 
 Calendar.propTypes = {
-  checkIn: PropTypes.string.isRequired,
-  checkOut: PropTypes.string.isRequired,
-  handleCheckoutOnclick: PropTypes.func.isRequired,
-  closeCalendar: PropTypes.func.isRequired,
-  onDayClick: PropTypes.func.isRequired,
-  calendarInitialize: PropTypes.func.isRequired,
-  bookedDates: PropTypes.array.isRequired,
-  minNight: PropTypes.number.isRequired,
-  maxNight: PropTypes.number.isRequired,
-  handleBothUnclicked: PropTypes.func.isRequired,
+  checkIn: PropTypes.string,
+  checkOut: PropTypes.string,
+  handleCheckoutOnclick: PropTypes.func,
+  closeCalendar: PropTypes.func,
+  onDayClick: PropTypes.func,
+  calendarInitialize: PropTypes.func,
+  bookedDates: PropTypes.arrayOf(PropTypes.string),
+  minNight: PropTypes.number,
+  maxNight: PropTypes.number,
+  handleBothUnclicked: PropTypes.func,
+};
+
+Calendar.defaultProps = {
+  checkIn: '',
+  checkOut: '',
+  handleCheckoutOnclick: () => { },
+  closeCalendar: () => { },
+  onDayClick: () => { },
+  calendarInitialize: () => { },
+  bookedDates: [],
+  minNight: 0,
+  maxNight: 0,
+  handleBothUnclicked: () => { },
 };
