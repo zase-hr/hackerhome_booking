@@ -302,7 +302,7 @@ Calendar.propTypes = {
   closeCalendar: PropTypes.func,
   onDayClick: PropTypes.func,
   calendarInitialize: PropTypes.func,
-  bookedDates: PropTypes.arrayOf(PropTypes.string),
+  bookedDates: PropTypes.arrayOf(PropTypes.object),
   minNight: PropTypes.number,
   maxNight: PropTypes.number,
   handleBothUnclicked: PropTypes.func,
