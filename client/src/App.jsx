@@ -3,6 +3,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import Info from './components/Info.jsx';
 import Form from './components/form.jsx';
+import '../../public/dist/App.css';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -152,7 +153,7 @@ export default class App extends React.Component {
     );
 
     return (
-      <div>
+      <div style={{ float: 'right', display: 'sticky' }}>
         {rendering ? app : null}
       </div>
     );

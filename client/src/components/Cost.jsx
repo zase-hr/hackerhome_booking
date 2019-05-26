@@ -25,7 +25,7 @@ const Cost = (props) => {
           </tr>
         </tbody>
       </table>
-      <div className="dividingSection1" />
+      <div className="dividingSection2" />
       <table style={{ width: '100%' }}>
         <tbody>
           <tr>

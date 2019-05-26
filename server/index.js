@@ -2,7 +2,9 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const moment = require('moment');
 const db = require('../db/dataGenerator.js');
+
 
 const app = express();
 const port = 3000;
@@ -42,8 +44,25 @@ app.get('/booking', (req, res) => {
 // making booking
 
 app.post('/booking', (req, res) => {
-  console.log(req.body);
-  res.send(req.body);
+  const data = {
+    roomId: req.body.roomId,
+    email: req.body.email,
+    guests: req.body.guests,
+    check_in: new Date(req.body.check_in),
+    check_out: new Date(req.body.check_out),
+    createdAt: new Date(req.body.createdAt),
+  };
+
+
+  db.Booking.create(data)
+    .catch((err) => {
+      console.log(`err: ${err}`);
+      res.sendStatus(500);
+    })
+    .then(() => {
+      console.log('Booking data is saved');
+      res.sendStatus(200);
+    });
 });
 
 app.listen(port, () => {

@@ -45,6 +45,7 @@ export default class BookingSummary extends React.Component {
       closeBookingPopup,
       ratings,
       reviews,
+      htmlFor,
     } = this.props;
     const roomPrice = parseFloat(price);
     const divStyle = {
@@ -57,11 +58,14 @@ export default class BookingSummary extends React.Component {
         <div className="popup_inner">
           <button type="submit" className="xbutton" onClick={closeBookingPopup}>
             <svg viewBox="0 0 24 24" role="img" aria-label="Close" focusable="false" style={divStyle}>
-              <path d="m23.25 24c-.19 0-.38-.07-.53-.22l-10.72-10.72-10.72 10.72c-.29.29-.77.29-1.06 0s-.29-.77 0-1.06l10.72-10.72-10.72-10.72c-.29-.29-.29-.77 0-1.06s.77-.29 1.06 0l10.72 10.72 10.72-10.72c.29-.29.77-.29 1.06 0s .29.77 0 1.06l-10.72 10.72 10.72 10.72c.29.29.29.77 0 1.06-.15.15-.34.22-.53.22" fillRule="evenodd" />
+              <path
+                d="m23.25 24c-.19 0-.38-.07-.53-.22l-10.72-10.72-10.72 10.72c-.29.29-.77.29-1.06 0s-.29-.77 0-1.06l10.72-10.72-10.72-10.72c-.29-.29-.29-.77 0-1.06s.77-.29 1.06 0l10.72 10.72 10.72-10.72c.29-.29.77-.29 1.06 0s .29.77 0 1.06l-10.72 10.72 10.72 10.72c.29.29.29.77 0 1.06-.15.15-.34.22-.53.22"
+                fillRule="evenodd"
+              />
             </svg>
           </button>
           <form onSubmit={this.handleClick}>
-            <label className="email">
+            <label htmlFor={htmlFor} className="email">
             Email:
               <input style={{ width: '70%', height: '15px' }} type="text" name="email" value={email} onChange={this.handleChange} />
             </label>
@@ -168,4 +172,15 @@ BookingSummary.propTypes = {
   makeBooking: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
   roomname: PropTypes.string.isRequired,
+  checkIn: PropTypes.string.isRequired,
+  checkOut: PropTypes.string.isRequired,
+  serviceFee: PropTypes.number.isRequired,
+  tax: PropTypes.number.isRequired,
+  cleaningFee: PropTypes.number.isRequired,
+  totalCost: PropTypes.number.isRequired,
+  price: PropTypes.number.isRequired,
+  selectedNights: PropTypes.string.isRequired,
+  closeBookingPopup: PropTypes.func.isRequired,
+  ratings: PropTypes.string.isRequired,
+  reviews: PropTypes.number.isRequired,
 };
