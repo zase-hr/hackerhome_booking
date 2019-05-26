@@ -68,6 +68,3 @@ const createRoomData = () => {
 
 createRoomData();
 
-module.exports = {
-  rooms,
-};

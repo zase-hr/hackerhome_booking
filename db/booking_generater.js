@@ -1,11 +1,10 @@
 const faker = require('faker');
 const moment = require('moment');
 const db = require('./index.js');
-const rooms = require('./room_generater.js');
 
-const roomList = rooms.rooms;
-const bookings = [];
+// const bookings = [];
 const bookingsByRoom = {};
+
 
 // min and max included
 function randomIntFromInterval(min, max) {
@@ -43,7 +42,7 @@ function isNotOverlapWithOtherBookingDates(roomId, startDate, endDate) {
   return true;
 }
 
-function randomCheckInOutOnRoom(roomId) {
+function randomCheckInOutOnRoom(roomId, roomList) {
   const room = roomList[`${roomId}`];
   let startDate = moment(randomDate(moment().toDate(), moment().add(2, 'months').toDate())).startOf('day').toDate();
   let endDate = moment(startDate).add(randomIntFromInterval(room.min_night, room.max_night), 'days').startOf('day').toDate();
@@ -51,7 +50,7 @@ function randomCheckInOutOnRoom(roomId) {
 
   while (!isNotOverlapWithOtherBookingDates(roomId, startDate, endDate)) {
     trial += 1;
-    if (trial > 1) {
+    if (trial > 100) {
       return null;
     }
     startDate = moment(randomDate(moment().toDate(), moment().add(2, 'months').toDate())).startOf('day').toDate();
@@ -65,11 +64,11 @@ function randomCheckInOutOnRoom(roomId) {
 }
 
 // Random Bookings
-function generateRandomBooking() {
+function generateRandomBooking(roomList) {
   const roomId = randomIntFromInterval(0, roomList.length - 1);
   const room = roomList[roomId];
 
-  const randomCheckInOutDates = randomCheckInOutOnRoom(roomId);
+  const randomCheckInOutDates = randomCheckInOutOnRoom(roomId, roomList);
 
   if (randomCheckInOutDates === null) {
     return null;
@@ -91,25 +90,24 @@ function generateRandomBooking() {
 }
 
 
-function generateRandomBookings(num) {
+function generateRandomBookings(num, roomList, arr) {
   let book;
   for (let i = 0; i < num; i += 1) {
-    book = generateRandomBooking();
+    book = generateRandomBooking(roomList);
     if (book !== null) {
-      bookings.push(book);
+      arr.push(book);
       if (bookingsByRoom[`${book.roomId}`] === undefined) {
         bookingsByRoom[`${book.roomId}`] = [];
       }
       bookingsByRoom[`${book.roomId}`].push(book);
     }
   }
+  return arr;
 }
 
 
-generateRandomBookings(50);
-
-
-const createBookingData = () => {
+const createBookingData = (allbookings) => {
+  const bookings = allbookings;
   for (let i = 0; i < bookings.length; i += 1) {
     bookings[i].guests = JSON.stringify(bookings[i].guests);
     bookings[i].roomId += 1;
@@ -118,7 +116,7 @@ const createBookingData = () => {
   bookings.forEach((data) => {
     db.Booking.create(data)
       .then(() => {
-        // eslint-disable-next-line no-console
+      // eslint-disable-next-line no-console
         console.log('success for booking');
       })
       .catch((err) => {
@@ -127,4 +125,15 @@ const createBookingData = () => {
   });
 };
 
-createBookingData();
+db.Room.findAll()
+  .then((results) => {
+    const bookings = generateRandomBookings(50, results, []);
+    console.log(bookings.length);
+    return bookings;
+  })
+  .then((bookings) => {
+    createBookingData(bookings);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
