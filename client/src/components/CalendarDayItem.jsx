@@ -22,7 +22,7 @@ export default class CalendarDayItem extends React.Component {
     if (!isDayDisabled) {
       this.setState({ isHover: !isHover });
       if (checkIn !== '' && checkOut === '') {
-        updateCandidateCheckOut(moment(dateContext).set('date', day).format('MM/DD/YYYY'));
+        updateCandidateCheckOut(dateContext.set('date', day).format('MM/DD/YYYY'));
       }
     }
   }
@@ -33,8 +33,8 @@ export default class CalendarDayItem extends React.Component {
       return false;
     }
 
-    const d1 = moment(checkIn).format('MM/DD/YYYY');
-    const d2 = moment(dateContext).set('date', day).format('MM/DD/YYYY');
+    const d1 = moment(checkIn, 'MM/DD/YYYY').format('MM/DD/YYYY');
+    const d2 = dateContext.set('date', day).format('MM/DD/YYYY');
 
     return d1 === d2;
   }
@@ -47,10 +47,10 @@ export default class CalendarDayItem extends React.Component {
       return false;
     }
 
-    const checkInDate = moment(checkIn).startOf('date');
-    const checkOutDate = moment(checkOut).endOf('date');
+    const checkInDate = moment(checkIn, 'MM/DD/YYYY').startOf('date');
+    const checkOutDate = moment(checkOut, 'MM/DD/YYYY').endOf('date');
 
-    const thisItemDate = moment(dateContext).set('date', day);
+    const thisItemDate = dateContext.set('date', day);
 
     return checkInDate <= thisItemDate && checkOutDate >= thisItemDate;
   }
@@ -64,10 +64,10 @@ export default class CalendarDayItem extends React.Component {
       return false;
     }
 
-    const checkInDate = moment(checkIn).startOf('date');
-    const candidateCheckOutDate = moment(candidateCheckOut).endOf('date');
+    const checkInDate = moment(checkIn, 'MM/DD/YYYY').startOf('date');
+    const candidateCheckOutDate = moment(candidateCheckOut, 'MM/DD/YYYY').endOf('date');
 
-    const thisItemDate = moment(dateContext).set('date', day);
+    const thisItemDate = dateContext.set('date', day);
 
     return checkInDate <= thisItemDate && candidateCheckOutDate >= thisItemDate;
   }

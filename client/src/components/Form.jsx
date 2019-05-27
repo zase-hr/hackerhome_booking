@@ -23,7 +23,7 @@ export default class Form extends React.Component {
       totalCostPerNight: 0,
       totalCost: 0,
       calculatedTax: 0,
-      selectedNights: 0,
+      selectedNights: '',
       checkIn: '',
       checkOut: '',
       selectedDate: 0,
@@ -255,6 +255,7 @@ export default class Form extends React.Component {
   }
 
   render() {
+    console.log(typeof this.state.selectedNights)
     const {
       adults,
       children,

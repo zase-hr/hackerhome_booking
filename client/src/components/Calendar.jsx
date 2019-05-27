@@ -132,11 +132,12 @@ export default class Calendar extends React.Component {
     } = this.props;
     if (checkIn === '' || checkOut !== '') {
       return dateContext.set('date', day) < moment() || bookedDates.map(date => date.format('MM/DD/YYYY')).includes(dateContext.set('date', day).format('MM/DD/YYYY'));
-    } if (checkIn !== '') {
+    }
+    if (checkIn !== '') {
       const closestFutureBookedDate = this.findClosestFutureBookingCheckIn();
       return dateContext.set('date', day) < moment(checkIn, 'MM/DD/YYYY').startOf('date')
         || (dateContext.set('date', day).startOf('date') > moment(checkIn, 'MM/DD/YYYY').startOf('date') && dateContext.set('date', day) <= moment(checkIn, 'MM/DD/YYYY').startOf('date').add(minNight, 'd'))
-        || (closestFutureBookedDate != null && dateContext.set('date', day) >= moment(closestFutureBookedDate))
+        || (closestFutureBookedDate != null && dateContext.set('date', day) >= moment(closestFutureBookedDate, 'MM/DD/YYYY'))
         || dateContext.set('date', day) >= moment(checkIn, 'MM/DD/YYYY').startOf('date').add(maxNight, 'd');
     }
   }

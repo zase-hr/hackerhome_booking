@@ -72,7 +72,7 @@ Cost.propTypes = {
   serviceFee: PropTypes.number,
   tax: PropTypes.number,
   totalCost: PropTypes.number,
-  selectedNights: PropTypes.number,
+  selectedNights: PropTypes.string,
 };
 
 Cost.defaultProps = {
@@ -81,7 +81,7 @@ Cost.defaultProps = {
   serviceFee: 0,
   tax: 0,
   totalCost: 0,
-  selectedNights: 0,
+  selectedNights: '',
 };
 
 export default Cost;
