@@ -2,9 +2,8 @@ const faker = require('faker');
 const moment = require('moment');
 const db = require('./index.js');
 
-// const bookings = [];
+const bookings = [];
 const bookingsByRoom = {};
-
 
 // min and max included
 function randomIntFromInterval(min, max) {
@@ -33,16 +32,16 @@ function isNotOverlapWithOtherBookingDates(roomId, startDate, endDate) {
 
     // Below condition is checking it is overlapped -> then return false
     if (!((moment(startDate) < moment(booking.check_in)
-    && moment(endDate) <= moment(booking.check_in))
-    || (moment(startDate) >= moment(booking.check_out)
-    && moment(endDate) > moment(booking.check_out)))) {
+      && moment(endDate) <= moment(booking.check_in))
+      || (moment(startDate) >= moment(booking.check_out)
+        && moment(endDate) > moment(booking.check_out)))) {
       return false;
     }
   }
   return true;
 }
 
-function randomCheckInOutOnRoom(roomId, roomList) {
+function randomCheckInOutOnRoom(roomList, roomId) {
   const room = roomList[`${roomId}`];
   let startDate = moment(randomDate(moment().toDate(), moment().add(2, 'months').toDate())).startOf('day').toDate();
   let endDate = moment(startDate).add(randomIntFromInterval(room.min_night, room.max_night), 'days').startOf('day').toDate();
@@ -50,7 +49,7 @@ function randomCheckInOutOnRoom(roomId, roomList) {
 
   while (!isNotOverlapWithOtherBookingDates(roomId, startDate, endDate)) {
     trial += 1;
-    if (trial > 100) {
+    if (trial > 1) {
       return null;
     }
     startDate = moment(randomDate(moment().toDate(), moment().add(2, 'months').toDate())).startOf('day').toDate();
@@ -68,7 +67,7 @@ function generateRandomBooking(roomList) {
   const roomId = randomIntFromInterval(0, roomList.length - 1);
   const room = roomList[roomId];
 
-  const randomCheckInOutDates = randomCheckInOutOnRoom(roomId, roomList);
+  const randomCheckInOutDates = randomCheckInOutOnRoom(roomList, roomId);
 
   if (randomCheckInOutDates === null) {
     return null;
@@ -78,9 +77,9 @@ function generateRandomBooking(roomList) {
     roomId,
     email: faker.internet.email(),
     guests: {
-      adults: randomIntFromInterval(1, room.max_guest.adults),
-      children: randomIntFromInterval(0, room.max_guest.children),
-      infants: randomIntFromInterval(0, room.max_guest.infants),
+      adults: randomIntFromInterval(1, JSON.parse(room.max_guest).adults),
+      children: randomIntFromInterval(0, JSON.parse(room.max_guest).children),
+      infants: randomIntFromInterval(0, JSON.parse(room.max_guest).infants),
     },
     check_in: randomCheckInOutDates.check_in,
     check_out: randomCheckInOutDates.check_out,
@@ -89,51 +88,41 @@ function generateRandomBooking(roomList) {
   return booking;
 }
 
-
-function generateRandomBookings(num, roomList, arr) {
+function generateRandomBookings(num, roomList) {
   let book;
   for (let i = 0; i < num; i += 1) {
     book = generateRandomBooking(roomList);
+    // console.log(book);
     if (book !== null) {
-      arr.push(book);
+      bookings.push(book);
       if (bookingsByRoom[`${book.roomId}`] === undefined) {
         bookingsByRoom[`${book.roomId}`] = [];
       }
       bookingsByRoom[`${book.roomId}`].push(book);
     }
   }
-  return arr;
 }
 
+function createBookingData(num) {
+  db.Room.findAll().then((rooms) => {
+    generateRandomBookings(num, rooms);
 
-const createBookingData = (allbookings) => {
-  const bookings = allbookings;
-  for (let i = 0; i < bookings.length; i += 1) {
-    bookings[i].guests = JSON.stringify(bookings[i].guests);
-    bookings[i].roomId += 1;
-  }
+    for (let i = 0; i < bookings.length; i += 1) {
+      bookings[i].guests = JSON.stringify(bookings[i].guests);
+      bookings[i].roomId += 1;
+    }
 
-  bookings.forEach((data) => {
-    db.Booking.create(data)
-      .then(() => {
-      // eslint-disable-next-line no-console
-        console.log('success for booking');
-      })
-      .catch((err) => {
-        throw err;
-      });
+    bookings.forEach((data) => {
+      db.Booking.create(data)
+        .then(() => {
+          // eslint-disable-next-line no-console
+          console.log('success for booking');
+        })
+        .catch((err) => {
+          throw err;
+        });
+    });
   });
-};
+}
 
-db.Room.findAll()
-  .then((results) => {
-    const bookings = generateRandomBookings(50, results, []);
-    console.log(bookings.length);
-    return bookings;
-  })
-  .then((bookings) => {
-    createBookingData(bookings);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+createBookingData(30);

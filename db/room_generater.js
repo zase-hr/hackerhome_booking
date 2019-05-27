@@ -37,7 +37,7 @@ function generateRandomRooms(num) {
         children: randomIntFromInterval(0, 4),
         infants: randomIntFromInterval(0, 2),
       },
-      min_night: 1,
+      min_night: randomIntFromInterval(1, 2),
       max_night: randomIntFromInterval(2, 6),
       ratings: (Math.random() * (5.0 - 1.0) + 1.0).toFixed(1),
       num_reviews: randomIntFromInterval(0, 100),
@@ -68,3 +68,6 @@ const createRoomData = () => {
 
 createRoomData();
 
+module.exports = {
+  rooms,
+};

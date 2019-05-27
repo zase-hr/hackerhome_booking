@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import MonthNav from './MonthNav.jsx';
 import ClickOutsideOfCalendar from './ClickOutsideOfCalendar.jsx';
+import CalendarDayItem from './CalendarDayItem.jsx';
 
 export default class Calendar extends React.Component {
   constructor(props) {
     super(props);
     this.style = {};
+
     this.state = {
-      dateContext: moment(),
+      dateContext: props.checkIn === '' ? moment() : moment(props.checkIn),
+      candidateCheckOut: null,
     };
     this.weekdays = moment.weekdays();
     this.weekdaysShort = moment.weekdaysShort();
@@ -21,6 +24,8 @@ export default class Calendar extends React.Component {
     this.setYear = this.setYear.bind(this);
     this.prevMonth = this.prevMonth.bind(this);
     this.nextMonth = this.nextMonth.bind(this);
+    this.clickDate = this.clickDate.bind(this);
+    this.updateCandidateCheckOut = this.updateCandidateCheckOut.bind(this);
   }
 
   onMonthChange(data) {
@@ -105,17 +110,54 @@ export default class Calendar extends React.Component {
     moment(checkIn, 'MM/DD/YYYY');
   }
 
+  clickDate(e, day) {
+    let dateContext1 = Object.assign({}, this.state.dateContext);
+    dateContext1 = moment(dateContext1).set('date', day);
+    this.props.onDayClick(e, dateContext1, this.props.handleCheckoutOnclick, this.props.closeCalendar);
+    this.setState({
+      dateContext: dateContext1,
+    });
+  }
+
+  updateCandidateCheckOut(formattedCandidateCheckOut) {
+    this.setState({
+      candidateCheckOut: formattedCandidateCheckOut,
+    });
+  }
+
+  isDayDisabled(day) {
+    const { dateContext } = this.state;
+    const {
+      checkIn, checkOut, bookedDates, maxNight, minNight,
+    } = this.props;
+    if (checkIn === '' || checkOut !== '') {
+      return dateContext.set('date', day) < moment() || bookedDates.map(date => date.format('MM/DD/YYYY')).includes(dateContext.set('date', day).format('MM/DD/YYYY'));
+    } if (checkIn !== '') {
+      const closestFutureBookedDate = this.findClosestFutureBookingCheckIn();
+      return dateContext.set('date', day) < moment(checkIn, 'MM/DD/YYYY').startOf('date')
+        || (dateContext.set('date', day).startOf('date') > moment(checkIn, 'MM/DD/YYYY').startOf('date') && dateContext.set('date', day) <= moment(checkIn, 'MM/DD/YYYY').startOf('date').add(minNight, 'd'))
+        || (closestFutureBookedDate != null && dateContext.set('date', day) >= moment(closestFutureBookedDate))
+        || dateContext.set('date', day) >= moment(checkIn, 'MM/DD/YYYY').startOf('date').add(maxNight, 'd');
+    }
+  }
+
+  findClosestFutureBookingCheckIn() {
+    const sortedBookedDates = this.props.bookedDates.map(date => date.format('MM/DD/YYYY')).sort();
+    for (let i = 0; i < sortedBookedDates.length; i += 1) {
+      if (moment(this.props.checkIn, 'MM/DD/YYYY') < moment(sortedBookedDates[i], 'MM/DD/YYYY')) {
+        return sortedBookedDates[i];
+      }
+    }
+
+    return null;
+  }
+
   render() {
     const {
-      bookedDates,
       checkIn,
       checkOut,
-      handleCheckoutOnclick,
       closeCalendar,
-      onDayClick,
       calendarInitialize,
-      minNight,
-      maxNight,
       handleBothUnclicked,
     } = this.props;
 
@@ -132,69 +174,10 @@ export default class Calendar extends React.Component {
       blanks.push(<td key={key} className="emptySlot" />);
     }
 
-    const formattedBookedDates = bookedDates.map(date => date.format('MM/DD/YYYY'));
     const daysInMonth = [];
     for (let d = 1; d <= this.daysInMonth(); d += 1) {
       daysInMonth.push(
-        <td
-          key={d}
-          className="days"
-          style={
-            (moment(dateContext).set('date', d) === moment(checkIn, 'MM/DD/YYYY')
-              || moment(dateContext).set('date', d) === moment(checkOut, 'MM/DD/YYYY')
-              ? {
-                border: '1px double rgb(0, 166, 153)',
-                color: 'rgb(255, 255, 255) !important',
-                background: 'rgb(0, 166, 153) !important',
-              }
-              : null)
-              || (
-                checkIn !== ''
-              && (moment(dateContext).set('date', d) > moment(checkIn, 'MM/DD/YYYY')
-                && moment(dateContext).set('date', d) < moment(checkOut, 'MM/DD/YYYY'))
-                  ? {
-                    border: '1px double rgb(128, 232, 224)',
-                    color: 'rgb(1, 122, 135)',
-                    background: 'rgb (178, 241, 236)',
-                  }
-                  : null
-              )
-            }
-        >
-          <span
-            className="day"
-            role="button"
-            disabled={
-              (checkIn !== '' && checkOut !== '')
-                ? moment(dateContext).set('date', d) < moment()
-              || formattedBookedDates.includes(moment(dateContext).set('date', d).format('MM/DD/YYYY'))
-                : moment(dateContext).set('date', d) < moment()
-                || formattedBookedDates.includes(moment(dateContext).set('date', d).format('MM/DD/YYYY'))
-              || moment(dateContext).set('date', d) < moment(checkIn, 'MM/DD/YYYY')
-              || moment(dateContext).set('date', d) > moment(checkOut, 'MM/DD/YYYY')
-              || moment(dateContext).set('date', d) < moment(checkIn, 'MM/DD/YYYY').add(minNight, 'd')
-              || moment(dateContext).set('date', d) > moment(checkIn, 'MM/DD/YYYY').add(maxNight, 'd')
-            }
-            onClick={(e) => {
-              let dateContext1 = Object.assign({}, dateContext);
-              dateContext1 = moment(dateContext1).set('date', d);
-              onDayClick(e, dateContext1, handleCheckoutOnclick, closeCalendar);
-              this.setState({
-                dateContext: dateContext1,
-              });
-            }}
-            onKeyPress={(e) => {
-              let dateContext1 = Object.assign({}, dateContext);
-              dateContext1 = moment(dateContext1).set('date', d);
-              onDayClick(e, dateContext1, handleCheckoutOnclick, closeCalendar);
-              this.setState({
-                dateContext: dateContext1,
-              });
-            }}
-          >
-            {d}
-          </span>
-        </td>,
+        <CalendarDayItem key={moment(dateContext).set('d', d)} day={d} isDayDisabled={this.isDayDisabled(d)} checkIn={checkIn} checkOut={checkOut} dateContext={dateContext} clickDate={this.clickDate} candidateCheckOut={this.state.candidateCheckOut} updateCandidateCheckOut={this.updateCandidateCheckOut} />,
       );
     }
 
@@ -243,7 +226,7 @@ export default class Calendar extends React.Component {
                       e.preventDefault();
                     }}
                   >
-                  ←
+                    ←
                   </button>
                 </td>
                 <td colSpan="5" className="thisMonth">
@@ -264,7 +247,7 @@ export default class Calendar extends React.Component {
                       e.preventDefault();
                     }}
                   >
-                  →
+                    →
                   </button>
                 </td>
               </tr>
@@ -286,7 +269,7 @@ export default class Calendar extends React.Component {
               });
             }}
           >
-  Clear dates
+            Clear dates
           </button>
         </div>
       </ClickOutsideOfCalendar>
