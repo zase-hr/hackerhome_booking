@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+// import moment from 'moment';
 
 export default class BookingSummary extends React.Component {
   constructor(props) {
@@ -21,6 +21,7 @@ export default class BookingSummary extends React.Component {
     } else {
       makeBooking(roomId, email);
     }
+    window.location.reload();
   }
 
   handleChange(e) {
@@ -45,8 +46,8 @@ export default class BookingSummary extends React.Component {
       closeBookingPopup,
       ratings,
       reviews,
-      htmlFor,
     } = this.props;
+
     const roomPrice = parseFloat(price);
     const divStyle = {
       height: '16px', width: '16px', display: 'block', fill: 'rgb(118, 118, 118)',
@@ -65,7 +66,7 @@ export default class BookingSummary extends React.Component {
             </svg>
           </button>
           <form onSubmit={this.handleClick}>
-            <label htmlFor={htmlFor} className="email">
+            <label htmlFor="email" className="email">
             Email:
               <input style={{ width: '70%', height: '15px' }} type="text" name="email" value={email} onChange={this.handleChange} />
             </label>
@@ -168,19 +169,37 @@ export default class BookingSummary extends React.Component {
 }
 
 BookingSummary.propTypes = {
-  roomId: PropTypes.number.isRequired,
-  makeBooking: PropTypes.func.isRequired,
-  message: PropTypes.string.isRequired,
-  roomname: PropTypes.string.isRequired,
-  checkIn: PropTypes.string.isRequired,
-  checkOut: PropTypes.string.isRequired,
-  serviceFee: PropTypes.number.isRequired,
-  tax: PropTypes.number.isRequired,
-  cleaningFee: PropTypes.number.isRequired,
-  totalCost: PropTypes.number.isRequired,
-  price: PropTypes.number.isRequired,
-  selectedNights: PropTypes.string.isRequired,
-  closeBookingPopup: PropTypes.func.isRequired,
-  ratings: PropTypes.string.isRequired,
-  reviews: PropTypes.number.isRequired,
+  roomId: PropTypes.number,
+  makeBooking: PropTypes.func,
+  message: PropTypes.string,
+  roomname: PropTypes.string,
+  checkIn: PropTypes.string,
+  checkOut: PropTypes.string,
+  serviceFee: PropTypes.number,
+  tax: PropTypes.number,
+  cleaningFee: PropTypes.number,
+  totalCost: PropTypes.number,
+  price: PropTypes.number,
+  selectedNights: PropTypes.string,
+  closeBookingPopup: PropTypes.func,
+  ratings: PropTypes.string,
+  reviews: PropTypes.number,
+};
+
+BookingSummary.defaultProps = {
+  roomId: 1,
+  makeBooking: () => { },
+  message: '1 adult',
+  roomname: '',
+  checkIn: '',
+  checkOut: '',
+  serviceFee: 0,
+  tax: 0,
+  cleaningFee: 0,
+  totalCost: 0,
+  price: 0,
+  selectedNights: '',
+  closeBookingPopup: () => { },
+  ratings: '',
+  reviews: 0,
 };

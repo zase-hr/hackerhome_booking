@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -15,7 +16,7 @@ export default class Form extends React.Component {
       adults: 1,
       children: 0,
       infants: 0,
-      adultMessage: '1 Guest',
+      adultMessage: '1 guest',
       childrenMessage: '',
       infantMessage: '',
       guestSelected: false,
@@ -23,7 +24,7 @@ export default class Form extends React.Component {
       totalCostPerNight: 0,
       totalCost: 0,
       calculatedTax: 0,
-      selectedNights: 0,
+      selectedNights: '',
       checkIn: '',
       checkOut: '',
       selectedDate: 0,
@@ -74,31 +75,31 @@ export default class Form extends React.Component {
     const { adults, children, infants } = this.state;
     if (adults === 1) {
       this.setState({
-        adultMessage: '1 Guest',
+        adultMessage: '1 guest',
       });
     } else {
       this.setState({
-        adultMessage: `${adults} Guests`,
+        adultMessage: `${adults} guests`,
       });
     }
 
     if (children === 1) {
       this.setState({
-        childrenMessage: ', 1 Child',
+        childrenMessage: ', 1 child',
       });
     } else {
       this.setState({
-        childrenMessage: `, ${children} Children`,
+        childrenMessage: `, ${children} children`,
       });
     }
 
     if (infants === 1) {
       this.setState({
-        infantMessage: ', 1 Infant',
+        infantMessage: ', 1 infant',
       });
     } else {
       this.setState({
-        infantMessage: `, ${infants} Infants`,
+        infantMessage: `, ${infants} infants`,
       });
     }
   }
@@ -299,7 +300,7 @@ export default class Form extends React.Component {
 
     return (
       <section>
-        <form>
+        <form className="form">
           <div>
             <Date
               checkIn={checkIn}
@@ -373,14 +374,31 @@ export default class Form extends React.Component {
 }
 
 Form.propTypes = {
-  guest: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  cleaningFee: PropTypes.number.isRequired,
-  serviceFee: PropTypes.number.isRequired,
-  tax: PropTypes.number.isRequired,
-  bookedDates: PropTypes.array.isRequired,
-  minNight: PropTypes.number.isRequired,
-  maxNight: PropTypes.number.isRequired,
-  roomId: PropTypes.number.isRequired,
-  roomname: PropTypes.string.isRequired,
+  guest: PropTypes.string,
+  price: PropTypes.number,
+  cleaningFee: PropTypes.number,
+  serviceFee: PropTypes.number,
+  tax: PropTypes.number,
+  bookedDates: PropTypes.arrayOf(PropTypes.object),
+  minNight: PropTypes.number,
+  maxNight: PropTypes.number,
+  roomId: PropTypes.number,
+  roomname: PropTypes.string,
+  reviews: PropTypes.number,
+  ratings: PropTypes.string,
+};
+
+Form.defaultProps = {
+  guest: '',
+  price: 0,
+  cleaningFee: 0,
+  serviceFee: 0,
+  tax: 0,
+  bookedDates: [{}],
+  minNight: 0,
+  maxNight: 0,
+  roomId: 1,
+  roomname: '',
+  reviews: 0,
+  ratings: '',
 };

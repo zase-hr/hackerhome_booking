@@ -64,14 +64,25 @@ const GuestPicker = (props) => {
 };
 
 GuestPicker.propTypes = {
-  guest: PropTypes.string.isRequired,
-  adults: PropTypes.number.isRequired,
-  numChildren: PropTypes.number.isRequired,
-  infants: PropTypes.number.isRequired,
-  clickOutsideOfGuestPicker: PropTypes.func.isRequired,
-  increaseGuest: PropTypes.func.isRequired,
-  decreaseGuest: PropTypes.func.isRequired,
-  guestExpandToggle: PropTypes.func.isRequired,
+  guest: PropTypes.string,
+  adults: PropTypes.number,
+  numChildren: PropTypes.number,
+  infants: PropTypes.number,
+  clickOutsideOfGuestPicker: PropTypes.func,
+  increaseGuest: PropTypes.func,
+  decreaseGuest: PropTypes.func,
+  guestExpandToggle: PropTypes.func,
+};
+
+GuestPicker.defaultProps = {
+  guest: '',
+  adults: 0,
+  numChildren: 0,
+  infants: 0,
+  clickOutsideOfGuestPicker: () => {},
+  increaseGuest: () => { },
+  decreaseGuest: () => { },
+  guestExpandToggle: () => { },
 };
 
 

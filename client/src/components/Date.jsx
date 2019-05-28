@@ -62,7 +62,7 @@ class Date extends React.Component {
     if (checkInClicked) {
       checkInClassName += '-clicked';
     }
-    let checkOutClassName = 'check-in';
+    let checkOutClassName = 'check-out';
     if (checkOutClicked) {
       checkOutClassName += '-clicked';
     }
@@ -71,7 +71,7 @@ class Date extends React.Component {
         <div className="dateSection">Dates</div>
         <div className="inputs">
           <div>
-            <input className={checkInClassName} type="text" value={checkIn === '' ? 'Check-in' : checkIn} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
+            <input className={checkInClassName} id="check-in" type="text" value={checkIn === '' ? 'Check-in' : checkIn} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
           </div>
           <svg
             className="arrow"
@@ -80,14 +80,14 @@ class Date extends React.Component {
             aria-hidden="true"
             focusable="false"
             style={{
-              
+
             }}
           >
             <path d="m0 12.5a.5.5 0 0 0 .5.5h21.79l-6.15 6.15a.5.5 0 1 0 .71.71l7-7v-.01a.5.5 0 0 0 .14-.35.5.5 0 0 0 -.14-.35v-.01l-7-7a .5.5 0 0 0 -.71.71l6.15 6.15h-21.79a.5.5 0 0 0 -.5.5z" fillRule="evenodd" />
 
           </svg>
           <div>
-            <input className={checkOutClassName} type="text" value={(checkOut === '' || checkIn > checkOut) ? 'Checkout' : checkOut} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
+            <input className={checkOutClassName} id="check-out" type="text" value={(checkOut === '' || checkIn > checkOut) ? 'Checkout' : checkOut} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
           </div>
         </div>
         <div className="datePicker">
@@ -116,18 +116,33 @@ class Date extends React.Component {
 }
 
 Date.propTypes = {
-  checkIn: PropTypes.string.isRequired,
-  checkOut: PropTypes.string.isRequired,
-  handleCheckinClicked: PropTypes.func.isRequired,
-  handleCheckoutClicked: PropTypes.func.isRequired,
-  onDayClick: PropTypes.func.isRequired,
-  calendarInitialize: PropTypes.func.isRequired,
-  checkInClicked: PropTypes.bool.isRequired,
-  checkOutClicked: PropTypes.bool.isRequired,
-  bookedDates: PropTypes.array.isRequired,
-  minNight: PropTypes.number.isRequired,
-  maxNight: PropTypes.number.isRequired,
-  handleBothUnclicked: PropTypes.func.isRequired,
+  checkIn: PropTypes.string,
+  checkOut: PropTypes.string,
+  handleCheckinClicked: PropTypes.func,
+  handleCheckoutClicked: PropTypes.func,
+  onDayClick: PropTypes.func,
+  calendarInitialize: PropTypes.func,
+  checkInClicked: PropTypes.bool,
+  checkOutClicked: PropTypes.bool,
+  bookedDates: PropTypes.arrayOf(PropTypes.object),
+  minNight: PropTypes.number,
+  maxNight: PropTypes.number,
+  handleBothUnclicked: PropTypes.func,
+};
+
+Date.defaultProps = {
+  checkIn: '',
+  checkOut: '',
+  handleCheckinClicked: () => { },
+  handleCheckoutClicked: () => { },
+  onDayClick: () => { },
+  calendarInitialize: () => { },
+  checkInClicked: false,
+  checkOutClicked: false,
+  bookedDates: [{}],
+  minNight: 0,
+  maxNight: 0,
+  handleBothUnclicked: () => { },
 };
 
 export default Date;
