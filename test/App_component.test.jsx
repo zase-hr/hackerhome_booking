@@ -1,15 +1,16 @@
+/* eslint-disable import/extensions */
 /* eslint-disable react/jsx-filename-extension */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable no-undef */
-import Info from '../client/src/components/Info';
-import Form from '../client/src/components/Form';
-import Date from '../client/src/components/Date';
-import Guest from '../client/src/components/Guest';
-import Cost from '../client/src/components/Cost';
-import BookingSummary from '../client/src/components/BookingSummary';
-import GuestPicker from '../client/src/components/GuestPicker';
-import Calendar from '../client/src/components/Calendar';
-import MonthNav from '../client/src/components/MonthNav';
+import Info from '../client/src/components/Info.jsx';
+import Form from '../client/src/components/Form.jsx';
+import Date from '../client/src/components/Date.jsx';
+import Guest from '../client/src/components/Guest.jsx';
+import Cost from '../client/src/components/Cost.jsx';
+import BookingSummary from '../client/src/components/BookingSummary.jsx';
+import GuestPicker from '../client/src/components/GuestPicker.jsx';
+import Calendar from '../client/src/components/Calendar.jsx';
+import MonthNav from '../client/src/components/MonthNav.jsx';
 
 
 const fakeDataRoom = {
