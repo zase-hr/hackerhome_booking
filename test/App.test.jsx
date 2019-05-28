@@ -100,6 +100,6 @@ describe('function updateRoomState and updateBookedDates', () => {
     const appInstance = component.instance();
     appInstance.updateBookedDates(fakeDataBooking);
     expect(appInstance.state.bookedDates.length).toEqual(7);
-    expect(appInstance.state.bookedDates[0].toString()).toEqual('Fri Jun 21 2019 00:00:00 GMT-0700');
+    expect(appInstance.state.bookedDates[0].toString().slice(0, 15)).toEqual('Fri Jun 21 2019');
   });
 });
