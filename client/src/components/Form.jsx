@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -15,7 +16,7 @@ export default class Form extends React.Component {
       adults: 1,
       children: 0,
       infants: 0,
-      adultMessage: '1 Guest',
+      adultMessage: '1 guest',
       childrenMessage: '',
       infantMessage: '',
       guestSelected: false,
@@ -74,31 +75,31 @@ export default class Form extends React.Component {
     const { adults, children, infants } = this.state;
     if (adults === 1) {
       this.setState({
-        adultMessage: '1 Guest',
+        adultMessage: '1 guest',
       });
     } else {
       this.setState({
-        adultMessage: `${adults} Guests`,
+        adultMessage: `${adults} guests`,
       });
     }
 
     if (children === 1) {
       this.setState({
-        childrenMessage: ', 1 Child',
+        childrenMessage: ', 1 child',
       });
     } else {
       this.setState({
-        childrenMessage: `, ${children} Children`,
+        childrenMessage: `, ${children} children`,
       });
     }
 
     if (infants === 1) {
       this.setState({
-        infantMessage: ', 1 Infant',
+        infantMessage: ', 1 infant',
       });
     } else {
       this.setState({
-        infantMessage: `, ${infants} Infants`,
+        infantMessage: `, ${infants} infants`,
       });
     }
   }
@@ -255,7 +256,6 @@ export default class Form extends React.Component {
   }
 
   render() {
-    console.log(typeof this.state.selectedNights)
     const {
       adults,
       children,
@@ -300,7 +300,7 @@ export default class Form extends React.Component {
 
     return (
       <section>
-        <form>
+        <form className="form">
           <div>
             <Date
               checkIn={checkIn}
@@ -384,6 +384,8 @@ Form.propTypes = {
   maxNight: PropTypes.number,
   roomId: PropTypes.number,
   roomname: PropTypes.string,
+  reviews: PropTypes.number,
+  ratings: PropTypes.string,
 };
 
 Form.defaultProps = {
@@ -397,4 +399,6 @@ Form.defaultProps = {
   maxNight: 0,
   roomId: 1,
   roomname: '',
+  reviews: 0,
+  ratings: '',
 };

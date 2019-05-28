@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -11,7 +12,7 @@ export default class Calendar extends React.Component {
     this.style = {};
 
     this.state = {
-      dateContext: props.checkIn === '' ? moment() : moment(props.checkIn),
+      dateContext: props.checkIn === '' ? moment() : moment(props.checkIn, 'MM/DD/YYYY'),
       candidateCheckOut: null,
     };
     this.weekdays = moment.weekdays();
@@ -19,19 +20,12 @@ export default class Calendar extends React.Component {
     this.months = moment.months();
     this.month = this.month.bind(this);
     this.setMonth = this.setMonth.bind(this);
-    this.onMonthChange = this.onMonthChange.bind(this);
     this.year = this.year.bind(this);
     this.setYear = this.setYear.bind(this);
     this.prevMonth = this.prevMonth.bind(this);
     this.nextMonth = this.nextMonth.bind(this);
     this.clickDate = this.clickDate.bind(this);
     this.updateCandidateCheckOut = this.updateCandidateCheckOut.bind(this);
-  }
-
-  onMonthChange(data) {
-    const { onChangeMonth } = this.props;
-    this.setMonth(data);
-    onChangeMonth && onChangeMonth();
   }
 
   setMonth(month) {
@@ -90,8 +84,6 @@ export default class Calendar extends React.Component {
     this.setState({
       dateContext: dateContext1,
     });
-    const { onNextMonth } = this.props;
-    onNextMonth && onNextMonth();
   }
 
   prevMonth() {
@@ -101,19 +93,19 @@ export default class Calendar extends React.Component {
     this.setState({
       dateContext: dateContext1,
     });
-
-    const { onPrevMonth } = this.props;
-    onPrevMonth && onPrevMonth();
   }
 
   calculateMinMaxNight() {
+    const { checkIn } = this.props;
     moment(checkIn, 'MM/DD/YYYY');
   }
 
   clickDate(e, day) {
-    let dateContext1 = Object.assign({}, this.state.dateContext);
+    const { dateContext } = this.state;
+    const { onDayClick, handleCheckoutOnclick, closeCalendar } = this.props;
+    let dateContext1 = Object.assign({}, dateContext);
     dateContext1 = moment(dateContext1).set('date', day);
-    this.props.onDayClick(e, dateContext1, this.props.handleCheckoutOnclick, this.props.closeCalendar);
+    onDayClick(e, dateContext1, handleCheckoutOnclick, closeCalendar);
     this.setState({
       dateContext: dateContext1,
     });
@@ -140,12 +132,14 @@ export default class Calendar extends React.Component {
         || (closestFutureBookedDate != null && dateContext.set('date', day) >= moment(closestFutureBookedDate, 'MM/DD/YYYY'))
         || dateContext.set('date', day) >= moment(checkIn, 'MM/DD/YYYY').startOf('date').add(maxNight, 'd');
     }
+    return false;
   }
 
   findClosestFutureBookingCheckIn() {
-    const sortedBookedDates = this.props.bookedDates.map(date => date.format('MM/DD/YYYY')).sort();
+    const { bookedDates, checkIn } = this.props;
+    const sortedBookedDates = bookedDates.map(date => date.format('MM/DD/YYYY')).sort();
     for (let i = 0; i < sortedBookedDates.length; i += 1) {
-      if (moment(this.props.checkIn, 'MM/DD/YYYY') < moment(sortedBookedDates[i], 'MM/DD/YYYY')) {
+      if (moment(checkIn, 'MM/DD/YYYY') < moment(sortedBookedDates[i], 'MM/DD/YYYY')) {
         return sortedBookedDates[i];
       }
     }
@@ -164,6 +158,7 @@ export default class Calendar extends React.Component {
 
     const {
       dateContext,
+      candidateCheckOut,
     } = this.state;
 
     const weekdays = this.weekdaysShort.map(day => (
@@ -178,7 +173,7 @@ export default class Calendar extends React.Component {
     const daysInMonth = [];
     for (let d = 1; d <= this.daysInMonth(); d += 1) {
       daysInMonth.push(
-        <CalendarDayItem key={moment(dateContext).set('d', d)} day={d} isDayDisabled={this.isDayDisabled(d)} checkIn={checkIn} checkOut={checkOut} dateContext={dateContext} clickDate={this.clickDate} candidateCheckOut={this.state.candidateCheckOut} updateCandidateCheckOut={this.updateCandidateCheckOut} />,
+        <CalendarDayItem key={moment(dateContext).set('d', d)} day={d} isDayDisabled={this.isDayDisabled(d)} checkIn={checkIn} checkOut={checkOut} dateContext={dateContext} clickDate={this.clickDate} candidateCheckOut={candidateCheckOut} updateCandidateCheckOut={this.updateCandidateCheckOut} />,
       );
     }
 

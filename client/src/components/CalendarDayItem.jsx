@@ -108,4 +108,18 @@ export default class CalendarDayItem extends React.Component {
   }
 }
 
+CalendarDayItem.propTypes = {
+  day: PropTypes.number.isRequired,
+  isDayDisabled: PropTypes.bool.isRequired,
+  checkIn: PropTypes.string.isRequired,
+  checkOut: PropTypes.string.isRequired,
+  dateContext: PropTypes.objectOf(PropTypes.any).isRequired,
+  clickDate: PropTypes.func.isRequired,
+  candidateCheckOut: PropTypes.string,
+  updateCandidateCheckOut: PropTypes.func,
+};
 
+CalendarDayItem.defaultProps = {
+  updateCandidateCheckOut: null,
+  candidateCheckOut: null,
+};

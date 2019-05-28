@@ -20,6 +20,7 @@ app.get('/room', (req, res) => {
   })
     .then((result) => {
       res.send(result[0].dataValues);
+      // res.render('index.jsx');
     })
     .catch(() => {
       res.sendStatus(500);

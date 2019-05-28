@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+// import moment from 'moment';
 
 export default class BookingSummary extends React.Component {
   constructor(props) {
@@ -21,6 +21,7 @@ export default class BookingSummary extends React.Component {
     } else {
       makeBooking(roomId, email);
     }
+    window.location.reload();
   }
 
   handleChange(e) {
@@ -45,8 +46,8 @@ export default class BookingSummary extends React.Component {
       closeBookingPopup,
       ratings,
       reviews,
-      htmlFor,
     } = this.props;
+
     const roomPrice = parseFloat(price);
     const divStyle = {
       height: '16px', width: '16px', display: 'block', fill: 'rgb(118, 118, 118)',
@@ -65,7 +66,7 @@ export default class BookingSummary extends React.Component {
             </svg>
           </button>
           <form onSubmit={this.handleClick}>
-            <label htmlFor={htmlFor} className="email">
+            <label htmlFor="email" className="email">
             Email:
               <input style={{ width: '70%', height: '15px' }} type="text" name="email" value={email} onChange={this.handleChange} />
             </label>
