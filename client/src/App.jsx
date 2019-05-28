@@ -1,8 +1,9 @@
+/* eslint-disable import/extensions */
 import React from 'react';
 import $ from 'jquery';
 import moment from 'moment';
 import Info from './components/Info.jsx';
-import Form from './components/form.jsx';
+import Form from './components/Form.jsx';
 
 
 export default class App extends React.Component {

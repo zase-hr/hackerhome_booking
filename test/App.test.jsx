@@ -2,9 +2,9 @@
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-filename-extension */
-import App from '../client/src/App.jsx';
 import Info from '../client/src/components/Info.jsx';
 import Form from '../client/src/components/Form.jsx';
+import App from '../client/src/App.jsx';
 
 const fakeDataRoom = {
   cleaning_fee: 5,
