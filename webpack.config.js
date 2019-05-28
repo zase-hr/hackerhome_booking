@@ -24,4 +24,7 @@ module.exports = {
       { test: /\.(css|less)$/, loader: ['style-loader', 'css-loader'] },
     ],
   },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
 };
