@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize');
-const dbConfig = require('./dbconfig.js');
 
-const sequelize = new Sequelize('booking', dbConfig.dbName, dbConfig.dbPassword, {
+const sequelize = new Sequelize('booking', 'root', null, {
   host: 'localhost',
   dialect: 'mysql',
 });
+
 
 const Room = sequelize.define('rooms', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
