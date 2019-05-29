@@ -4,6 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import css from '../../../public/dist/App.css';
 
 export default class CalendarDayItem extends React.Component {
   constructor(props) {
@@ -80,7 +81,7 @@ export default class CalendarDayItem extends React.Component {
     return (
       <td
         key={day}
-        className="days"
+        className={css.days}
         onMouseEnter={this.toggle}
         onMouseLeave={this.toggle}
         onClick={e => clickDate(e, day)}
@@ -94,7 +95,7 @@ export default class CalendarDayItem extends React.Component {
                     }
       >
         <span
-          className="day"
+          className={css.day}
           role="button"
           disabled={isDayDisabled}
           style={

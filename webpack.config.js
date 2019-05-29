@@ -1,5 +1,5 @@
 const path = require('path');
-
+const env = process.env.NODE_ENV;
 const SRC_DIR = path.join(__dirname, '/client/src');
 const DIST_DIR = path.join(__dirname, '/public/dist');
 
@@ -21,7 +21,17 @@ module.exports = {
           presets: ['@babel/preset-react', '@babel/preset-env'],
         },
       },
-      { test: /\.(css|less)$/, loader: ['style-loader', 'css-loader'] },
+      {
+        test: /\.(css|less)$/,
+        use: [{ loader: 'style-loader' }, {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            importLoaders: 1,
+            localIdentName: '[sha1:hash:hex:4]',
+          },
+        }],
+      },
     ],
   },
   resolve: {

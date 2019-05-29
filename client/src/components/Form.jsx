@@ -7,7 +7,7 @@ import Date from './Date.jsx';
 import Cost from './Cost.jsx';
 import Guest from './Guest.jsx';
 import BookingSummary from './BookingSummary.jsx';
-
+import css from '../../../public/dist/App.css';
 
 export default class Form extends React.Component {
   constructor(props) {
@@ -155,14 +155,14 @@ export default class Form extends React.Component {
   increaseGuest(e) {
     e.preventDefault(e);
     this.setState({
-      [e.target.className]: this.state[e.target.className] + 1,
+      [e.target.id]: this.state[e.target.id] + 1,
     }, this.guestButtonMessage);
   }
 
   decreaseGuest(e) {
     e.preventDefault(e);
     this.setState({
-      [e.target.className]: this.state[e.target.className] - 1,
+      [e.target.id]: this.state[e.target.id] - 1,
     }, this.guestButtonMessage);
   }
 
@@ -300,7 +300,7 @@ export default class Form extends React.Component {
 
     return (
       <section>
-        <form className="form">
+        <form className={css.form}>
           <div>
             <Date
               checkIn={checkIn}
@@ -345,8 +345,8 @@ export default class Form extends React.Component {
               ) : null}
           </div>
         </form>
-        <div className="bookbutton">
-          <button className="book" type="button" onClick={this.bookButtonClick}><div>Book</div></button>
+        <div className={css.bookbutton}>
+          <button className={css.book} type="button" onClick={this.bookButtonClick}><div>Book</div></button>
           {bookingSummaryExpand ? (
             <BookingSummary
               roomId={roomId}

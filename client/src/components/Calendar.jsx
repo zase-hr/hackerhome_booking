@@ -5,6 +5,7 @@ import moment from 'moment';
 import MonthNav from './MonthNav.jsx';
 import ClickOutsideOfCalendar from './ClickOutsideOfCalendar.jsx';
 import CalendarDayItem from './CalendarDayItem.jsx';
+import css from '../../../public/dist/App.css';
 
 export default class Calendar extends React.Component {
   constructor(props) {
@@ -162,12 +163,12 @@ export default class Calendar extends React.Component {
     } = this.state;
 
     const weekdays = this.weekdaysShort.map(day => (
-      <td key={day} className="week-day">{day.slice(0, day.length - 1)}</td>
+      <td key={day} className={css['week-day']}>{day.slice(0, day.length - 1)}</td>
     ));
     const blanks = [];
     for (let i = 0; i < this.firstDayOfMonth(); i += 1) {
       const key = i * 80;
-      blanks.push(<td key={key} className="emptySlot" />);
+      blanks.push(<td key={key} className={css.emptySlot} />);
     }
 
     const daysInMonth = [];
@@ -208,15 +209,15 @@ export default class Calendar extends React.Component {
         closeCalendar={closeCalendar}
         handleBothUnclicked={handleBothUnclicked}
       >
-        <div className="calendar-container">
-          <table className="calendar">
+        <div className={css['calendar-container']}>
+          <table className={css.calendar}>
             <thead>
-              <tr className="calendar-header" />
+              <tr className={css['calendar-header']} />
               <tr>
-                <td colSpan="1" className="nav-month">
+                <td colSpan="1" className={css['nav-month']}>
                   <button
                     type="submit"
-                    className="prev"
+                    className={css.prev}
                     onClick={(e) => {
                       this.prevMonth();
                       e.preventDefault();
@@ -225,7 +226,7 @@ export default class Calendar extends React.Component {
                     ←
                   </button>
                 </td>
-                <td colSpan="5" className="thisMonth">
+                <td colSpan="5" className={css.thisMonth}>
                   <MonthNav
                     month={this.month}
                     months={this.months}
@@ -234,10 +235,10 @@ export default class Calendar extends React.Component {
                   {' '}
                   {this.year()}
                 </td>
-                <td colSpan="2" className="nav-month">
+                <td colSpan="2" className={css['nav-month']}>
                   <button
                     type="submit"
-                    className="prev"
+                    className={css.prev}
                     onClick={(e) => {
                       this.nextMonth();
                       e.preventDefault();
@@ -256,7 +257,7 @@ export default class Calendar extends React.Component {
             </tbody>
           </table>
           <button
-            className="clear"
+            className={css.clear}
             type="submit"
             onClick={(e) => {
               calendarInitialize(e);

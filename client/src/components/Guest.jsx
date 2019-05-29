@@ -3,6 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import GuestPicker from './GuestPicker.jsx';
+import css from '../../../public/dist/App.css';
 
 const Guest = (props) => {
   const {
@@ -21,14 +22,20 @@ const Guest = (props) => {
     guestButtonMessage,
   } = props;
   return (
-    <div className="guest">
-      <div className="guestSection">Guests</div>
-      <div className="guestSection1">
-        <button className={guestExpand ? 'guestButton' : 'guestButton0'} type="button" expand={guestSelected.toString()} onClick={guestExpandToggle}>
-          <div className="guestButton1">
-            <div className="message">
+    <div className={css.guest}>
+      <div className={css.guestSection}>Guests</div>
+      <div className={css.guestSection1}>
+        <button
+          className={guestExpand
+            ? css.guestButton : css.guestButton0}
+          type="button"
+          expand={guestSelected.toString()}
+          onClick={guestExpandToggle}
+        >
+          <div className={css.guestButton1}>
+            <div className={css.message}>
               {message}
-              <div className="goDown">
+              <div className={css.goDown}>
                 {guestExpand
                   ? (
                     <svg
@@ -69,7 +76,7 @@ const Guest = (props) => {
 
         </button>
       </div>
-      <div className="guestPicker">
+      <div className={css.guestPicker}>
         {guestExpand
           ? (
             <GuestPicker

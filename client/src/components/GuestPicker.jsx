@@ -1,7 +1,8 @@
+/* eslint-disable import/extensions */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ClickOutsideOfGuestPicker from './ClickOutsideOfGuestPicker.jsx';
-
+import css from '../../../public/dist/App.css';
 
 const GuestPicker = (props) => {
   const {
@@ -19,45 +20,45 @@ const GuestPicker = (props) => {
 
   return (
     <ClickOutsideOfGuestPicker clickOutsideOfGuestPicker={clickOutsideOfGuestPicker}>
-      <div className="picker">
+      <div className={css.picker}>
         <div>
-          <div className="guestType">
+          <div className={css.guestType}>
             Adults
-            <div className="buttonSection">
-              <button type="submit" className="adults" id="buttons" disabled={adults === 1} onClick={decreaseGuest}>- </button>
-              <div className="countAdults">{adults}</div>
-              <button type="submit" className="adults" id="buttons" disabled={adults === maxGuests.adults} onClick={increaseGuest}> + </button>
+            <div className={css.buttonSection}>
+              <button type="submit" className={css.adults} id="adults" disabled={adults === 1} onClick={decreaseGuest}>- </button>
+              <div className={css.countAdults}>{adults}</div>
+              <button type="submit" className={css.adults} id="adults" disabled={adults === maxGuests.adults} onClick={increaseGuest}> + </button>
             </div>
           </div>
           <div />
           <br />
           <br />
-          <div className="guestType">
+          <div className={css.guestType}>
             Children
-            <div className="buttonSection">
-              <button type="submit" className="children" id="buttons" disabled={numChildren === 0} onClick={decreaseGuest}>-</button>
-              <div className="count">{numChildren}</div>
-              <button type="submit" className="children" id="buttons" disabled={numChildren === maxGuests.children} onClick={increaseGuest}>+</button>
+            <div className={css.buttonSection}>
+              <button type="submit" className={css.children} id="children" disabled={numChildren === 0} onClick={decreaseGuest}>-</button>
+              <div className={css.count}>{numChildren}</div>
+              <button type="submit" className={css.children} id="children" disabled={numChildren === maxGuests.children} onClick={increaseGuest}>+</button>
             </div>
           </div>
-          <div className="guestTypeInfo">Ages 2-12</div>
+          <div className={css.guestTypeInfo}>Ages 2-12</div>
           <br />
-          <div className="guestType">
+          <div className={css.guestType}>
             Infants
-            <div className="buttonSection">
-              <button type="submit" className="infants" id="buttons" disabled={infants === 0} onClick={decreaseGuest}>-</button>
-              <div className="count">{infants}</div>
-              <button type="submit" className="infants" id="buttons" disabled={infants === maxGuests.infants} onClick={increaseGuest}>+</button>
+            <div className={css.buttonSection}>
+              <button type="submit" className={css.infants} id="infants" disabled={infants === 0} onClick={decreaseGuest}>-</button>
+              <div className={css.count}>{infants}</div>
+              <button type="submit" className={css.infants} id="infants" disabled={infants === maxGuests.infants} onClick={increaseGuest}>+</button>
             </div>
           </div>
-          <div className="guestTypeInfo">Under 2</div>
+          <div className={css.guestTypeInfo}>Under 2</div>
         </div>
         <br />
         <div>
           {`${maxGuests.adults} guest maximum. `}
           {`${maxGuests.children} children and ${maxGuests.infants} infants are allowed in this room.`}
         </div>
-        <button type="submit" className="close" onClick={guestExpandToggle}>Close</button>
+        <button type="submit" className={css.close} onClick={guestExpandToggle}>Close</button>
       </div>
     </ClickOutsideOfGuestPicker>
   );
