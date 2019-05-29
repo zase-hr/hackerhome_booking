@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import moment from 'moment';
+import css from '../../../public/dist/App.css';
 
 export default class BookingSummary extends React.Component {
   constructor(props) {
@@ -55,9 +55,9 @@ export default class BookingSummary extends React.Component {
     const rating = parseFloat(ratings);
     const starsWidth = rating * 10;
     return (
-      <div className="popup">
-        <div className="popup_inner">
-          <button type="submit" className="xbutton" onClick={closeBookingPopup}>
+      <div className={css.popup}>
+        <div className={css.popup_inner}>
+          <button type="submit" className={css.xbutton} onClick={closeBookingPopup}>
             <svg viewBox="0 0 24 24" role="img" aria-label="Close" focusable="false" style={divStyle}>
               <path
                 d="m23.25 24c-.19 0-.38-.07-.53-.22l-10.72-10.72-10.72 10.72c-.29.29-.77.29-1.06 0s-.29-.77 0-1.06l10.72-10.72-10.72-10.72c-.29-.29-.29-.77 0-1.06s.77-.29 1.06 0l10.72 10.72 10.72-10.72c.29-.29.77-.29 1.06 0s .29.77 0 1.06l-10.72 10.72 10.72 10.72c.29.29.29.77 0 1.06-.15.15-.34.22-.53.22"
@@ -66,27 +66,27 @@ export default class BookingSummary extends React.Component {
             </svg>
           </button>
           <form onSubmit={this.handleClick}>
-            <label htmlFor="email" className="email">
+            <label htmlFor="email" className={css.email}>
             Email:
               <input style={{ width: '70%', height: '15px' }} type="text" name="email" value={email} onChange={this.handleChange} />
             </label>
           </form>
-          <div className="dividingSection" />
-          <div className="summary">
+          <div className={css.dividingSection} />
+          <div className={css.summary}>
             {roomname}
-            <div className="secondLine">
-              <div className="ratings">
-                <span className="outerStar">
-                  <span className="innerStar" style={{ width: `${starsWidth}px` }} />
+            <div className={css.secondLine}>
+              <div className={css.ratings}>
+                <span className={css.outerStar}>
+                  <span className={css.innerStar} style={{ width: `${starsWidth}px` }} />
                 </span>
                 {' '}
               </div>
               {' '}
-              <div className="reviews">{reviews}</div>
+              <div className={css.reviews}>{reviews}</div>
             </div>
-            <div className="dividingSection" />
+            <div className={css.dividingSection} />
             <div>
-              <div className="guestSummary">
+              <div className={css.guestSummary}>
                 <svg
                   viewBox="0 0 24 24"
                   style={{
@@ -99,9 +99,9 @@ export default class BookingSummary extends React.Component {
                 <div>{message}</div>
               </div>
               <br />
-              <div className="dateSummary">
+              <div className={css.dateSummary}>
                 <svg
-                  className="dateSummary1"
+                  className={css.dateSummary1}
                   viewBox="0 0 24 24"
                   role="presentation"
                   aria-hidden="true"
@@ -110,13 +110,13 @@ export default class BookingSummary extends React.Component {
                     height: '20px', width: '20px', display: 'block', fill: 'currentcolor', float: 'left', paddingRight: '10px',
                   }}
                 >
-                  <path className="dateSummary1" d="m22 9.5v-1.5-5h-4.75v-2c0-.41-.34-.75-.75-.75s-.75.34-.75.75v2h-7.5v-2c0-.41-.34-.75-.75-.75s-.75.34-.75.75v2h-4.75v5 1.5 12.51c0 .54.44.99.99.99h18.02c.54 0 .99-.44.99-.99zm-18.5-5h3.25v.5c0 .41.34.75.75.75s.75-.34.75-.75v-.5h7.5v.5c0 .41.34.75.75.75s.75-.34.75-.75v-.5h3.25v3.5h-17zm0 17v-12h17v12z" fillRule="evenodd" />
+                  <path className={css.dateSummary1} d="m22 9.5v-1.5-5h-4.75v-2c0-.41-.34-.75-.75-.75s-.75.34-.75.75v2h-7.5v-2c0-.41-.34-.75-.75-.75s-.75.34-.75.75v2h-4.75v5 1.5 12.51c0 .54.44.99.99.99h18.02c.54 0 .99-.44.99-.99zm-18.5-5h3.25v.5c0 .41.34.75.75.75s.75-.34.75-.75v-.5h7.5v.5c0 .41.34.75.75.75s.75-.34.75-.75v-.5h3.25v3.5h-17zm0 17v-12h17v12z" fillRule="evenodd" />
 
                 </svg>
-                <div className="dateSummary1">{checkIn}</div>
+                <div className={css.dateSummary1}>{checkIn}</div>
 
                 <svg
-                  className="dateSummary1"
+                  className={css.dateSummary1}
                   viewBox="0 0 24 24"
                   role="presentation"
                   aria-hidden="true"
@@ -125,43 +125,43 @@ export default class BookingSummary extends React.Component {
                     height: '15px', width: '15px', display: 'block', fill: 'currentcolor',
                   }}
                 >
-                  <path className="dateSummary1" d="m0 12.5a.5.5 0 0 0 .5.5h21.79l-6.15 6.15a.5.5 0 1 0 .71.71l7-7v-.01a.5.5 0 0 0 .14-.35.5.5 0 0 0 -.14-.35v-.01l-7-7a .5.5 0 0 0 -.71.71l6.15 6.15h-21.79a.5.5 0 0 0 -.5.5z" fillRule="evenodd" />
+                  <path className={css.dateSummary1} d="m0 12.5a.5.5 0 0 0 .5.5h21.79l-6.15 6.15a.5.5 0 1 0 .71.71l7-7v-.01a.5.5 0 0 0 .14-.35.5.5 0 0 0 -.14-.35v-.01l-7-7a .5.5 0 0 0 -.71.71l6.15 6.15h-21.79a.5.5 0 0 0 -.5.5z" fillRule="evenodd" />
                 </svg>
-                <div className="dateSummary1">{checkOut}</div>
+                <div className={css.dateSummary1}>{checkOut}</div>
               </div>
             </div>
           </div>
           <br />
-          <div className="dividingSection" />
-          <div className="costSummary">
+          <div className={css.dividingSection} />
+          <div className={css.costSummary}>
             <table style={{ width: '100%' }}>
               <tbody>
                 <tr>
                   <td>{`$ ${roomPrice} x ${selectedNights} nights`}</td>
-                  <td className="prices">{`$ ${roomPrice * selectedNights}`}</td>
+                  <td className={css.prices}>{`$ ${roomPrice * selectedNights}`}</td>
                 </tr>
                 <tr>
                   <td>Cleaning fee</td>
-                  <td className="prices">{`$ ${serviceFee * selectedNights}`}</td>
+                  <td className={css.prices}>{`$ ${serviceFee * selectedNights}`}</td>
                 </tr>
                 <tr>
                   <td>Service fee</td>
-                  <td className="prices">{`$ ${cleaningFee * selectedNights}`}</td>
+                  <td className={css.prices}>{`$ ${cleaningFee * selectedNights}`}</td>
                 </tr>
                 <tr>
                   <td>Taxes</td>
-                  <td className="prices">{`$ ${(tax * selectedNights).toFixed(1)}`}</td>
+                  <td className={css.prices}>{`$ ${(tax * selectedNights).toFixed(1)}`}</td>
                 </tr>
                 <tr />
                 <tr>
                   <td style={{ fontWeight: '600', fontSize: '15px' }}>Total (USD)</td>
-                  <td className="prices" style={{ fontWeight: '600' }}>{`$ ${totalCost}`}</td>
+                  <td className={css.prices} style={{ fontWeight: '600' }}>{`$ ${totalCost}`}</td>
                 </tr>
               </tbody>
             </table>
-            <div className="dividingSection" />
+            <div className={css.dividingSection} />
           </div>
-          <button className="book" type="submit" onClick={this.handleClick}>Sign Up</button>
+          <button className={css.book} type="submit" onClick={this.handleClick}>Sign Up</button>
         </div>
       </div>
     );

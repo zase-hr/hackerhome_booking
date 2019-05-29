@@ -1,9 +1,10 @@
+/* eslint-disable import/extensions */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-filename-extension */
-import App from '../client/src/App';
-import Info from '../client/src/components/Info';
-import Form from '../client/src/components/Form';
+import Info from '../client/src/components/Info.jsx';
+import Form from '../client/src/components/Form.jsx';
+import App from '../client/src/App.jsx';
 
 const fakeDataRoom = {
   cleaning_fee: 5,
@@ -99,6 +100,6 @@ describe('function updateRoomState and updateBookedDates', () => {
     const appInstance = component.instance();
     appInstance.updateBookedDates(fakeDataBooking);
     expect(appInstance.state.bookedDates.length).toEqual(7);
-    expect(appInstance.state.bookedDates[0].toString()).toEqual('Fri Jun 21 2019 00:00:00 GMT-0700');
+    expect(appInstance.state.bookedDates[0].toString().slice(0, 15)).toEqual('Fri Jun 21 2019');
   });
 });

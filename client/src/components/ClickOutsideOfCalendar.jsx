@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+
 export default class ClickOutsideOfCalendar extends Component {
   constructor(props) {
     super(props);

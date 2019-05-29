@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const moment = require('moment');
 const db = require('../db/index.js');
 
 
@@ -20,7 +19,6 @@ app.get('/room', (req, res) => {
   })
     .then((result) => {
       res.send(result[0].dataValues);
-      // res.render('index.jsx');
     })
     .catch(() => {
       res.sendStatus(500);

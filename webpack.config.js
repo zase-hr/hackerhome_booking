@@ -21,7 +21,20 @@ module.exports = {
           presets: ['@babel/preset-react', '@babel/preset-env'],
         },
       },
-      { test: /\.(css|less)$/, loader: ['style-loader', 'css-loader'] },
+      {
+        test: /\.(css|less)$/,
+        use: [{ loader: 'style-loader' }, {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            importLoaders: 1,
+            localIdentName: '[sha1:hash:hex:4]',
+          },
+        }],
+      },
     ],
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
   },
 };

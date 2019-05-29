@@ -471,7 +471,7 @@ body {
     width: 32px !important;
     box-shadow: none !important;
     border-radius: 50% !important;
-    border-style: solid !important;
+    border-style: solid 1px!important;
     border-color: rgb(0, 132, 137) !important;
     background: transparent !important;
     border-width: 1px !important;
@@ -480,12 +480,21 @@ body {
     display: table-cell !important;
     vertical-align: middle !important;
 }
-#buttons:disabled {
+.adults:disabled {
     cursor: default !important;
     border-color: rgba(0, 132, 137, 0.3) !important;
     background: transparent !important;
 }
-
+.children:disabled {
+    cursor: default !important;
+    border-color: rgba(0, 132, 137, 0.3) !important;
+    background: transparent !important;
+}
+.infants:disabled {
+    cursor: default !important;
+    border-color: rgba(0, 132, 137, 0.3) !important;
+    background: transparent !important;
+}
 .count {
   text-align: center !important;
   line-height: 1.375em !important;

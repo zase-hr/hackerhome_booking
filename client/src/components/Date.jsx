@@ -1,6 +1,8 @@
+/* eslint-disable import/extensions */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Calendar from './Calendar.jsx';
+import css from '../../../public/dist/App.css';
 
 class Date extends React.Component {
   constructor(props) {
@@ -67,14 +69,14 @@ class Date extends React.Component {
       checkOutClassName += '-clicked';
     }
     return (
-      <div className="dates">
-        <div className="dateSection">Dates</div>
-        <div className="inputs">
+      <div className={css.dates}>
+        <div className={css.dateSection}>Dates</div>
+        <div className={css.inputs}>
           <div>
-            <input className={checkInClassName} id="check-in" type="text" value={checkIn === '' ? 'Check-in' : checkIn} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
+            <input className={css[checkInClassName]} id="check-in" type="text" value={checkIn === '' ? 'Check-in' : checkIn} onChange={this.handleChange} onClick={this.handleCheckinOnclick} />
           </div>
           <svg
-            className="arrow"
+            className={css.arrow}
             viewBox="0 0 24 24"
             role="presentation"
             aria-hidden="true"
@@ -87,10 +89,10 @@ class Date extends React.Component {
 
           </svg>
           <div>
-            <input className={checkOutClassName} id="check-out" type="text" value={(checkOut === '' || checkIn > checkOut) ? 'Checkout' : checkOut} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
+            <input className={css[checkOutClassName]} id="check-out" type="text" value={(checkOut === '' || checkIn > checkOut) ? 'Checkout' : checkOut} onChange={this.handleChange} onClick={this.handleCheckoutOnclick} />
           </div>
         </div>
-        <div className="datePicker">
+        <div className={css.datePicker}>
           {calendarExpanded
             ? (
               <Calendar
