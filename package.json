@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --coverage",
     "start": "nodemon server/index.js",
-    "build": "webpack -d --watch"
+    "build": "webpack -d --watch",
+    "createdatabase": "mysql -u root <db/schema.sql"
   },
   "lint-staged": {
     "*.js": [
