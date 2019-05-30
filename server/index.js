@@ -11,10 +11,10 @@ app.use(express.static(path.join(__dirname, '../public/dist')));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/room', (req, res) => {
+app.get('/room/:id', (req, res) => {
   db.Room.findAll({
     where: {
-      id: req.query.roomId,
+      id: req.params.id,
     },
   })
     .then((result) => {
@@ -25,10 +25,10 @@ app.get('/room', (req, res) => {
     });
 });
 
-app.get('/booking', (req, res) => {
+app.get('/booking/:id', (req, res) => {
   db.Booking.findAll({
     where: {
-      roomId: req.query.roomId,
+      roomId: req.params.id,
     },
   })
     .then((result) => {
