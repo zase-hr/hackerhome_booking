@@ -42,7 +42,7 @@ export default class App extends React.Component {
 
   getRoomData(roomId) {
     $.ajax({
-      url: `/room?roomId=${roomId}`,
+      url: `/room/${window.location.href.match(/id\s*=\s*(.*)/)[1]}`,
       type: 'GET',
       error: (err) => {
         throw err;
@@ -56,7 +56,7 @@ export default class App extends React.Component {
 
   getBookingData(roomId) {
     $.ajax({
-      url: `/booking?roomId=${roomId}`,
+      url: `/booking/${window.location.href.match(/id\s*=\s*(.*)/)[1]}`,
       type: 'GET',
       error: (err) => {
         throw err;
