@@ -40,33 +40,64 @@ export default class App extends React.Component {
     this.getBookingData(roomId);
   }
 
-  getRoomData(roomId) {
-    $.ajax({
-      url: `/room/${window.location.href.match(/id\s*=\s*(.*)/)[1]}`,
-      type: 'GET',
-      error: (err) => {
-        throw err;
-      },
-      success: (result) => {
-        this.updateRoomState(result);
-        console.log(result);
-      },
-    });
+  getRoomData() {
+    const list = window.location.href.match(/id\s*=\s*(.*)/);
+    if (list) {
+      $.ajax({
+        url: `/room/${list[1]}`,
+        type: 'GET',
+        error: (err) => {
+          throw err;
+        },
+        success: (result) => {
+          this.updateRoomState(result);
+          console.log(result);
+        },
+      });
+    } else {
+      $.ajax({
+        url: '/room/?id=1',
+        type: 'GET',
+        error: (err) => {
+          throw err;
+        },
+        success: (result) => {
+          this.updateRoomState(result);
+          console.log(result);
+        },
+      });
+    }
   }
 
-  getBookingData(roomId) {
-    $.ajax({
-      url: `/booking/${window.location.href.match(/id\s*=\s*(.*)/)[1]}`,
-      type: 'GET',
-      error: (err) => {
-        throw err;
-      },
-      success: (result) => {
-        console.log(result);
-        this.updateBookedDates(result);
-      },
-    });
+  getBookingData() {
+    const list = window.location.href.match(/id\s*=\s*(.*)/);
+    if (list) {
+      $.ajax({
+        url: `/booking/${list[1]}`,
+        type: 'GET',
+        error: (err) => {
+          throw err;
+        },
+        success: (result) => {
+          console.log(result);
+          this.updateBookedDates(result);
+        },
+      });
+    } else {
+      $.ajax({
+        url: '/booking/?id=1',
+        type: 'GET',
+        error: (err) => {
+          throw err;
+        },
+        success: (result) => {
+          console.log(result);
+          this.updateBookedDates(result);
+        },
+      });
+    }
   }
+
 
   handleRendering() {
     this.setState({
