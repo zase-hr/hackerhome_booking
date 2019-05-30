@@ -51,7 +51,6 @@ export default class App extends React.Component {
         },
         success: (result) => {
           this.updateRoomState(result);
-          console.log(result);
         },
       });
     } else {
@@ -63,7 +62,6 @@ export default class App extends React.Component {
         },
         success: (result) => {
           this.updateRoomState(result);
-          console.log(result);
         },
       });
     }
