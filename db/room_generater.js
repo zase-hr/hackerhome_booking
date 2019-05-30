@@ -46,7 +46,7 @@ function generateRandomRooms(num) {
   }
 }
 
-generateRandomRooms(10);
+generateRandomRooms(100);
 
 const createRoomData = () => {
   for (let i = 0; i < rooms.length; i += 1) {
