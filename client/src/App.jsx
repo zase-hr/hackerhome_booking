@@ -55,7 +55,7 @@ export default class App extends React.Component {
       });
     } else {
       $.ajax({
-        url: '/room/?id=1',
+        url: '/room/1',
         type: 'GET',
         error: (err) => {
           throw err;
@@ -83,7 +83,7 @@ export default class App extends React.Component {
       });
     } else {
       $.ajax({
-        url: '/booking/?id=1',
+        url: '/booking/1',
         type: 'GET',
         error: (err) => {
           throw err;
