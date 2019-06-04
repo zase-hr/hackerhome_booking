@@ -88,11 +88,11 @@ npm install
 NOTE: this will require deleting all related bookings!
 - Method: DELETE
 - URL: ‘/rooms?id=1’
-- Input: JSON object (roomid, max_stay, etc)
+- Input: JSON object with id
 - Output: Confirmation
 
 #### Delete a single booking
 - Method: DELETE
 - URL: ‘/bookings?id=1’
-- Input: JSON object (email, check in/out, etc)
+- Input: JSON object with id
 - Output: Confirmation
