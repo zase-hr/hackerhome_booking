@@ -4,3 +4,5 @@ db/dbconfig.js
 coverage/clover.xml
 coverage/lcov-report/index.html
 coverage
+public/dist/bundle.js
+.DS_Store

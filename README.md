@@ -37,3 +37,27 @@ npm install -g webpack
 npm install
 ```
 
+## CRUD
+### Create / POST
+#### Book room
+- Method: POST
+- URL: ‘/booking?roomId=1’
+- Input: JSON object (email, check in/out, etc)
+- Output: booking information (json array)
+
+### Read / GET
+#### Get booking information
+- Method: GET
+- URL: ‘/booking?roomId=1’
+- Input: room_id (url query parameter, string)
+- Output: booking information (json array)
+
+#### Get room information
+- Method: GET
+- URL: ‘/room?roomId=1’
+- Input: room_id (url query parameter, string)
+- Output: room information (json array)
+
+### Update / PUT
+
+### Delete / DELETE
