@@ -226,7 +226,7 @@ export default class Form extends React.Component {
     };
     value = JSON.stringify(value);
     $.ajax({
-      url: `/booking?roomId=${roomId}`,
+      url: `/bookings?roomId=${roomId}`,
       type: 'POST',
       contentType: 'application/json',
       data: value,

@@ -44,7 +44,7 @@ export default class App extends React.Component {
     const list = window.location.href.match(/id\s*=\s*(.*)/);
     if (list) {
       $.ajax({
-        url: `/room/${list[1]}`,
+        url: `/rooms/${list[1]}`,
         type: 'GET',
         error: (err) => {
           throw err;
@@ -55,7 +55,7 @@ export default class App extends React.Component {
       });
     } else {
       $.ajax({
-        url: '/room/?id=1',
+        url: '/rooms/1',
         type: 'GET',
         error: (err) => {
           throw err;
@@ -71,7 +71,7 @@ export default class App extends React.Component {
     const list = window.location.href.match(/id\s*=\s*(.*)/);
     if (list) {
       $.ajax({
-        url: `/booking/${list[1]}`,
+        url: `/bookings/${list[1]}`,
         type: 'GET',
         error: (err) => {
           throw err;
@@ -83,7 +83,7 @@ export default class App extends React.Component {
       });
     } else {
       $.ajax({
-        url: '/booking/?id=1',
+        url: '/bookings/1',
         type: 'GET',
         error: (err) => {
           throw err;
