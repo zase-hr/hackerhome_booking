@@ -2,6 +2,8 @@ const faker = require('faker');
 const moment = require('moment');
 const path = require('path');
 const fs = require('fs');
+const zlib = require('zlib');
+const gzip = zlib.createGzip();
 
 // min and max included
 function randomIntFromInterval(min, max) {
@@ -25,7 +27,13 @@ function randomCheckInOutOnRoom() {
 }
 
 // Random Bookings
-function generateRandomBooking() {
+function generateRandomBooking(total) {
+  const paymentTypes = {
+    1: 'visa',
+    2: 'amex',
+    3: 'mastercard',
+    4: 'discover',
+  }
   const randomCheckInOutDates = randomCheckInOutOnRoom();
 
   if (randomCheckInOutDates === null) {
@@ -42,16 +50,20 @@ function generateRandomBooking() {
     check_in: randomCheckInOutDates.check_in,
     check_out: randomCheckInOutDates.check_out,
     createdAt: moment(randomCheckInOutDates.check_in).subtract(randomIntFromInterval(0, 30), 'days').toDate(),
+    transaction: {
+      price: total,
+      payment_type: paymentTypes[randomIntFromInterval(1, 4)],
+    },
   };
   return booking;
 }
 
-function generateRandomBookings(num) {
+function generateRandomBookings(num, total) {
   let book;
   const bookings = [];
 
   for (let i = 0; i < num; i += 1) {
-    book = generateRandomBooking();
+    book = generateRandomBooking(total);
     if (book !== null) {
       bookings.push(book);
     }
@@ -59,17 +71,22 @@ function generateRandomBookings(num) {
   return bookings;
 }
 
-const fileWriteStream = fs.createWriteStream(path.join(__dirname, 'seed_test.json'));
+const fileWriteStream = fs.createWriteStream(path.join(__dirname, 'seed_test.json.gz'));
+gzip.pipe(fileWriteStream);
 const roomNameAppendix = ['\'s Apartment', '\'s House', '\'s Loft', '\'s Condo'];
 
 function generateRandomRoom() {
+  const price = randomIntFromInterval(50, 200);
+  const cleaning_fee = 5;
+  const service_fee = 5;
+  const tax = 10;
   const room = {
     roomname: faker.name.findName()
     + roomNameAppendix[randomIntFromInterval(0, roomNameAppendix.length - 1)],
-    price: randomIntFromInterval(50, 200),
-    cleaning_fee: 5,
-    service_fee: 5,
-    tax: 10,
+    price,
+    cleaning_fee,
+    service_fee,
+    tax,
     max_guest: {
       adults: randomIntFromInterval(1, 6),
       children: randomIntFromInterval(0, 4),
@@ -79,7 +96,7 @@ function generateRandomRoom() {
     max_night: randomIntFromInterval(2, 6),
     ratings: (Math.random() * (5.0 - 1.0) + 1.0).toFixed(1),
     num_reviews: randomIntFromInterval(0, 100),
-    bookings: generateRandomBookings(randomIntFromInterval(0, 5)),
+    bookings: generateRandomBookings(randomIntFromInterval(0, 5), price + cleaning_fee + service_fee + tax),
   };
   //console.log(room);
   return room;
@@ -89,27 +106,25 @@ function addRooms(i) {
   if (i % 100000 === 0) { console.log(i); }
   if (i <= 0) {
     console.log(moment().format('h:mm:ss a'));
+    gzip.end();
     return;
   }
 
   const room = generateRandomRoom();
-  const ableToWrite = fileWriteStream.write(`${JSON.stringify(room)}\n`);
+  const ableToWrite = gzip.write(`${JSON.stringify(room)}\n`);
 
   if (ableToWrite) {
     addRooms(i - 1);
   } else {
-    fileWriteStream.once('drain', () => {
+    gzip.once('drain', () => {
       addRooms(i - 1);
     });
   }
 }
 
 function writeToFile() {
-  // fileWriteStream.write('[');
   console.log(moment().format('h:mm:ss a'));
-  addRooms(1);
-
-  // fileWriteStream.write(']');
+  addRooms(1e7);
 }
 
 writeToFile();
