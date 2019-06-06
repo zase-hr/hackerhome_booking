@@ -6,3 +6,6 @@ coverage/lcov-report/index.html
 coverage
 public/dist/bundle.js
 .DS_Store
+db/seed.json
+db/seed_test.json
+db/seed_test.json.gz

@@ -50,6 +50,7 @@ export default class App extends React.Component {
           throw err;
         },
         success: (result) => {
+          console.log(result);
           this.updateRoomState(result);
         },
       });
@@ -61,6 +62,7 @@ export default class App extends React.Component {
           throw err;
         },
         success: (result) => {
+          console.log(result);
           this.updateRoomState(result);
         },
       });
