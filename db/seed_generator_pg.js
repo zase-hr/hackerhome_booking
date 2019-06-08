@@ -50,6 +50,10 @@ function incrementRoomId() {
   ROOM_ID += 1;
 }
 
+function getRoomId() {
+  return ROOM_ID;
+}
+
 function randomCheckInOutOnRoom() {
   const MIN_STAY = 1;
   const MAX_STAY = 5;
@@ -155,7 +159,7 @@ function generateRandomRoom(ownerID) {
   const cleaning_fee = 5;
   const service_fee = 5;
   const tax = 10;
-  const room = `${ROOM_ID},`
+  const room = `${getRoomId()},`
     + `${ownerID},`
     + `${faker.name.findName() // roomname
     + roomNameAppendix[randomIntFromInterval(0, roomNameAppendix.length - 1)]},`
