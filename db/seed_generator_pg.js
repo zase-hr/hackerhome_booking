@@ -22,13 +22,13 @@ gzipTransactions.pipe(fileWriteStreamTransactions);
 
 /* CONSTANTS */
 const roomNameAppendix = ['\'s Apartment', '\'s House', '\'s Loft', '\'s Condo'];
-const NUM_ROOMS = 10;
-const NUM_USERS = 10;
-const NUM_BOOKINGS = 5;
+const NUM_ROOMS = 1e7;
+const NUM_USERS = 1e6;
+let NUM_BOOKINGS = 1e6;
 
 /* GLOBAL VARIABLES */
-var ROOM_ID = 1;
-var BOOKING_ID = 1;
+let ROOM_ID = 1;
+let BOOKING_ID = 1;
 
 /* RANDOM DATA HELPERS */
 function randomIntFromInterval(min, max) {
@@ -51,9 +51,32 @@ function randomCheckInOutOnRoom() {
   };
 }
 
-async function generateTransaction(price, payType) {
-  if (!gzipTransactions.write(`${BOOKING_ID}, ${price}, ${payType}\n`)) {
-    await new Promise(resolve => gzipTransactions.once('drain', resolve));
+function writeTransactions(num) {
+  if (num % 50000 === 0) { console.log(`Transaction: ${num}`); }
+  if (num <= 0) {
+    console.log(`Finishing transactions export: ${moment().format('h:mm:ss a')}`);
+    gzipTransactions.end();
+    return;
+  }
+  const paymentTypes = {
+    1: 'visa',
+    2: 'amex',
+    3: 'mastercard',
+    4: 'discover',
+  };
+  const price = randomIntFromInterval(100, 1000);
+  const payType = paymentTypes[randomIntFromInterval(1, 4)];
+  const transaction = `${num},`
+    + `${price},`
+    + `${payType}\n`;
+
+  const ableToWrite = gzipTransactions.write(`${transaction}`);
+  if (ableToWrite) {
+    writeTransactions(num - 1);
+  } else {
+    gzipTransactions.once('drain', () => {
+      writeTransactions(num - 1);
+    });
   }
 }
 
@@ -61,26 +84,12 @@ async function generateTransaction(price, payType) {
  * @param {integer} total - the total price of the booking
  * @returns - a booking object
  */
-function generateRandomBooking(i) {
-  // Base case
-  if (i <= 0) {
-    console.log(`Finishing bookings export: ${moment().format('h:mm:ss a')}`);
-    return;
-  }
-
-  console.log(i);
-  const paymentTypes = {
-    1: 'visa',
-    2: 'amex',
-    3: 'mastercard',
-    4: 'discover',
-  };
+function generateRandomBooking(roomId) {
   const randomCheckInOutDates = randomCheckInOutOnRoom();
-  const price = randomIntFromInterval(100, 1000);
-  const payType = paymentTypes[randomIntFromInterval(1, 4)];
+  let booking = null;
   if (randomCheckInOutDates) {
-    const booking = `${BOOKING_ID},`
-      + `${ROOM_ID},`
+    booking = `${BOOKING_ID},`
+      + `${roomId},`
       + `${randomIntFromInterval(1, NUM_USERS)},` // userID
       + `${randomIntFromInterval(1, 5)},` // max adults
       + `${randomIntFromInterval(0, 5)},` // max children
@@ -88,43 +97,60 @@ function generateRandomBooking(i) {
       + `${randomCheckInOutDates.check_in},` // check_in date
       + `${randomCheckInOutDates.check_out},` // check_out date
       + `${moment(randomCheckInOutDates.check_in).subtract(randomIntFromInterval(0, 30), 'days').toDate()}`; // createdAt date
-    
-    //generateTransaction(price, payType);
+  }
+  return booking;
+}
 
-    BOOKING_ID += 1;
+function recursiveBook(num, cb) {
+  if (num <= 0) {
+    console.log('Done making bookings');
+    cb();
+  }
+  const booking = generateRandomBooking(num);
+  if (booking) {
+    console.log(`Making booking number ${num}`);
     const ableToWrite = gzipBookings.write(`${booking}\n`);
-    fileWriteStreamBookings.on('error', (err) => {
-      console.log('THERE WAS AN ERROR: ' + err);
-    });
-    
+    NUM_BOOKINGS += 1;
     if (ableToWrite) {
-      generateRandomBooking(i - 1);
+      recursiveBook(num - 1, cb);
     } else {
-      console.log('Draining booking stream');
-      fileWriteStreamBookings.once('drain', () => {
-        console.log('I am done draining');
-        generateRandomBooking(i - 1);
+      console.log('I NEED TO DRAIN');
+      gzipBookings.once('drain', () => {
+        console.log('DONE DRAINING BOOK STREAM');
+        recursiveBook(num - 1, cb);
       });
     }
   }
 }
 
 /**
- * @param {integer} num - the total number of random bookings to be generated
+ * @param {integer} roomId - the total number of random bookings to be generated
  * @param {total} total - the total price of a booking (tax + cleaning + service + base)
  */
-function generateRandomBookings(num) {
-  console.log('Generate ' + num + ' bookings');
-  generateRandomBooking(num);
-}
+function writeBookings(roomId) {
+  if (roomId <= 0) {
+    console.log(`Finishing bookings export: ${moment().format('h:mm:ss a')}`);
+    gzipBookings.end();
+    return;
+  }
+  const bookingArray = [];
 
-function exportBookings() {
-  try {
-    generateRandomBooking(NUM_BOOKINGS);
-  } catch (e) {
-    console.error('Could not export bookings', e);
+  const bookCount = randomIntFromInterval(0, 5);
+  for (let i = 0; i < bookCount; i += 1) {
+    bookingArray.push(generateRandomBooking(roomId));
+  }
+  console.log(`Writing ${bookCount} bookings to Room ${roomId}`);
+  const ableToWrite = gzipBookings.write(`${bookingArray.join('\n')}\n`);
+
+  if (ableToWrite) {
+    writeBookings(roomId - 1);
+  } else {
+    gzipBookings.once('drain', () => {
+      writeBookings(roomId - 1);
+    });
   }
 }
+
 
 /**
  * This function generates a random room
@@ -152,7 +178,7 @@ function generateRandomRoom(ownerID) {
     + `${(Math.random() * (5.0 - 1.0) + 1.0).toFixed(1)},` // ratings value
     + `${randomIntFromInterval(0, 100)}`; // number of reviews
 
-  generateRandomBookings(randomIntFromInterval(0, 5));
+
   ROOM_ID += 1;
   return room;
 }
@@ -162,31 +188,23 @@ function generateRandomRoom(ownerID) {
  * Each room gets written to a gzip'd JSON file.
  * @param {integer} i - the total number of rooms to be generated
  */
-function addRooms(i) {
-  if (i % 100000 === 0) { console.log(i); }
+function writeRooms(i) {
+  if (i % 50000 === 0) { console.log(`Room: ${i}`); }
   if (i <= 0) {
-    console.log(`Finishing rooms/bookings/transactions export: ${moment().format('h:mm:ss a')}`);
+    console.log(`Finishing rooms export: ${moment().format('h:mm:ss a')}`);
     gzipRooms.end();
-    gzipBookings.end(() => {
-      console.log('ENDING BOOKINGS');
-    });
-    gzipTransactions.end();
     return;
   }
   const room = generateRandomRoom(i);
   const ableToWrite = gzipRooms.write(`${room}\n`);
 
   if (ableToWrite) {
-    addRooms(i - 1);
+    writeRooms(i - 1);
   } else {
     gzipRooms.once('drain', () => {
-      addRooms(i - 1);
+      writeRooms(i - 1);
     });
   }
-}
-
-function exportRooms() {
-  addRooms(NUM_ROOMS);
 }
 
 /**
@@ -197,12 +215,10 @@ function exportRooms() {
  * @param {integer} i - the total number of rooms to be generated
  */
 function writeUsers(i) {
-  if (i % 100000 === 0) { console.log(i); }
+  if (i % 50000 === 0) { console.log(`User: ${i}`); }
   if (i <= 0) {
     console.log(`Finishing user export: ${moment().format('h:mm:ss a')}`);
     gzipUsers.end();
-    console.log(`Starting rooms export: ${moment().format('h:mm:ss a')}`);
-    exportRooms();
     return;
   }
   const user = `${i.toString()},`
@@ -224,8 +240,6 @@ function writeUsers(i) {
     });
   }
 }
-
-
 
 function intializeTables() {
   gzipUsers.write(`_id,\
@@ -267,8 +281,12 @@ function intializeTables() {
 }
 
 function beginExport() {
-  console.log(`Starting users export: ${moment().format('h:mm:ss a')}`);
+  console.log(`Starting export: ${moment().format('h:mm:ss a')}`);
   intializeTables();
   writeUsers(NUM_USERS);
+  writeRooms(NUM_ROOMS);   
+  writeBookings(NUM_ROOMS); // The number of bookings is dependent on number of rooms
+  writeTransactions(NUM_BOOKINGS); // Transactions has a 1:1 relationship with bookings
 }
+
 beginExport();
