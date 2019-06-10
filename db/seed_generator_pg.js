@@ -11,10 +11,10 @@ const gzipUsers = zlib.createGzip();
 const gzipRooms = zlib.createGzip();
 const gzipBookings = zlib.createGzip();
 const gzipTransactions = zlib.createGzip();
-const fileWriteStreamRooms = fs.createWriteStream(path.join(__dirname, '/postgres/rooms.csv.gz'));
-const fileWriteStreamBookings = fs.createWriteStream(path.join(__dirname, '/postgres/bookings.csv.gz'));
-const fileWriteStreamUsers = fs.createWriteStream(path.join(__dirname, '/postgres/users.csv.gz'));
-const fileWriteStreamTransactions = fs.createWriteStream(path.join(__dirname, '/postgres/transactions.csv.gz'));
+const fileWriteStreamRooms = fs.createWriteStream(path.join(__dirname, '/postgres/import_files/rooms.csv.gz'));
+const fileWriteStreamBookings = fs.createWriteStream(path.join(__dirname, '/postgres/import_files/bookings.csv.gz'));
+const fileWriteStreamUsers = fs.createWriteStream(path.join(__dirname, '/postgres/import_files/users.csv.gz'));
+const fileWriteStreamTransactions = fs.createWriteStream(path.join(__dirname, '/postgres/import_files/transactions.csv.gz'));
 gzipUsers.pipe(fileWriteStreamUsers);
 gzipRooms.pipe(fileWriteStreamRooms);
 gzipBookings.pipe(fileWriteStreamBookings);
@@ -22,8 +22,8 @@ gzipTransactions.pipe(fileWriteStreamTransactions);
 
 /* CONSTANTS */
 const roomNameAppendix = ['\'s Apartment', '\'s House', '\'s Loft', '\'s Condo'];
-const NUM_ROOMS = 1000;
-const NUM_USERS = 1000;
+const NUM_ROOMS = 1e7;
+const NUM_USERS = 1e6;
 
 /* GLOBAL VARIABLES */
 let ROOM_ID = 1;
@@ -109,9 +109,9 @@ function generateRandomBooking(roomId) {
       + `${randomIntFromInterval(1, 5)},` // max adults
       + `${randomIntFromInterval(0, 5)},` // max children
       + `${randomIntFromInterval(0, 5)},` // max infants
-      + `${randomCheckInOutDates.check_in},` // check_in date
-      + `${randomCheckInOutDates.check_out},` // check_out date
-      + `${moment(randomCheckInOutDates.check_in).subtract(randomIntFromInterval(0, 30), 'days').toDate()}`; // createdAt date
+      + `${moment.utc(randomCheckInOutDates.check_in).format()},` // check_in date
+      + `${moment.utc(randomCheckInOutDates.check_out).format()},` // check_out date
+      + `${moment.utc(moment(randomCheckInOutDates.check_in).subtract(randomIntFromInterval(0, 30), 'days').toDate()).format()}`; // createdAt date
   }
   incrementBookingId();
   return booking;
@@ -224,7 +224,7 @@ function writeUsers(i) {
     + `${faker.internet.password()},`
     + `${faker.name.firstName()},`
     + `${faker.name.lastName()},`
-    + `${faker.date.past()}`;
+    + `${moment.utc(faker.date.past()).format()}`;
 
   const ableToWrite = gzipUsers.write(`${user}\n`);
 
@@ -238,7 +238,7 @@ function writeUsers(i) {
 }
 
 function intializeTables() {
-  gzipUsers.write('_id,'
+  gzipUsers.write('id,'
    + 'email,'
    + 'username,'
    + 'password,'
@@ -246,7 +246,7 @@ function intializeTables() {
    + 'last_name,'
    + 'registration_date\n');
 
-  gzipRooms.write('roomId,'
+  gzipRooms.write('id,'
     + 'ownerId,'
     + 'roomname,'
     + 'price,'
@@ -261,7 +261,7 @@ function intializeTables() {
     + 'ratings,'
     + 'num_reviews\n');
 
-  gzipBookings.write('bookingId,'
+  gzipBookings.write('id,'
     + 'roomId,'
     + 'userId,'
     + 'adults,'
