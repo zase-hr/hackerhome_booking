@@ -67,7 +67,7 @@ function randomCheckInOutOnRoom() {
 }
 
 function writeTransactions(num) {
-  if (num % 50000 === 0) { console.log(`Transaction: ${num}`); }
+  if (num % 100000 === 0) { console.log(`Transaction: ${num}`); }
   if (num <= 0) {
     console.log(`Finishing transactions export: ${moment().format('h:mm:ss a')}`);
     gzipTransactions.end();
@@ -122,6 +122,7 @@ function generateRandomBooking(roomId) {
  * @param {total} total - the total price of a booking (tax + cleaning + service + base)
  */
 function writeBookings(roomId) {
+  if (roomId % 100000 === 0) { console.log(`Booking: ${roomId}`); }
   if (roomId <= 0) {
     console.log(`Finishing bookings export: ${moment().format('h:mm:ss a')}`);
     gzipBookings.end();
@@ -136,7 +137,6 @@ function writeBookings(roomId) {
     for (let i = 0; i < bookCount; i += 1) {
       bookingArray.push(generateRandomBooking(roomId));
     }
-    console.log(`Writing ${bookCount} bookings to Room ${roomId}`);
     ableToWrite = gzipBookings.write(`${bookingArray.join('\n')}\n`);
   }
 
