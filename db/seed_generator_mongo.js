@@ -99,13 +99,14 @@ function generateRandomBookings(num, total) {
  * This function generates a random room
  * @returns - a room object
  */
-function generateRandomRoom() {
+function generateRandomRoom(i) {
   const price = randomIntFromInterval(50, 200);
   const cleaning_fee = 5;
   const service_fee = 5;
   const tax = 10;
   const total = cleaning_fee + service_fee + tax;
   const room = {
+    _id: i,
     owner: randomIntFromInterval(1, NUM_USERS),
     roomname: faker.name.findName()
     + roomNameAppendix[randomIntFromInterval(0, roomNameAppendix.length - 1)],
@@ -140,7 +141,7 @@ function addRooms(i) {
     return;
   }
 
-  const room = generateRandomRoom();
+  const room = generateRandomRoom(i);
   const ableToWrite = gzipRooms.write(`${JSON.stringify(room)}\n`);
 
   if (ableToWrite) {

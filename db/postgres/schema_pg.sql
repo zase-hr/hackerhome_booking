@@ -4,20 +4,20 @@ CREATE SCHEMA bookings;
 DROP TABLE IF EXISTS bookings.users CASCADE;
 CREATE TABLE bookings.users (
   ID                 INTEGER          NOT NULL,
-  EMAIL              VARCHAR (255)     NOT NULL,
+  EMAIL              VARCHAR (255)    NOT NULL,
   USERNAME           VARCHAR (30)     NOT NULL,
   PASSWORD           VARCHAR (40)     NOT NULL,
   FIRST_NAME         VARCHAR (30)     NOT NULL,
   LAST_NAME          VARCHAR (30)     NOT NULL,
-  REGISTRATION_DATE  TIMESTAMPTZ      NOT NULL DEFAULT CURRENT_DATE,
+  REGISTRATION_DATE  TIMESTAMPTZ      NOT NULL, -- DEFAULT CURRENT_DATE,
   PRIMARY KEY (ID)
 );
 
 DROP TABLE IF EXISTS bookings.rooms CASCADE;
 CREATE TABLE bookings.rooms (
   ID                 INTEGER          NOT NULL,
-  OWNERID            INTEGER          NOT NULL REFERENCES bookings.users(ID),
-  ROOMNAME           VARCHAR (255)     NOT NULL,
+  OWNERID            INTEGER          NOT NULL, -- REFERENCES bookings.users(ID),
+  ROOMNAME           VARCHAR (255)    NOT NULL,
   PRICE              SMALLINT         NOT NULL,
   CLEANING_FEE       SMALLINT         NOT NULL,
   SERVICE_FEE        SMALLINT         NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE bookings.rooms (
   INFANTS            SMALLINT         NOT NULL DEFAULT 0,
   MIN_NIGHT          SMALLINT         NOT NULL DEFAULT 1,
   MAX_NIGHT          SMALLINT         NOT NULL DEFAULT 10,
-  RATINGS            NUMERIC         NOT NULL,
+  RATINGS            NUMERIC          NOT NULL,
   NUM_REVIEWS        SMALLINT         NOT NULL,
   PRIMARY KEY (ID)
 );
@@ -35,8 +35,8 @@ CREATE TABLE bookings.rooms (
 DROP TABLE IF EXISTS bookings.bookings CASCADE;
 CREATE TABLE bookings.bookings (
   ID                 INTEGER          NOT NULL,
-  ROOMID             INTEGER          NOT NULL REFERENCES bookings.rooms(ID),
-  USERID             INTEGER          NOT NULL REFERENCES bookings.users(ID),
+  ROOMID             INTEGER          NOT NULL, -- REFERENCES bookings.rooms(ID),
+  USERID             INTEGER          NOT NULL, -- REFERENCES bookings.users(ID),
   ADULTS             SMALLINT         NOT NULL,
   CHILDREN           SMALLINT         NOT NULL,
   INFANTS            SMALLINT         NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE bookings.bookings (
 DROP TABLE IF EXISTS bookings.transactions CASCADE;
 CREATE TABLE bookings.transactions (
   ID                 SERIAL           NOT NULL,
-  BOOKINGID          INTEGER          NOT NULL REFERENCES bookings.bookings(ID),
+  BOOKINGID          INTEGER          NOT NULL, -- REFERENCES bookings.bookings(ID),
   PRICE              INTEGER          NOT NULL,
   PAYMENT_TYPE       VARCHAR(255)     NOT NULL,
   PRIMARY KEY (ID)

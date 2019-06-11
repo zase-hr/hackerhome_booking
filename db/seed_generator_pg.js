@@ -54,6 +54,10 @@ function getRoomId() {
   return ROOM_ID;
 }
 
+function getNumUsers() {
+  return NUM_USERS;
+}
+
 function randomCheckInOutOnRoom() {
   const MIN_STAY = 1;
   const MAX_STAY = 5;
@@ -154,13 +158,13 @@ function writeBookings(roomId) {
  * This function generates a random room
  * @returns - a room object
  */
-function generateRandomRoom(ownerID) {
+function generateRandomRoom() {
   const price = randomIntFromInterval(50, 200);
   const cleaning_fee = 5;
   const service_fee = 5;
   const tax = 10;
   const room = `${getRoomId()},`
-    + `${ownerID},`
+    + `${randomIntFromInterval(1, getNumUsers())},` // ownerID
     + `${faker.name.findName() // roomname
     + roomNameAppendix[randomIntFromInterval(0, roomNameAppendix.length - 1)]},`
     + `${price},`
@@ -191,7 +195,7 @@ function writeRooms(i) {
     gzipRooms.end();
     return;
   }
-  const room = generateRandomRoom(i);
+  const room = generateRandomRoom();
   const ableToWrite = gzipRooms.write(`${room}\n`);
 
   if (ableToWrite) {
@@ -280,7 +284,7 @@ function beginExport() {
   console.log(`Starting export: ${moment().format('h:mm:ss a')}`);
   intializeTables();
   writeUsers(NUM_USERS);
-  writeRooms(NUM_ROOMS);   
+  writeRooms(NUM_ROOMS);
   writeBookings(NUM_ROOMS); // The number of bookings is dependent on number of rooms
 }
 
