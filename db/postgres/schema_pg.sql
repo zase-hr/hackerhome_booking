@@ -3,7 +3,7 @@ CREATE SCHEMA bookings;
 
 DROP TABLE IF EXISTS bookings.users CASCADE;
 CREATE TABLE bookings.users (
-  ID                 INTEGER          NOT NULL,
+  ID                 SERIAL          NOT NULL,
   EMAIL              VARCHAR (255)    NOT NULL,
   USERNAME           VARCHAR (30)     NOT NULL,
   PASSWORD           VARCHAR (40)     NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE bookings.users (
 
 DROP TABLE IF EXISTS bookings.rooms CASCADE;
 CREATE TABLE bookings.rooms (
-  ID                 INTEGER          NOT NULL,
+  ID                 SERIAL          NOT NULL,
   OWNERID            INTEGER          NOT NULL, -- REFERENCES bookings.users(ID),
   ROOMNAME           VARCHAR (255)    NOT NULL,
   PRICE              SMALLINT         NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE bookings.rooms (
 
 DROP TABLE IF EXISTS bookings.bookings CASCADE;
 CREATE TABLE bookings.bookings (
-  ID                 INTEGER          NOT NULL,
+  ID                 SERIAL          NOT NULL,
   ROOMID             INTEGER          NOT NULL, -- REFERENCES bookings.rooms(ID),
   USERID             INTEGER          NOT NULL, -- REFERENCES bookings.users(ID),
   ADULTS             SMALLINT         NOT NULL,
