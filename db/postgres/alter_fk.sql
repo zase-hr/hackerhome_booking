@@ -10,3 +10,4 @@ ADD FOREIGN KEY (BOOKINGID) REFERENCES bookings.bookings(ID);
 
 CREATE INDEX ON bookings.bookings (roomid);
 CREATE INDEX ON bookings.rooms (roomname);
+CREATE INDEX ON bookings.users (email);

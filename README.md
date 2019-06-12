@@ -96,6 +96,7 @@ updatedAt: "2019-06-04T02:46:46.000Z"
 
 #### Get booking information for all bookings
 This operation is **not** currently used in the frontend implementation.
+This operation **SHOULD NOT** be implemented. We don't want to return 10 million rows of data.
 - Method: GET
 - URL: ‘/bookings
 - Input: none
@@ -125,7 +126,8 @@ updatedAt: "2019-06-04T02:46:30.000Z"
 ```
 
 #### Get booking information for all bookings
-This operation is **not** currently used in the frontend implementation. 
+This operation is **not** currently used in the frontend implementation.
+This operation **SHOULD NOT** be implemented. We don't want to return 10 million rows of data. 
 - Method: GET
 - URL: ‘/bookings
 - Input: none

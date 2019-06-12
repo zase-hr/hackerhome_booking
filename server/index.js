@@ -22,67 +22,86 @@ app.get('/rooms/:id', (req, res) => {
 
   db.query(query, [id], (err, results) => {
     if (err) { return res.status(400).send(err); }
-    res.send(results);
+    const room = results.rows[0];
+    const formattedRoom = {
+      roomname: room.roomname,
+      cleaning_fee: room.cleaning_fee,
+      id: room.id,
+      max_guest: {
+        adults: room.adults,
+        children: room.children,
+        infants: room.infants,
+      },
+      max_night: room.max_night,
+      min_night: room.min_night,
+      num_reviews: room.num_reviews,
+      price: room.price,
+      ratings: room.ratings,
+      service_fee: room.service_fee,
+      tax: room.tax,
+    };
+    return res.send(formattedRoom);
   });
 });
 
-app.get('/rooms', (req, res) => {
-  db.Room.findAll()
-    .then((result) => {
-      res.status(200).send(result);
-    })
-    .catch((err) => {
-      console.error('Couldn\'t get rooms', err);
-      res.status(500).send('Couldn\'t get rooms');
-    });
-});
 
 app.get('/bookings/:id', (req, res) => {
-  db.Booking.findAll({
-    where: {
-      roomId: req.params.id,
-    },
-  })
-    .then((result) => {
-      res.send(result);
-    })
-    .catch(() => {
-      res.sendStatus(500);
-    });
-});
-
-app.get('/bookings', (req, res) => {
-  db.Booking.findAll()
-    .then((result) => {
-      res.status(200).send(result);
-    })
-    .catch((err) => {
-      console.error('Couldn\'t get bookings', err);
-      res.status(500).send('Couldn\'t get bookings');
-    });
+  const query = 'SELECT bookings.bookings.*, bookings.users.email from bookings.rooms '
+              + 'INNER JOIN bookings.bookings '
+              + 'ON (bookings.rooms.id = bookings.bookings.roomid) '
+              + 'INNER JOIN bookings.users '
+              + 'ON (bookings.bookings.userid = bookings.users.id) '
+              + 'WHERE bookings.rooms.id = $1';
+  const { id } = req.params;
+  db.query(query, [id], (err, result) => {
+    if (err) { return res.status(400).send(err); }
+    const formattedArr = result.rows.map(booking => ({
+      check_in: booking.check_in,
+      check_out: booking.check_out,
+      createdAt: booking.createdat,
+      email: booking.email,
+      guests: {
+        adults: booking.adults,
+        children: booking.children,
+        infants: booking.children,
+      },
+      id: booking.id,
+      roomId: booking.roomid,
+    }));
+    res.send(formattedArr);
+  });
 });
 
 /* POST REQUESTS */
 app.post('/bookings', (req, res) => {
-  console.log(req.body);
-  const data = {
-    roomId: req.body.roomId,
-    email: req.body.email,
-    guests: req.body.guests,
-    check_in: new Date(req.body.check_in),
-    check_out: new Date(req.body.check_out),
-    createdAt: new Date(req.body.createdAt),
-  };
-
-
-  db.Booking.create(data)
-    .catch((err) => {
-      console.log(`err: ${err}`);
-      res.sendStatus(500);
-    })
-    .then(() => {
-      console.log('Booking data is saved');
-      res.sendStatus(200);
+  const insertUser = 'INSERT INTO bookings.users (email, username, password, first_name, last_name, registration_date, id) '
+                   + 'VALUES ($1, $2, $3, $4, $5, DEFAULT, DEFAULT) RETURNING *';
+  db.query(insertUser,
+    [
+      req.body.email,
+      req.body.username,
+      req.body.password,
+      req.body.first_name,
+      req.body.last_name,
+    ], (err, result) => {
+      if (err) { return res.status(400).send(err); }
+      const user = result.rows[0];
+      const insertBooking = 'INSERT INTO bookings.bookings '
+                          + '(roomid, userid, adults, children, infants, check_in, check_out, createdat, id) '
+                          + 'VALUES ($1, $2, $3, $4, $5, $6, $7, DEFAULT, DEFAULT) RETURNING *';
+      db.query(insertBooking,
+        [
+          req.body.roomId,
+          user.id,
+          req.body.adults,
+          req.body.children,
+          req.body.infants,
+          req.body.check_in,
+          req.body.check_out,
+        ], (err, result) => {
+          if (err) { return res.status(400).send(err); }
+          return res.send(result.rows[0]);
+        });
     });
 });
 
