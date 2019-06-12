@@ -16,3 +16,4 @@ db/mongo/rooms.json
 db/mongo/users.json
 db/mongo/backup/rooms.json.gz
 db/mongo/backup/users.json.gz
+package-lock.json

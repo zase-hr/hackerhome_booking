@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const db = require('../db/index.js');
+const db = require('../db');
 
 
 const app = express();
@@ -16,17 +16,14 @@ app.use(cors());
 
 /* GET REQUESTS */
 app.get('/rooms/:id', (req, res) => {
-  db.Room.findAll({
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then((result) => {
-      res.send(result[0].dataValues);
-    })
-    .catch(() => {
-      res.sendStatus(500);
-    });
+  const query = 'SELECT * FROM bookings.rooms '
+              + 'WHERE bookings.rooms.id = $1';
+  const { id } = req.params;
+
+  db.query(query, [id], (err, results) => {
+    if (err) { return res.status(400).send(err); }
+    res.send(results);
+  });
 });
 
 app.get('/rooms', (req, res) => {
