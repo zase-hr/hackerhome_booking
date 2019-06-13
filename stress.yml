@@ -1,0 +1,35 @@
+config:
+  target: 'http://localhost:3003'
+  phases:
+    - duration: 90
+      arrivalRate: 100
+  processor: "./my_functions.js"
+  defaults:
+    headers:
+      x-my-service-auth: '987401838271002188298567'
+scenarios:
+  - name: "Get room bookings"
+    flow:
+      - get:
+          url: "/bookings/{{$randomNumber(1,10000000)}}"
+  - name: "Get room info"
+    flow:
+      - get:
+          url: "/rooms/{{$randomNumber(1,10000000)}}"
+  - name: "Add booking"
+    flow:
+      - function: generateRandomData
+      - post:
+          url: "/bookings"
+          json:
+            first_name: "{{ first_name }}"
+            last_name: "{{ last_name }}"
+            email: "{{ email }}"
+            username: "{{ username }}"
+            password: "{{ password }}"
+            roomId: "{{ roomId }}"
+            adults: "{{ adults }}"
+            children: "{{ children }}"
+            infants: "{{ infants }}"
+            check_in: "{{ check_in }}"
+            check_out: "{{ check_out }}"

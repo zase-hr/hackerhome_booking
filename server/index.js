@@ -1,3 +1,4 @@
+require('newrelic');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -31,7 +32,6 @@ app.post('/bookings', (req, res) => {
 });
 
 app.post('/rooms', (req, res) => {
-  console.log(req.body);
   const data = {
     roomname: req.body.roomname,
     price: req.body.price,
@@ -60,7 +60,6 @@ app.put('/bookings', (req, res) => {
     where: { id: req.body.id },
   })
     .then((affectedRows) => {
-      console.log(`Affected rows: ${affectedRows}`);
       res.status(200).send(`Affected rows: ${affectedRows}`);
     })
     .catch((err) => {
@@ -74,7 +73,6 @@ app.put('/rooms', (req, res) => {
     where: { id: req.body.id },
   })
     .then((affectedRows) => {
-      console.log(`Affected rows: ${affectedRows}`);
       res.status(200).send(`Affected rows: ${affectedRows}`);
     })
     .catch((err) => {
@@ -85,12 +83,10 @@ app.put('/rooms', (req, res) => {
 
 /* DELETE REQUESTS */
 app.delete('/bookings', (req, res) => {
-  console.log(req.body);
   db.Booking.destroy({
     where: { id: req.body.id },
   })
     .then(() => {
-      console.log('Booking has been deleted');
       res.send(200).send('Booking has been deleted');
     })
     .catch((e) => {
@@ -104,7 +100,6 @@ app.delete('/rooms', (req, res) => {
     where: { id: req.body.id },
   })
     .then(() => {
-      console.log('Room has been deleted');
       res.status(200).send('Room has been deleted');
     })
     .catch((e) => {

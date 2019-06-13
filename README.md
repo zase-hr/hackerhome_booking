@@ -62,7 +62,7 @@ To be revised when scripts are complete.
 ## CRUD operations
 ### Create / POST
 #### Book room
-This operation is part of the front end implementation.
+This operation **is** part of the front end implementation.
 - Method: POST
 - URL: ‘/bookings?roomId=1’
 - Input: JSON object (email, check in/out, etc)

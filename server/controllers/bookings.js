@@ -1,7 +1,7 @@
 const db = require('../../db');
 
 exports.getBookings = (req, res) => {
-  const query = 'SELECT bookings.bookings.*, bookings.users.email from bookings.rooms '
+  const query = 'SELECT bookings.bookings.*, bookings.users.* from bookings.rooms '
               + 'INNER JOIN bookings.bookings '
               + 'ON (bookings.rooms.id = bookings.bookings.roomid) '
               + 'INNER JOIN bookings.users '
@@ -43,7 +43,7 @@ exports.addBooking = (req, res) => {
       const insertBooking = 'INSERT INTO bookings.bookings '
          + '(roomid, userid, adults, children, infants, check_in, check_out, createdat, id) '
          + 'VALUES ($1, $2, $3, $4, $5, $6, $7, DEFAULT, DEFAULT) RETURNING *';
-      db.query(insertBooking,
+      return db.query(insertBooking,
         [
           req.body.roomId,
           user.id,
