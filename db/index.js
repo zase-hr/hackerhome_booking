@@ -10,7 +10,7 @@ const query = (text, params, callback) => {
   const start = Date.now();
   return pool.query(text, params, (err, res) => {
     const duration = Date.now() - start;
-    //console.log('executed query', { text, params, duration, rows: res.rowCount });
+    // console.log('executed query', { text, params, duration, rows: res.rowCount });
     callback(err, res);
   });
 };
