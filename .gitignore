@@ -9,3 +9,10 @@ public/dist/bundle.js
 db/seed.json
 db/seed_test.json
 db/seed_test.json.gz
+db/postgres/import_files
+db/mongo/rooms.json.gz
+db/mongo/users.json.gz
+db/mongo/rooms.json
+db/mongo/users.json
+db/mongo/backup/rooms.json.gz
+db/mongo/backup/users.json.gz

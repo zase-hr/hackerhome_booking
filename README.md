@@ -17,7 +17,31 @@ To be revised.
 
 ## Usage
 
-To be revised.
+### Mongo seeding
+1. Export data
+```
+> node db/seed_generator_mongo.js
+```
+2. Import data
+Users should be imported before rooms. You can specficy a collection with '-c', otherwise it will import to collection based on filename, e.g. users.json imports to the users collection.
+```
+> mongoimport --db airbnb --type json --file users.json
+> mongoimport --db airbnb --type json --file rooms.json
+```
+
+### Postgres seeding
+1. Run schema
+```
+> psql -d airbnb -a -f db/postgres/schema_pg.sql
+```
+2. Export data
+```
+> node db/seed_generator_pg.js
+```
+3. Import data
+```
+> node db/import.sql
+```
 
 ## Requirements
 
