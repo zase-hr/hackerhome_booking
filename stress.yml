@@ -2,7 +2,7 @@ config:
   target: 'http://localhost:3003'
   phases:
     - duration: 90
-      arrivalRate: 1000
+      arrivalRate: 400
   processor: "./my_functions.js"
   defaults:
     headers:

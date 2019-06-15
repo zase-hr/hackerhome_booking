@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { getRoom } = require('./controllers/rooms.js');
+const { getRoom, getCachedRoom } = require('./controllers/rooms.js');
 const { getBookings, addBooking } = require('./controllers/bookings.js');
 const db = require('../db');
 
@@ -19,7 +19,7 @@ app.use(cors());
 
 /* GET REQUESTS */
 app.get('/rooms/:id', (req, res) => {
-  getRoom(req, res);
+  getCachedRoom(req, res);
 });
 
 app.get('/bookings/:id', (req, res) => {
