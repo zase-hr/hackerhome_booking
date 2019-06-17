@@ -7,7 +7,7 @@ COPY bookings.users(
              first_name,
              last_name,
              registration_date) 
-FROM '/Users/ericdo/documents/hack reactor/capstone/sdc/airbnb-booking/db/postgres/import_files/users.csv' 
+FROM '/tmp/users.csv' 
       DELIMITER ',' CSV HEADER;
 
 TRUNCATE bookings.rooms CASCADE;
@@ -26,7 +26,7 @@ COPY bookings.rooms(
              max_night,
              ratings,
              num_reviews) 
-FROM '/Users/ericdo/documents/hack reactor/capstone/sdc/airbnb-booking/db/postgres/import_files/rooms.csv' 
+FROM '/tmp/rooms.csv' 
       DELIMITER ',' CSV HEADER;
 
 TRUNCATE bookings.bookings CASCADE;
@@ -40,7 +40,7 @@ COPY bookings.bookings(
              check_in,
              check_out,
              createdAt) 
-FROM '/Users/ericdo/documents/hack reactor/capstone/sdc/airbnb-booking/db/postgres/import_files/bookings.csv' 
+FROM '/tmp/bookings.csv' 
       DELIMITER ',' CSV HEADER;
 
 TRUNCATE bookings.transactions CASCADE;
@@ -48,5 +48,5 @@ COPY bookings.transactions(
              bookingId,
              price,
              payment_type) 
-FROM '/Users/ericdo/documents/hack reactor/capstone/sdc/airbnb-booking/db/postgres/import_files/transactions.csv' 
+FROM '/tmp/transactions.csv' 
       DELIMITER ',' CSV HEADER;

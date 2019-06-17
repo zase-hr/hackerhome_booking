@@ -19,6 +19,7 @@ app.use(cors());
 
 /* GET REQUESTS */
 app.get('/rooms/:id', (req, res) => {
+  console.log('Getting room info');
   getRoom(req, res);
 });
 
