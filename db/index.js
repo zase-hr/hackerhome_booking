@@ -3,6 +3,7 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
   user: 'postgres',
+  host: '34.215.33.164',
   password: 'FuckYou52',
   database: 'airbnb',
 });
@@ -16,7 +17,6 @@ const query = (text, params, callback) => {
   return pool.query(text, params, (err, res) => {
     if (err) { return callback(err); }
     const duration = Date.now() - start;
-    console.log('executed query', { text, params, duration, rows: res.rowCount });
     callback(err, res);
   });
 };
