@@ -17,30 +17,78 @@ To be revised.
 
 ## Usage
 
-### Mongo seeding
-1. Export data
+### Instances
+- Proxy: http://ec2-54-149-66-169.us-west-2.compute.amazonaws.com:3030
+- Nginx: http://ec2-54-213-134-51.us-west-2.compute.amazonaws.com/
+- Service 1: http://ec2-34-222-46-128.us-west-2.compute.amazonaws.com
+- Service 2: http://ec2-52-88-132-91.us-west-2.compute.amazonaws.com:3003
+- Database: http://ec2-34-215-33-164.us-west-2.compute.amazonaws.com:5432
+
+### Helpful Linux commands
+sudo -u postgres psql
+sudo vim /var/lib/pgsql9/data/pg_hba.conf
+sudo /etc/init.d/postgresql restart / sudo service postgresql restart
+
+### Install NGINX
+EC2: https://medium.com/@nishankjaintdk/setting-up-a-node-js-app-on-a-linux-ami-on-an-aws-ec2-instance-with-nginx-59cbc1bcc68c
 ```
-> node db/seed_generator_mongo.js
-```
-2. Import data
-Users should be imported before rooms. You can specficy a collection with '-c', otherwise it will import to collection based on filename, e.g. users.json imports to the users collection.
-```
-> mongoimport --db airbnb --type json --file users.json
-> mongoimport --db airbnb --type json --file rooms.json
+> sudo service nginx restart
 ```
 
-### Postgres seeding
+### Install Redis
+EC2: https://medium.com/@feliperohdee/installing-redis-to-an-aws-ec2-machine-2e2c4c443b68
+OSX: https://medium.com/@petehouston/install-and-config-redis-on-mac-os-x-via-homebrew-eb8df9a4f298
+
+### Install Postgres DB
+EC2: https://github.com/snowplow/snowplow/wiki/Setting-up-PostgreSQL
+OSX: https://gist.github.com/ibraheem4/ce5ccd3e4d7a65589ce84f2a3b7c23a3
+
+### Additional configurations on EC2
+This will be needed for when you run files from command line, e.g. psql -d airbnb -a -f db/postgres/schema_pg.sql.
+```
+postgres=# ALTER USER "ec2-user" WITH SUPERUSER;
+```
+
+### Create import file
+```
+> cd db/postgres
+> mkdir import_files
+> cd ..
+> node seed_generator_pg.js
+```
+
+### Seed DB
 1. Run schema
 ```
+> postgres=# CREATE DATABASE airbnb;
 > psql -d airbnb -a -f db/postgres/schema_pg.sql
 ```
-2. Export data
+
+Amazon EC2 only: 
+- Move all import files to /tmp
+- Make sure import script is updated to reflect path to tmp
 ```
-> node db/seed_generator_pg.js
+[ec2-user@ip-172-31-18-194 import_files]$ mv bookings.csv.gz /tmp/bookings.csv.gz
+[ec2-user@ip-172-31-18-194 import_files]$ mv rooms.csv.gz /tmp/rooms.csv.gz
+[ec2-user@ip-172-31-18-194 import_files]$ mv transations.csv.gz /tmp/transactions.csv.gz
+[ec2-user@ip-172-31-18-194 import_files]$ mv transactions.csv.gz /tmp/transactions.csv.gz
+[ec2-user@ip-172-31-18-194 import_files]$ mv users.csv.gz /tmp/users.csv.gz
 ```
-3. Import data
+
 ```
-> node db/import.sql
+[ec2-user@ip-172-31-20-48 import_files]$ zcat bookings.csv.gz > bookings.csv
+[ec2-user@ip-172-31-20-48 import_files]$ zcat rooms.csv.gz > rooms.csv
+[ec2-user@ip-172-31-20-48 import_files]$ zcat transactions.csv.gz > transactions.csv
+[ec2-user@ip-172-31-20-48 import_files]$ zcat users.csv.gz > users.csv
+```
+
+Then import files
+```
+> psql -d airbnb -a -f db//postgres/import.sql
+```
+4. Modify schema with indexes and foreign keys
+```
+> psql -d airbnb -a -f db/postgres/alter_fk.sql
 ```
 
 ## Requirements

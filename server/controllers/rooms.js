@@ -1,4 +1,7 @@
+const redis = require('redis');
 const db = require('../../db');
+
+const client = redis.createClient();
 
 exports.getRoom = (req, res) => {
   const query = 'SELECT * FROM bookings.rooms '
@@ -25,6 +28,19 @@ exports.getRoom = (req, res) => {
       service_fee: room.service_fee,
       tax: room.tax,
     };
+    client.setex(id, 3600, JSON.stringify(formattedRoom));
     return res.send(formattedRoom);
+  });
+};
+
+exports.getCachedRoom = (req, res) => {
+  const { id } = req.params;
+  client.get(id, (err, result) => {
+    if (result) {
+      //console.log(`Returning cached ${result}`);
+      res.send(result);
+    } else {
+      this.getRoom(req, res);
+    }
   });
 };
